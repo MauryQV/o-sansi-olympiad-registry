@@ -3,7 +3,13 @@ const app = express()
 const userRoutes = require('./routes/userRoutes');
 const competidorRoutes = require('./routes/competidorRoutes');
 const errorHandler = require('./middleware/errorHandler');
+const cors = require('cors');
 const port = process.env.PORT;
+
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
+
 app.use(express.json());
 app.use(errorHandler);
 
