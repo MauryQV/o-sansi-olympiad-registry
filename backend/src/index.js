@@ -1,6 +1,5 @@
 const express = require('express')
 const app = express()
-const userRoutes = require('./routes/userRoutes');
 const fileRoutes = require('./routes/fileRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const cors = require('cors');
@@ -13,7 +12,6 @@ app.use(cors({
 app.use(express.json());
 app.use(errorHandler);
 
-app.use('/api', userRoutes);
 app.use('/api', fileRoutes);
 
 
