@@ -74,18 +74,21 @@ const createTutor = async (req, res) => {
     try {
         const { nombre, apellido, telefono, correo } = req.body;
 
-        const { data, error } = await supabase
+        // Insertar el tutor (ya se verificó duplicado en el middleware)
+        const { data: newTutor, error: insertError } = await supabase
             .from('tutor')
             .insert([{ nombre, apellido, telefono, correo }])
             .select();
 
-        if (error) throw error;
-        res.status(201).json(data[0]);
+        if (insertError) throw insertError;
+
+        res.status(201).json(newTutor[0]);
+
     } catch (error) {
+        console.error('Error en createTutor:', error);
         res.status(500).json({ error: 'Error al crear tutor' });
     }
 };
-
 
 const deleteTutor = async (req, res) => {
     try {
