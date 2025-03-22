@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const fileRoutes = require('./routes/fileRoutes');
+const tutorRoutes = require('./routes/tutoresRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const cors = require('cors');
 const port = process.env.PORT;
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(errorHandler);
 
 app.use('/api', fileRoutes);
+app.use('/api', tutorRoutes);
 
 
 app.get('/', (req, res) => {
