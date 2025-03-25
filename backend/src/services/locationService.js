@@ -5,7 +5,10 @@ const fetchDepartamentos = async () => {
         .from('departamento')
         .select('*');
 
-    if (error) throw error;
+    if (error) {
+        console.error('Error en Supabase (fetchDepartamentos):', error);
+        throw error;
+    }
     return data;
 };
 
@@ -21,7 +24,7 @@ const fetchProvincias = async (id_departamento) => {
 
 const fetchColegios = async (id_provincia) => {
     const { data, error } = await supabase
-        .from('colegio')
+        .from('escuela')
         .select('*')
         .eq('id_provincia', id_provincia);
 
