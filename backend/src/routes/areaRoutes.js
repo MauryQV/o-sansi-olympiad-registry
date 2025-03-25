@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { getAreas, createArea } = require('../controllers/areaController');
+const { crearArea } = require('../controllers/areaController');
 
-router.get('/area', getAreas);
-router.post('/area', createArea);
+router.post('/area', crearArea);
 
 module.exports = router;

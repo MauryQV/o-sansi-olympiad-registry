@@ -1,29 +1,18 @@
-const supabase = require('../config/supabaseClient')
+const areaService = require('../services/areaService');
 
-const getAreas = async (req, res) => {
+const crearArea = async (req, res) => {
+    const { nombre_area, cost, nombre_categoria, grado_min, grado_max } = req.body;
+
+    if (!nombre_area || !cost || !nombre_categoria) {
+        return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+    }
+
     try {
-        const { data, error } = await supabase.from('area').select('*');
-        if (error) throw error;
-        res.json(data);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const area = await areaService.crearAreaConCategoria(nombre_area, cost, nombre_categoria, grado_min, grado_max);
+        res.status(201).json(area);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
 
-// Crear un área
-const createArea = async (req, res) => {
-    const { name_area, categoria_id } = req.body;
-
-    try {
-        const { data, error } = await supabase
-            .from('area')
-            .insert([{ name_area, categoria_id }]);
-
-        if (error) throw error;
-        res.status(201).json(data);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-};
-
-module.exports = { getAreas, createArea };
+module.exports = { crearArea };
