@@ -1,108 +1,119 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap');
+
 body {
-    font-family: 'Comfortaa', cursive;
-}
-/* Estilo del contenedor del formulario */
-.form-wrapper {
-  display: flex; /* Flexbox para centrar el formulario */
-  justify-content: center; /* Centra el formulario horizontalmente */
-  margin-top: 20px; /* Espacio arriba del formulario */
+  font-family: 'Comfortaa', cursive;
+  margin: 0;
+  background-color: #e0e0e0;
 }
 
-/* Estilo del contenedor del formulario */
-.form-container {
-  background: rgb(255, 255, 255); /* Fondo blanco */
-  padding: 40px; /* Padding alrededor del formulario */
-  border-radius: 20px; /* Bordes redondeados */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave alrededor del formulario */
-  width: 500px; /* Ancho fijo del formulario */
-}
-
-/* Estilo general para el formulario */
-.form {
-  display: flex; /* Usamos flexbox para el formulario */
-  flex-direction: column; /* Los elementos del formulario se apilan verticalmente */
-}
-
-/* Estilo para cada grupo de campos en el formulario */
-.form-group {
-  margin-bottom: 15px; /* Espacio abajo de cada campo */
-}
-
-/* Estilo para las etiquetas de los campos del formulario */
-.form-group label {
-  font-weight: bold; /* Negrita para las etiquetas */
-  display: block; /* Hace que las etiquetas ocupen toda la línea */
-  margin-bottom: 5px; /* Espacio debajo de las etiquetas */
-}
-
-/* Estilo para los inputs del formulario */
-.input {
-  width: 100%; /* Ancho completo del contenedor */
-  padding: 8px; /* Padding interno de los inputs */
-  border: 1px solid #ccc; /* Borde gris claro */
-  border-radius: 5px; /* Bordes redondeados */
-}
-
-/* Estilo para el contenedor de los botones */
-.buttons {
-  display: flex; /* Usamos flexbox para los botones */
-  justify-content: center; /* Centra los botones */
-  gap: 20px; /* Espacio entre los botones */
-  margin-top: 20px; /* Espacio arriba de los botones */
-}
-
-/* Estilo para el botón de registro */
-.register, .cancel {
-  font-family: 'Comfortaa', cursive; /* Usamos la fuente Comfortaa para los botones */
-  padding: 12px 24px; /* Padding para tamaño del botón */
-  font-size: 16px; /* Tamaño de la fuente */
-  border-radius: 8px; /* Bordes redondeados en los botones */
-  border: none; /* Sin borde */
-  cursor: pointer; /* Cambia el cursor a mano cuando pasa sobre el botón */
-  transition: background 0.3s ease; /* Efecto suave al pasar el cursor sobre el botón */
-  width: 150px; /* Ancho fijo de los botones */
-  text-align: center; /* Centra el texto en los botones */
-}
-
-/* Estilo para el botón de registrar */
-.register {
-  background-color: #0b0692; /* Fondo azul oscuro */
-  color: white; /* Color de texto blanco */
-}
-
-/* Efecto al pasar el cursor sobre el botón de registrar */
-.register:hover {
-  background-color: #010a70; /* Fondo azul aún más oscuro cuando se pasa el cursor */
-}
-
-/* Estilo para el botón de cancelar */
-.cancel {
-  background-color: #940816; /* Fondo rojo oscuro */
-  color: white; /* Color de texto blanco */
-}
-
-/* Efecto al pasar el cursor sobre el botón de cancelar */
-.cancel:hover {
-  background-color: #960312; /* Fondo rojo más oscuro cuando se pasa el cursor */
-}
-
-/* Estilo para el contenedor principal de la página */
 .page-container {
-  background-color: #d9d9d9; /* Fondo gris claro */
-  min-height: 100vh; /* Altura mínima de la página */
-  display: flex; /* Usamos flexbox para centrar el contenido */
-  flex-direction: column; /* Los elementos se apilan verticalmente */
-  align-items: center; /* Centra los elementos horizontalmente */
-  justify-content: center; /* Centra los elementos verticalmente */
+  background-color: #d9d9d9;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20px; /* mueve el contenido un poco arriba */
 }
 
-/* Estilo para el título de la página */
 .title {
-  font-size: 20px;  /* Tamaño del texto */
-  font-weight: 700; /* Negrita */
-  color: #000000; /* Color negro */
-  text-align: center; /* Centra el texto */
-  margin-bottom: 50px; /* Espacio debajo */
-  font-family: 'Comfortaa', cursive; /* Usamos la fuente Comfortaa */
+  font-size: 24px;
+  font-weight: 700;
+  color: #222;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.form-container {
+  background: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin-top: -100px; /* desplaza el formulario hacia arriba */
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+  color: #333;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  font-size: 14px;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.input:focus {
+  border-color: #3a86ff;
+  box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.2);
+  outline: none;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.register, .cancel {
+  font-family: 'Comfortaa', cursive;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  width: 150px;
+  text-align: center;
+  color: #fff;
+}
+
+.register {
+  background-color: #1e6baf;
+}
+
+.register:hover {
+  background-color: #041679;
+}
+
+.register:active {
+  background-color: #162e96;
+  transform: scale(0.98);
+}
+
+.cancel {
+  background-color: #b99c1c;
+}
+
+.cancel:hover {
+  background-color: #991b1b;
+}
+
+.cancel:active {
+  background-color: #7f3f1d;
+  transform: scale(0.98);
 }

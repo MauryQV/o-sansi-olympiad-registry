@@ -140,7 +140,7 @@ const RegistrarTutores = () => {
         </div>
       </div>
 
-      {/* Lista de tutores registrados */}
+      {/* Lista de tutores registrados *
       <div className="tutores-list">
         <h3>Tutores Registrados</h3>
         <table>
@@ -163,7 +163,8 @@ const RegistrarTutores = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> 
+      */}
     </div>
   );
 };

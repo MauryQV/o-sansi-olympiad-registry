@@ -3,7 +3,7 @@
     width: 90%; /* Ajusta el ancho al 90% del contenedor padre */
     max-width: 1200px; /* Establece un ancho máximo de 1200px */
     margin: 0 auto; /* Centra el contenido horizontalmente */
-    padding: 20px 0; /* Espaciado superior e inferior */
+    padding: 0 px 0; /* Espaciado superior e inferior */
 }
 
 /* Estilos para el slogan */
@@ -59,7 +59,7 @@
     display: grid; /* Usa CSS Grid para organizar los elementos */
     grid-template-columns: repeat(3, 1fr); /* Mantiene tres columnas */
     gap: 60px; /* Reduce aún más el espacio entre elementos */
-    padding: 120px; /* Reduce el espaciado interno general */
+    padding: 60 px; /* Reduce el espaciado interno general */
 }
 
 .disciplina-card {
@@ -112,22 +112,28 @@
     }
 }
 .slogan-section {
-    background-image: url('/src/image/umss.jpg'); /* Ruta de la imagen */
-    background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
-    background-position: center; /* Centra la imagen */
-    background-repeat: no-repeat; /* Evita que la imagen se repita */
-    min-height: 350px; /* Asegura una altura mínima */
-    display: flex; /* Para centrar el contenido */
-    flex-direction: column; /* Acomoda el contenido en columna */
-    justify-content: center; /* Centra el contenido verticalmente */
-    align-items: center; /* Centra el contenido horizontalmente */
-    padding: 60px 20px; /* Ajusta el padding */
-    border-radius: 0px;
+    width: 100vw; /* Ocupa el 100% del ancho de la ventana */
+    margin: 0; /* Elimina márgenes */
+    padding: 60px 20px;
+    background-image: url('/src/image/umss.jpg'); /* o usa la ruta correcta si es local */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
-    color: white; /* Cambia el color del texto para que contraste */
-    object-fit: cover; /* Asegura que la imagen se vea bien */
+    color: white;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    transform: translateX(-50%);
 }
+
 
 
 .slogan-text {

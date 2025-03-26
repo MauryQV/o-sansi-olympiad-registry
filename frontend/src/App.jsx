@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar"; // Importamos la barra de navegación
 import InicioAdministrador from "./components/InicioAdministrador";
 import TablaArea from "./components/TablaArea";
 import RegistrarTutores from "./components/RegistrarTutores"; // Ajusta la ruta aquí
+import Disciplinas from "./components/Disciplinas";
 
 import './styles/Navbar.css';
 
@@ -54,7 +55,7 @@ function App() {
             }
           />
           <Route path="/inscripciones" element={<h1>Inscripciones</h1>} />
-          <Route path="/disciplinas" element={<h1>Disciplinas</h1>} />
+          <Route path="/disciplinas" element={<Disciplinas />} />
           <Route path="/ingresar" element={<InicioAdministrador setIsAdmin={setIsAdmin} />} />
           <Route path="/admin" element={<AdminRedirect setIsAdmin={setIsAdmin} />} />
           <Route path="/registrar-disciplinas" element={<TablaArea />} />

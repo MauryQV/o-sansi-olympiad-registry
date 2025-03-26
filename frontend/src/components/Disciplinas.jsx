@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Disciplinas.css";
 
-// Importar imágenes
+// Imágenes
 import astronomiaImg from "../image/astronomia.jpg";
 import quimicaImg from "../image/quimica.jpg";
 import fisicaImg from "../image/fisica.webp";
@@ -29,25 +29,30 @@ const Disciplinas = () => {
   };
 
   return (
-    <div className="disciplinas-container">
+    <div className="disciplina-content-wrapper">
       <div className="slogan-section">
-        <h1>OLIMPIADAS CIENTÍFICAS ESCOLARES</h1>
+        <h2>OLIMPIADAS CIENTÍFICAS ESCOLARES</h2>
         <p className="slogan-text">
           "¡Despierta el científico que llevas dentro! Participa en nuestras Olimpiadas Científicas y vive la emoción de explorar, descubrir y compartir. ¡El futuro de la ciencia comienza aquí!"
         </p>
       </div>
 
-      <h2 className="disciplinas-title">DISCIPLINAS</h2>
-      <div className="disciplinas-grid">
-        {disciplinas.map((disciplina, index) => (
-          <div key={index} className="disciplina-card">
-            <img src={disciplina.img} alt={disciplina.nombre} className="disciplina-img" />
-            <h3>{disciplina.nombre}</h3>
-            <button className="ingresar-button" onClick={() => handleNavigation(disciplina.ruta)}>
-              Ingresar
-            </button>
-          </div>
-        ))}
+      <div className="disciplinas-container">
+        <h2 className="disciplinas-title">DISCIPLINAS</h2>
+        <div className="disciplinas-grid">
+          {disciplinas.map((disciplina, index) => (
+            <div key={index} className="disciplina-card">
+              <img src={disciplina.img} alt={disciplina.nombre} className="disciplina-img" />
+              <h3>{disciplina.nombre}</h3>
+              <button
+                className="ingresar-button"
+                onClick={() => handleNavigation(disciplina.ruta)}
+              >
+                Ingresar
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
