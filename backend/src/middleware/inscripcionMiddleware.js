@@ -31,7 +31,7 @@ const verificarCompetidor = async (req, res, next) => {
         return res.status(500).json({ error: "Error al verificar inscripciones previas" });
     }
 
-    // 📌 Reglas de inscripción
+
     const totalInscripciones = inscripciones.length;
     const yaInscritoEnArea = inscripciones.some(inscripcion => inscripcion.id_area === id_area);
 

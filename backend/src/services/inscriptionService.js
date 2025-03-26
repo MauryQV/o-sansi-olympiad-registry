@@ -1,22 +1,53 @@
 const supabase = require('../config/supabaseClient');
 
-const inscribirCompetidor = async (req, res) => {
-    try {
-        const { id_competidor } = req;
-        const { id_area } = req.body;
+const inscribirCompetidor = async (competidorData) => {
+    const {
+        nombre, apellido, carnet_identidad, fecha_nacimiento,
+        correo_electronico, id_provincia, id_escuela,
+        id_tutores, id_area,
+    } = competidorData;
 
-        // 📝 Insertar la inscripción con estado "pendiente"
-        const { error: inscriptionError } = await supabase
-            .from('inscription')
-            .insert([{ id_competidor, id_area, status: 'pendiente', inscription_date: new Date() }]);
+    const { data: existingCompetidor, error: selectError } = await supabase
+        .from('competidor')
+        .select('id_competidor')
+        .eq('carnet_identidad', carnet_identidad)
+        .maybeSingle();
 
-        if (inscriptionError) throw inscriptionError;
+    if (selectError) throw selectError;
 
-        res.json({ success: true, message: "Competidor inscrito correctamente en el área" });
+    let id_competidor;
 
-    } catch (error) {
-        res.status(500).json({ error: "Error en la inscripción", details: error.message });
+    if (existingCompetidor) {
+        id_competidor = existingCompetidor.id_competidor;
+    } else {
+        const { data: newCompetidor, error: insertError } = await supabase
+            .from('competidor')
+            .insert([{
+                nombre, apellido, carnet_identidad, fecha_nacimiento,
+                correo_electronico, id_provincia, id_escuela
+            }])
+            .select('id_competidor')
+            .single();
+
+        if (insertError) throw insertError;
+
+        id_competidor = newCompetidor.id_competidor;
     }
+
+
+    await Promise.all(id_tutores.map(id_tutor =>
+        supabase.from('competidor_tutor').insert([{ id_competidor, id_tutor }])
+    ));
+
+
+    const inscriptionDate = new Date().toISOString();
+    const { error: inscriptionError } = await supabase
+        .from('inscription')
+        .insert([{ id_competidor, id_area }]);
+
+    if (inscriptionError) throw inscriptionError;
+
+    return { success: true, message: 'Competidor inscrito correctamente' };
 };
 
 
