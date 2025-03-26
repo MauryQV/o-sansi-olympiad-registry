@@ -6,7 +6,8 @@ import Navbar from "./components/Navbar"; // Importamos la barra de navegación
 import InicioAdministrador from "./components/InicioAdministrador";
 import TablaArea from "./components/TablaArea";
 import FormularioInscripcion from './components/FormularioInscripcion.jsx'
-
+import Disciplinas from "./components/Disciplinas.jsx";
+import RegistrarTutores from "./components/RegistrarTutores.jsx";
 
 
 function App() {
@@ -55,9 +56,10 @@ const AdminRedirect = ({ setIsAdmin }) => {
                 }
               />
               <Route path="/inscripciones" element={<FormularioInscripcion/>} />
-              <Route path="/disciplinas" element={<h1>disciplinas</h1>} />
+              <Route path="/disciplinas" element={<Disciplinas />} />
               <Route path="/ingresar" element={<InicioAdministrador setIsAdmin={setIsAdmin} />} />
               <Route path="/admin" element={<AdminRedirect setIsAdmin={setIsAdmin} />} />
+              <Route path="/registrar-tutores" element={<RegistrarTutores />} /> {/* Ruta para RegistrarTutores */}
               <Route path="/registrar-disciplinas" element={<TablaArea />} />
             </Routes>
           </div>
