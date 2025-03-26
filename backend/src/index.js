@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const fileRoutes = require('./routes/fileRoutes');
 const tutorRoutes = require('./routes/tutoresRoutes');
+const competidoresRoutes = require('./routes/competidoresRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const cors = require('cors');
 const port = process.env.PORT;
@@ -15,6 +16,7 @@ app.use(errorHandler);
 
 app.use('/api', fileRoutes);
 app.use('/api', tutorRoutes);
+app.use('/api', competidoresRoutes);
 
 
 app.get('/', (req, res) => {

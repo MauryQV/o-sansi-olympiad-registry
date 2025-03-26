@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node runAllTests.js",
+    "test:tutores": "node testQueries.js",
+    "test:competidores": "node testCompetidores.js",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"
   },
@@ -21,5 +23,9 @@
     "multer": "^1.4.5-lts.1",
     "supabase": "^2.19.6",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "devDependencies": {
+    "form-data": "^4.0.0",
+    "nodemon": "^3.0.1"
   }
 }
