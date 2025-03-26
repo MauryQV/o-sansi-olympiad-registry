@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap');
+body {
+    font-family: 'Comfortaa', cursive;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a2b50;
+    padding: 10px 20px;
+  }
+  
+  .logo-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo-img {
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .faculty-logo {
+    height: 60px;
+  }
+  
+  .nav-bar {
+    display: flex;
+    justify-content: center;
+    background-color: #1a2b50;
+    padding: 10px;
+  }
+  
+  .nav-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    margin: 0 15px;
+    cursor: pointer;
+  }
+  
+  .nav-button.active {
+    background-color: #3a4f8f;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .form-container {
+    background: rgb(255, 255, 255);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: center;  /* Centra los botones */
+    gap: 20px;  /* Espacio entre los botones */
+    margin-top: 20px;
+}
+
+.register, .cancel {
+    font-family: 'Comfortaa', cursive;
+    padding: 12px 24px; /* Tamaño del botón */
+    font-size: 16px; /* Tamaño del texto */
+    border-radius: 8px; /* Bordes redondeados */
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 150px;  /* Ancho fijo de los botones */
+    text-align: center;
+}
+
+.register {
+    background-color: #0b0692;
+    color: white;
+}
+
+.register:hover {
+    background-color: #010a70;
+}
+
+.cancel {
+    background-color: #940816;
+    color: white;
+}
+
+.cancel:hover {
+    background-color: #960312;
+}
+
+  .page-container {
+    background-color: #d9d9d9; /* Color plomo */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .header {
+    width: 100%;
+    color: rgb(124, 25, 25);
+    padding: 20px 0;
+    text-align: center;
+  }
+  .title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+.title {
+  font-size: 20px;  /* Tamaño del texto */
+  font-weight: 700; /* Negrita */
+  color: #000000; /* Cambia este color al que desees */
+  text-align: center; /* Centrar el texto */
+  margin-bottom: 50px; /* Espacio debajo */
+  font-family: 'Comfortaa', cursive;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: space-between; /* Distribuye los elementos */
+  padding: 10px;
+}
+
+.nav-left {
+  display: flex;
+  gap: 10px; /* Espacio entre los botones */
+}
+
+.nav-right {
+  display: flex;
+}
