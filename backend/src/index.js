@@ -5,6 +5,7 @@ const tutorRoutes = require('./routes/tutoresRoutes');
 const locationRoutes = require('./routes/locationRoutes');
 const areaRoutes = require('./routes/areaRoutes');
 const categoriaRoutes = require('./routes/categoriaRoutes');
+const inscriptionRoutes = require('./routes/inscriptionRoutes');
 const cors = require('cors');
 const port = process.env.PORT;
 //app.use(errorHandler);
@@ -20,7 +21,7 @@ app.use('/api', tutorRoutes);
 app.use('/api', areaRoutes);
 app.use('/api', categoriaRoutes);
 app.use('/api', locationRoutes);
-
+app.use('/api', inscriptionRoutes);
 
 
 
