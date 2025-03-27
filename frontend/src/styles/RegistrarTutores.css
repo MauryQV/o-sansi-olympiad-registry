@@ -50,10 +50,9 @@ body {
 }
 
 .form-group label {
-  font-weight: 600;
-  margin-bottom: 8px;
-  display: block;
-  color: #333;
+  margin-bottom: 20px !important;
+  font-weight: bold !important;
+  color: #25326c;
 }
 
 .input {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import * as XLSX from 'xlsx';
 import '../styles/FormularioInscripcion.css';
-
 
 const FormularioInscripcion = () => {
   const [isGrupal, setIsGrupal] = useState(false);
@@ -14,78 +14,90 @@ const FormularioInscripcion = () => {
     file: null
   });
 
-  // Cambia la pestaña activa
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
+  const [fileName, setFileName] = useState('');
+  const [excelData, setExcelData] = useState([]);
+  const [errorExcel, setErrorExcel] = useState('');
+
+
+  // ✅ Cambiar entre Individual y Grupal
+  const handleToggle = (isGroup) => {
+    setIsGrupal(isGroup);
+    setActiveTab('step1'); // Volver a Datos del Postulante
+    setExcelData([]);
   };
 
-  // Maneja la navegación de los pasos
+  // ✅ Validaciones de formulario
+  const validateForm = () => {
+    if (!isGrupal) { 
+      const { firstName, lastName, idNumber, email, birthDate } = formData;
+      if (!/^[a-zA-Z\s]{1,25}$/.test(firstName)) {
+        alert('El nombre solo debe contener letras y tener un máximo de 25 caracteres.');
+        return false;
+      }
+      if (!/^[a-zA-Z\s]{1,25}$/.test(lastName)) {
+        alert('El apellido solo debe contener letras y tener un máximo de 25 caracteres.');
+        return false;
+      }
+      if (!/^\d{1,8}$/.test(idNumber)) {
+        alert('El carnet de identidad debe contener solo números y no exceder 8 dígitos.');
+        return false;
+      }
+      if (!/^[a-z0-9._%+-]+@gmail\.com$/.test(email)) {
+        alert('El correo debe ser válido y de tipo @gmail.com.');
+        return false;
+      }
+      if (!birthDate) {
+        alert('Por favor, ingrese su fecha de nacimiento.');
+        return false;
+      }
+    } else { 
+      if (!formData.file) {
+        alert('Por favor, suba un archivo Excel con los datos de los postulantes.');
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // ✅ Navegación entre pasos
+  const getNextStep = () => {
+    if (isGrupal) return activeTab === 'step1' ? 'step4' : 'step1';
+    switch (activeTab) {
+      case 'step1': return 'step2';
+      case 'step2': return 'step3';
+      case 'step3': return 'step4';
+      default: return 'step1';
+    }
+  };
+
+  const getPrevStep = () => {
+    if (isGrupal) return 'step1';
+    switch (activeTab) {
+      case 'step2': return 'step1';
+      case 'step3': return 'step2';
+      case 'step4': return 'step3';
+      default: return 'step1';
+    }
+  };
+
   const handleNext = () => {
-    const { firstName, lastName, idNumber, email, birthDate } = formData;
-
-    // Validar Nombre y Apellido
-    if (!/^[a-zA-Z\s]+$/.test(firstName)) {
-      alert('El nombre solo debe contener letras');
-      return;
-    }
-
-    if (!/^[a-zA-Z\s]+$/.test(lastName)) {
-      alert('El apellido solo debe contener letras');
-      return;
-    }
-
-    // Validar Carnet de Identidad
-    if (!/^\d{1,8}$/.test(idNumber)) {
-      alert('El carnet de identidad debe ser numérico y no exceder los 8 caracteres');
-      return;
-    }
-
-    // Validar Correo Electrónico
-    if (!/^[a-z0-9._%+-]+@gmail\.com$/.test(email)) {
-      alert('El correo debe ser un correo válido de tipo @gmail.com');
-      return;
-    }
-
-    // Validar Fecha de Nacimiento
-    if (!birthDate) {
-      alert('Por favor, ingrese su fecha de nacimiento');
-      return;
-    }
-
-    // Cambio de tab según el tipo de inscripción
-    if (isGrupal) {
-      if (activeTab === 'step1') {
-        setActiveTab('step4');
-      }
-    } else {
-      if (activeTab === 'step1') {
-        setActiveTab('step2');
-      } else if (activeTab === 'step2') {
-        setActiveTab('step3');
-      } else if (activeTab === 'step3') {
-        setActiveTab('step4');
-      }
-    }
+    if (!validateForm()) return;
+    setActiveTab(getNextStep());
   };
 
   const handlePrev = () => {
-    if (isGrupal) {
-      if (activeTab === 'step4') {
-        setActiveTab('step1');
-      }
-    } else {
-      if (activeTab === 'step2') {
-        setActiveTab('step1');
-      } else if (activeTab === 'step3') {
-        setActiveTab('step2');
-      } else if (activeTab === 'step4') {
-        setActiveTab('step3');
-      }
-    }
+    setActiveTab(getPrevStep());
   };
 
-  const handleToggle = () => {
-    setIsGrupal(!isGrupal);
+  // ✅ Restricciones en inputs
+  const handleNameChange = (e) => {
+    e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '').slice(0, 25);
+    handleInputChange(e);
+  };
+
+  const handleIdChange = (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 8);
+    handleInputChange(e);
   };
 
   const handleInputChange = (e) => {
@@ -93,224 +105,131 @@ const FormularioInscripcion = () => {
     setFormData({ ...formData, [id]: value });
   };
 
+  // ✅ Manejo de carga de archivo Excel
   const handleFileChange = (e) => {
-    setFormData({ ...formData, file: e.target.files[0] });
-  };
-
-  // Restricciones de los campos
-  const handleNameChange = (e) => {
-    // Permitir solo letras y espacios
-    e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
-    handleInputChange(e);
-  };
-
-  const handleIdChange = (e) => {
-    // Permitir solo números y limitar a 8 caracteres
-    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 8);
-    handleInputChange(e);
-  };
-
-  const handleEmailChange = (e) => {
-    // Validar correo tipo gmail
-    e.target.value = e.target.value.toLowerCase();
-    handleInputChange(e);
-  };
-
-  useEffect(() => {
-    if (isGrupal && (activeTab === 'step2' || activeTab === 'step3')) {
-      setActiveTab('step4');
+    const file = e.target.files[0];
+  
+    if (file) {
+      const fileType = file.name.split('.').pop().toLowerCase();
+      if (fileType !== 'xlsx' && fileType !== 'csv') {
+        alert('Por favor, suba un archivo en formato .xlsx o .csv');
+        return;
+      }
+  
+      setFormData({ ...formData, file });
+      setFileName(file.name);
+      setErrorExcel('');
+  
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+  
+        // Verificar columnas del archivo
+        const requiredColumns = ["Apellidos", "Nombres", "CI", "Colegio", "Área"];
+        const fileColumns = Object.keys(jsonData[0] || {});
+        const missingColumns = requiredColumns.filter(col => !fileColumns.includes(col));
+  
+        if (missingColumns.length > 0) {
+          setErrorExcel(`El archivo Excel no tiene las columnas esperadas: ${missingColumns.join(', ')}`);
+          setExcelData([]);
+          return;
+        } else {
+          setErrorExcel(''); // Limpiar error si está bien
+        }
+  
+        const filteredData = jsonData.map(row => ({
+          apellidos: row["Apellidos"] || '',
+          nombres: row["Nombres"] || '',
+          ci: row["CI"] || '',
+          colegio: row["Colegio"] || '',
+          area: row["Área"] || ''
+        }));
+  
+        setExcelData(filteredData);
+      };
+      reader.readAsArrayBuffer(file);
     }
-  }, [isGrupal, activeTab]);
+  };
+  
 
   return (
     <div className="container mt-5">
-      <div className = "tituloInscripcion"><h1>Formulario de Inscripción - Olimpiada en Ciencias y Tecnología San Simón</h1></div>
-      <div className="form-container">
-      <ul className="nav-pills mb-3" id="formSteps" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
-            className={`nav-link ${activeTab === 'step1' ? 'active' : ''}`}
-            href="#step1"
-            onClick={(e) => { e.preventDefault(); handleTabChange('step1'); }}
-          >
-            Datos del Postulante
-          </a>
-        </li>
-        {!isGrupal && (
-          <li className="nav-item" role="presentation">
-            <a
-              className={`nav-link ${activeTab === 'step2' ? 'active' : ''}`}
-              href="#step2"
-              onClick={(e) => { e.preventDefault(); handleTabChange('step2'); }}
-            >
-              Datos del Tutor/Representante
-            </a>
-          </li>
-        )}
-        {!isGrupal && (
-          <li className="nav-item" role="presentation">
-            <a
-              className={`nav-link ${activeTab === 'step3' ? 'active' : ''}`}
-              href="#step3"
-              onClick={(e) => { e.preventDefault(); handleTabChange('step3'); }}
-            >
-              Datos Académicos y Área
-            </a>
-          </li>
-        )}
-        <li className="nav-item" role="presentation">
-          <a
-            className={`nav-link ${activeTab === 'step4' ? 'active' : ''}`}
-            href="#step4"
-            onClick={(e) => { e.preventDefault(); handleTabChange('step4'); }}
-          >
-            Revisión y Pago
-          </a>
-        </li>
-      </ul>
+      <h1 className="tituloInscripcion">Formulario de Inscripción - Olimpiada en Ciencias y Tecnología San Simón</h1>
 
-      <div className="mb-3 text-center">
-        <div className="custom-radio-buttons">
-          <label className={`radio-btn ${!isGrupal ? 'selected' : ''}`} onClick={handleToggle}>
-            <input
-              type="radio"
-              name="inscripcion"
-              checked={!isGrupal}
-              onChange={handleToggle}
-            />
+      <div className="form-container">
+        <ul className="nav-pills mb-3">
+          <li className="nav-item"><a className={`nav-link ${activeTab === 'step1' ? 'active' : ''}`} href="#step1">Datos del Postulante</a></li>
+          {!isGrupal && (
+            <>
+              <li className="nav-item"><a className={`nav-link ${activeTab === 'step2' ? 'active' : ''}`} href="#step2">Datos del Tutor/Representante</a></li>
+              <li className="nav-item"><a className={`nav-link ${activeTab === 'step3' ? 'active' : ''}`} href="#step3">Datos Académicos y Área</a></li>
+            </>
+          )}
+          <li className="nav-item"><a className={`nav-link ${activeTab === 'step4' ? 'active' : ''}`} href="#step4">Revisión y Pago</a></li>
+        </ul>
+
+        <div className="mb-3 text-center">
+          <label className={`radio-btn ${!isGrupal ? 'selected' : ''}`} onClick={() => handleToggle(false)}>
+            <input type="radio" name="inscripcion" checked={!isGrupal} readOnly />
             <span>Individual</span>
           </label>
-          <label className={`radio-btn ${isGrupal ? 'selected' : ''}`} onClick={handleToggle}>
-            <input
-              type="radio"
-              name="inscripcion"
-              checked={isGrupal}
-              onChange={handleToggle}
-            />
+          <label className={`radio-btn ${isGrupal ? 'selected' : ''}`} onClick={() => handleToggle(true)}>
+            <input type="radio" name="inscripcion" checked={isGrupal} readOnly />
             <span>Grupal</span>
           </label>
         </div>
-      </div>
+        
+        <div className="tab-content">
+          {activeTab === 'step1' && (
+            <div>
+              <h2>Formulario de Registro de Postulante</h2>
+              {!isGrupal ? (
+                <>
+                  <InputField id="firstName" label="Nombres" value={formData.firstName} onChange={handleNameChange} placeholder="Ingrese su nombre" />
+                  <InputField id="lastName" label="Apellidos" value={formData.lastName} onChange={handleNameChange} placeholder="Ingrese su apellido" />
+                  <InputField id="idNumber" label="Carnet de Identidad" value={formData.idNumber} onChange={handleIdChange} placeholder="Ingrese su CI" />
+                  <InputField id="birthDate" label="Fecha de Nacimiento" type="date" value={formData.birthDate} onChange={handleInputChange} />
+                  <InputField id="email" label="Correo Electrónico" type="email" value={formData.email} onChange={handleInputChange} placeholder="Ingrese su correo" />
+                </>
+              ) : (
+                <div>
+                  <h3>Subir Archivo Excel</h3>
+                  <input type="file" className="form-control" onChange={handleFileChange} />
+                  {fileName && <p className="mt-2">Archivo cargado: {fileName}</p>}
+                  {errorExcel && <p className="text-danger">{errorExcel}</p>}
 
-      <div className="tab-content">
-        <div className={`tab-pane fade ${activeTab === 'step1' ? 'show active' : ''}`} id="step1">
-          <h2>Formulario de Registro de Postulante</h2>
-          {!isGrupal ? (
-            <div>
-              <div className="form-group">
-                <label htmlFor="firstName">Nombres</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="firstName"
-                  value={formData.firstName}
-                  onChange={handleNameChange}
-                  placeholder="Ingrese su nombre"
-                  maxLength="20"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="lastName">Apellidos</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="lastName"
-                  value={formData.lastName}
-                  onChange={handleNameChange}
-                  placeholder="Ingrese su apellido"
-                  maxLength="20"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="idNumber">Carnet de Identidad</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="idNumber"
-                  value={formData.idNumber}
-                  onChange={handleIdChange}
-                  placeholder="Ingrese su CI"
-                  maxLength="8"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="birthDate">Fecha de Nacimiento</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="birthDate"
-                  value={formData.birthDate}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">Correo Electrónico</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  id="email"
-                  value={formData.email}
-                  onChange={handleEmailChange}
-                  placeholder="Ingrese su correo"
-                  required
-                />
-              </div>
+                  {excelData.length > 0 && (
+                    <table className="table mt-3">
+                      <thead><tr><th>Apellidos</th><th>Nombres</th><th>CI</th><th>Colegio</th><th>Área</th></tr></thead>
+                      <tbody>{excelData.map((row, index) => (<tr key={index}><td>{row.apellidos}</td><td>{row.nombres}</td><td>{row.ci}</td><td>{row.colegio}</td><td>{row.area}</td></tr>))}</tbody>
+                    </table>
+                  )}
+                </div>
+              )}
             </div>
-          ) : (
-            <div>
-                <div className='sArchivo'><h3>Subir Archivo Excel</h3></div>
-              <div className="form-group">
-                <input type="file" className="form-control" id="fileUpload" onChange={handleFileChange} />
-              </div>
-              <div className="mt-3">
-                <p>Vista Previa de Datos Cargados</p>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Apellidos</th>
-                      <th>Nombres</th>
-                      <th>CI</th>
-                      <th>Colegio</th>
-                      <th>Área</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Pérez</td>
-                      <td>Juan</td>
-                      <td>12345678</td>
-                      <td>Marykol</td>
-                      <td>Biología</td>
-                    </tr>
-                    <tr>
-                      <td>López</td>
-                      <td>María</td>
-                      <td>87654321</td>
-                      <td>San Andrés</td>
-                      <td>Física</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+          )}  
         </div>
-
-        <div className="d-flex justify-content-between">
-          <button className="btn btn-secondary" onClick={() => alert('Cancelar')}>Cancelar</button>
-          <div>
-            <button className="btn btn-secondary" onClick={handlePrev} disabled={activeTab === 'step1'}>Anterior</button>
-            <button className="btn btn-primary" onClick={handleNext}>{activeTab === 'step4' ? 'Finalizar' : 'Siguiente'}</button>
+            <div className="d-flex justify-content-between mt-4">
+              <button className="btn btn-secondary" onClick={() => alert('Cancelar')}>Cancelar</button>
+              <div>
+                <button className="btn btn-secondary" onClick={handlePrev} disabled={activeTab === 'step1'}>Anterior</button>
+                <button className="btn btn-primary" onClick={handleNext}>{activeTab === 'step4' ? 'Finalizar' : 'Siguiente'}</button>
+              </div>
           </div>
-        </div>
-      </div>
       </div>
     </div>
   );
 };
+
+const InputField = ({ id, label, type = "text", value, onChange, placeholder }) => (
+  <div className="form-group">
+    <label htmlFor={id}>{label}</label>
+    <input type={type} className="form-control" id={id} value={value} onChange={onChange} placeholder={placeholder} required />
+  </div>
+);
 
 export default FormularioInscripcion;
