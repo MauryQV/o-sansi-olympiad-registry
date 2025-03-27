@@ -1,0 +1,144 @@
+/* Contenedor principal */
+.disciplina-content-wrapper {
+    width: 90%; /* Ajusta el ancho al 90% del contenedor padre */
+    max-width: 1200px; /* Establece un ancho máximo de 1200px */
+    margin: 0 auto; /* Centra el contenido horizontalmente */
+    padding: 0 px 0; /* Espaciado superior e inferior */
+}
+
+/* Estilos para el slogan */
+.disciplina-slogan {
+    text-align: center; /* Centra el texto */
+    margin-bottom: 40px; /* Espaciado inferior */
+    padding: 20px; /* Espaciado interno */
+    background-color: #f8f9fa; /* Color de fondo */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra sutil */
+}
+
+.disciplina-slogan h2 {
+    color: #2c3e50; /* Color del texto */
+    margin-bottom: 15px; /* Espaciado inferior */
+    font-size: 1.8rem; /* Tamaño de fuente */
+}
+
+.slogan-text {
+    font-size: 1.1rem; /* Tamaño de fuente */
+    color: #34495e; /* Color del texto */
+    line-height: 1.6; /* Espaciado entre líneas */
+    font-style: italic; /* Texto en cursiva */
+}
+
+/* Contenedor de disciplinas */
+.disciplinas-container {
+    text-align: center; /* Centra el contenido */
+    margin-top: 20px; /* Espaciado superior */
+}
+
+.slogan-section {
+    background-color: #ecf0f1; /* Color de fondo */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra sutil */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+.slogan-text {
+    font-size: 1.1rem; /* Tamaño de fuente */
+    color: #f8f9fb; /* Color del texto */
+    font-style: italic; /* Texto en cursiva */
+}
+
+.disciplinas-title {
+    font-size: 24px; /* Tamaño de fuente */
+    color: #000000; /* Color del texto */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+/* Diseño de la cuadrícula de disciplinas */
+.disciplinas-grid {
+    display: grid; /* Usa CSS Grid para organizar los elementos */
+    grid-template-columns: repeat(3, 1fr); /* Mantiene tres columnas */
+    gap: 60px; /* Reduce aún más el espacio entre elementos */
+    padding: 60 px; /* Reduce el espaciado interno general */
+}
+
+.disciplina-card {
+    background-color: white;
+    border-radius: 0px;
+    box-shadow: 0 2px 10px rgba(34, 208, 28, 0.1);
+    padding: 4px; /* Mantiene un buen espacio interno */
+    text-align: center;
+    width: 100%; /* Ajusta el ancho al 100% dentro de la celda */
+    max-width: 400px; /* Mantiene el tamaño adecuado */
+    margin: 0 auto; /* Centra las tarjetas */
+}
+
+.disciplina-img {
+    width: 100%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+    border-radius: 0px; /* Mantiene bordes rectos */
+    max-height: 200px; /* Ajusta la altura máxima de la imagen */
+    object-fit: cover; /* Asegura que la imagen se vea bien */
+}
+
+/* Botón de ingreso */
+.ingresar-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 18px; /* Aumenta el tamaño del botón */
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px; /* Reduce la separación del botón */
+    font-size: 1rem; /* Aumenta el tamaño del texto */
+    transition: background 0.3s;
+}
+
+.ingresar-button:hover {
+    background-color: #2980b9;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 900px) {
+    .disciplinas-grid {
+        grid-template-columns: repeat(2, 1fr); /* Reduce a dos columnas en pantallas medianas */
+        gap: 8px; /* Reduce el espacio entre columnas en pantallas medianas */
+    }
+}
+
+@media (max-width: 600px) {
+    .disciplinas-grid {
+        grid-template-columns: repeat(1, 1fr); /* Reduce a una columna en móviles */
+        gap: 5px; /* Reduce aún más el espacio en móviles */
+    }
+}
+.slogan-section {
+    width: 100vw; /* Ocupa el 100% del ancho de la ventana */
+    margin: 0; /* Elimina márgenes */
+    padding: 60px 20px;
+    background-image: url('/src/image/umss.jpg'); /* o usa la ruta correcta si es local */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: white;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    transform: translateX(-50%);
+}
+
+
+
+.slogan-text {
+    font-size: 1.2rem;
+    font-style: italic;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(12, 170, 30, 0.5); /* Agrega sombra al texto para mejor visibilidad */
+}

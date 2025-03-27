@@ -1,0 +1,58 @@
+.nav{
+    background-color: #25326c; 
+    width: auto; /* Ocupa todo el ancho */
+    display:flex;
+    flex-direction: column;
+    margin:0;
+    align-items: flex-end; /* Alinea los elementos en la parte inferior */
+    padding: 10px 20px; /* Espaciado interno */
+    justify-content: space-between; /* Separa la imagen y la lista */
+}
+.texto-imagen{
+    display: flex;
+    flex-direction: row;  /* Alinea en fila (horizontalmente) */
+    justify-content: space-between; /* Distribuye los elementos */
+    align-items: center; /* Centra los elementos horizontalmente */
+    gap: 11rem; /* Espacio entre los elementos */
+}
+
+.titulos{
+    color:white;
+ 
+}
+
+.imagen-nav{
+    height: 10rem;
+}
+.text-xl {
+    font-size: 2.4rem; /* Ajusta el tamaño según necesites */
+    align-items: center;
+    text-decoration: underline;
+    margin: 0.3rem;
+}
+h3{
+    margin: 0.1rem;
+}
+#links{
+    list-style: none; 
+    display: flex; /* Pone los elementos en línea (horizontal) */
+    gap: 9rem;
+    margin-bottom: 0;
+    margin-right: 2rem;
+    
+
+}
+.enlace-admin{
+    margin-left: 30rem;
+}
+.menu-item {
+    color:#fff;
+    display: flex;
+    align-items: center; /* Alinea la imagen y el texto verticalmente */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    text-decoration: none;
+  }
+  
+  .menu-item img {
+    margin-right: 8px; /* Espaciado entre la imagen y el texto */
+  }

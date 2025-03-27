@@ -1,0 +1,274 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Contenedor principal */
+body {
+    background-color: #cfcfcf !important; /* Fondo gris claro */
+
+    
+  }
+  
+  /* Titulo */
+  
+  .tituloInscripcion
+   {
+    text-align: center !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+    color: #25326c !important; /* Azul */
+    margin-bottom: 20px !important;
+  }
+  
+  h2
+   {
+    text-align: center !important;
+    font-size: 23px !important;
+    font-weight: bold !important;
+    color: #25326c !important; /* Azul */
+    margin-bottom: 20px !important;
+  }
+  
+  .sArchivo
+   {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #25326c !important; /* Azul */
+    margin-bottom: 10px !important;
+  }
+  
+  p{
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #25326c !important; /* Azul */
+    margin-bottom: 10px !important;
+  }
+  
+  /* Contenedor del formulario */
+  .form-container {
+    background-color: white !important;
+    border-radius: 20px !important;
+    padding: 30px !important; /* Aumentar padding para más espacio interno */
+    width: 100% !important;
+    max-width: 800px !important; /* Ampliar el tamaño máximo del formulario */
+    border: 1px solid #000000 !important; /* Borde gris alrededor del formulario */
+    position: relative !important;
+    background-color: #f9f9f9 !important; /* Fondo ligeramente gris para el formulario */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    margin: 0 auto !important; /* Centrar el formulario horizontalmente */
+  }
+  
+  
+  /* Pestañas de navegación */
+  .nav-pills .nav-link {
+    color: #e4272a !important;
+    font-weight: 600 !important;
+    border-radius: 0 !important;
+  }
+  
+  .nav-pills .nav-link.active {
+    background-color: #e4272a !important; /* Rojo */
+    border-radius: 10px !important;
+    color: white !important;
+  }
+  
+  .nav-link:hover {
+    background-color: #f1f1f1 !important;
+    color: #25326c !important;
+  }
+  
+  .nav-link{
+    text-decoration: none;
+  }
+  /* Botones */
+  button {
+    border-radius: 5px !important;
+    padding: 10px 20px !important;
+  }
+  
+  .btn-primary {
+    background-color: #e4272a !important; /* Azul para "Siguiente" */
+    border-color: #e4272a !important;
+    color: white !important;
+  }
+  
+  .form-container .btn-primary:hover {
+    background-color: #e4272a !important; /* Azul oscuro */
+  
+  }
+  
+  .form-container .btn-secondary {
+    background-color: #d6d6d6 !important; /* Gris claro para "Cancelar" */
+    border-color: #d6d6d6 !important;
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  .form-container .btn:disabled {
+    background-color: #cfcfcf !important;
+    cursor: not-allowed !important;
+    color: rgb(0, 0, 0) !important;
+  }
+  
+  /* Botones */
+  .d-flex {
+    margin-top: 20px !important;
+    margin-bottom: 10px !important;
+    justify-content: space-between !important; /* Separar los botones */
+  }
+  
+  /* Botón Siguiente */
+  .btn-primary {
+    background-color: #e4272a !important; /* Rojo para "Siguiente" */
+    border-color: #e4272a !important;
+    color: white !important;
+    margin-left: 10px !important; /* Separar del botón anterior */
+  }
+  
+  /* Botón Anterior */
+  .btn-secondary {
+    background-color: #d6d6d6 !important; /* Gris claro para "Cancelar" */
+    border-color: #d6d6d6 !important;
+    margin-right: 10px !important; /* Separar del botón siguiente */
+  }
+  
+  
+  /* Campos de formulario */
+  .form-group {
+    margin-bottom: 20px !important;
+    font-weight: bold !important;
+    color: #25326c;
+  }
+  
+  .form-control {
+    padding: 12px !important;
+    border-radius: 5px !important;
+    border: 1px solid #25326c !important; /* Borde azul en los campos */
+    width: 100% !important;
+    font-size: 16px !important;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="date"] {
+    color: #000000 !important;
+  }
+  
+  .form-control:focus {
+    border-color: #25326c !important;
+    box-shadow: 0 0 5px rgba(37, 50, 108, 0.3) !important;
+  }
+  
+  /* Personalización de las pestañas de radio */
+  .custom-radio-buttons {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 20px !important;
+    margin-top: 20px !important;
+    padding-top: 20px !important;
+    border-top: 2px solid #e0e0e0 !important;
+    color: #25326c !important;
+  }
+  
+  .radio-btn {
+    padding: 10px 20px !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #555 !important;
+    border-bottom: 2px solid transparent !important;
+    transition: border-color 0.3s ease !important;
+  }
+  
+  .radio-btn.selected {
+    color: #25326c !important;
+    border-bottom: 2px solid #25326c !important;
+  }
+  
+  .radio-btn:hover {
+    color: #25326c !important;
+  }
+  
+  /* Asegurar que las pestañas se mantengan dentro del contorno */
+  .nav-pills {
+    margin-top: 20px !important;
+    border-bottom: 2px solid #e0e0e0 !important;
+  }
+  
+  /* Agregar margen para separar los botones */
+  .d-flex {
+    margin-top: 20px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  /* Personalización adicional para las pestañas */
+  .custom-radio-buttons {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 20px !important;
+    margin-top: 10px !important;
+  }
+  
+  .radio-btn {
+    position: relative !important;
+    padding: 10px 20px !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #555 !important;
+    border-bottom: 2px solid transparent !important;
+    transition: border-color 0.3s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 40px !important;
+    min-width: 100px !important;
+  }
+  
+  .radio-btn input[type="radio"] {
+    position: absolute !important;
+    opacity: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    cursor: pointer !important;
+  }
+  
+  .radio-btn span {
+    cursor: pointer !important;
+    padding-left: 10px !important;
+  }
+  
+  .radio-btn.selected {
+    color: #007bff !important;
+    border-bottom: 2px solid #007bff !important;
+  }
+  
+  .radio-btn:hover {
+    color: #007bff !important;
+  }
+  
+  /* Alinear las pestañas de los pasos de manera uniforme */
+  .nav-pills {
+    display: flex !important;
+    justify-content: center !important; /* Alinea las pestañas al centro */
+    gap: 10px !important; /* Añade espacio entre las pestañas */
+  }
+  
+  .nav-pills .nav-item {
+    flex: 1; /* Esto hace que cada elemento ocupe el mismo espacio */
+    text-align: center; /* Centra el texto dentro de cada elemento */
+  }
+  
+  .nav-pills .nav-link {
+    display: block !important;
+    padding: 8px !important; /* Ajuste de padding para uniformidad */
+    border-radius: 0 !important;
+  }
+  
+  .nav-pills .nav-link.active {
+    background-color: #e4272a !important; /* Rojo */
+    color: white !important;
+  }
+  
+  .nav-link:hover {
+    background-color: #f1f1f1 !important;
+    color: #25326c !important;
+  }
+  
