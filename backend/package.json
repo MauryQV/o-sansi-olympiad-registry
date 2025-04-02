@@ -11,10 +11,14 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@prisma/client": "^6.5.0",
     "@supabase/supabase-js": "^2.49.4",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "nodemon": "^3.1.9",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "prisma": "^6.5.0"
   }
 }
