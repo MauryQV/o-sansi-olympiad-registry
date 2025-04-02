@@ -42,7 +42,7 @@ model Competidor {
   nombre           String
   apellido         String
   carnet_identidad String        @unique
-  fecha_nacimiento DateTime      @default(now())
+  fecha_nacimiento DateTime
   Inscripciones    Inscripcion[]
 }
 
@@ -121,6 +121,8 @@ model Pago {
   monto          Decimal
   estado         String      @default("pendiente")
   fecha_pago     DateTime    @default(now())
+  metodo_pago_id Int
+  metodo_pago    Metodo_pago @relation(fields: [metodo_pago_id], references: [id])
 }
 
 model Inscripcion {
@@ -152,10 +154,17 @@ model Categoria_convocatoria {
 }
 
 model Inscripcion_tutor {
-  id             Int         @id @default(autoincrement())
-  inscripcion_id Int
-  inscripcion    Inscripcion @relation(fields: [inscripcion_id], references: [id])
-  tutor_id       String
-  tutor          Tutor       @relation(fields: [tutor_id], references: [id])
-  aprobado       Boolean     @default(false)
+  id               Int         @id @default(autoincrement())
+  inscripcion_id   Int
+  inscripcion      Inscripcion @relation(fields: [inscripcion_id], references: [id])
+  tutor_id         String
+  tutor            Tutor       @relation(fields: [tutor_id], references: [id])
+  aprobado         Boolean     @default(false)
+  fecha_aprobacion DateTime?
+}
+
+model Metodo_pago {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique
+  Pago   Pago[]
 }
