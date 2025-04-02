@@ -8,15 +8,8 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) // Supabase usa UUIDs
   email     String   @unique
-  password  String
+  role      String   @default("user") // admin, user, etc.
   createdAt DateTime @default(now())
-}
-
-model Competidor {
-  id       String @id @default(uuid())
-  nombre   String
-  apellido String
-  carnet   String
 }
