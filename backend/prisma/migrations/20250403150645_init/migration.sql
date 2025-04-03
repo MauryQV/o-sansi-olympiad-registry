@@ -34,7 +34,8 @@ CREATE TABLE "Competidor" (
     "nombre" TEXT NOT NULL,
     "apellido" TEXT NOT NULL,
     "carnet_identidad" TEXT NOT NULL,
-    "fecha_nacimiento" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "fecha_nacimiento" TIMESTAMP(3) NOT NULL,
+    "correo_electronico" TEXT NOT NULL,
 
     CONSTRAINT "Competidor_pkey" PRIMARY KEY ("id")
 );
@@ -46,6 +47,7 @@ CREATE TABLE "Tutor" (
     "nombre" TEXT NOT NULL,
     "apellido" TEXT NOT NULL,
     "carnet_identidad" TEXT NOT NULL,
+    "correo_electronico" TEXT NOT NULL,
 
     CONSTRAINT "Tutor_pkey" PRIMARY KEY ("id")
 );
@@ -102,6 +104,7 @@ CREATE TABLE "Categoria" (
     "nombre_categoria" TEXT NOT NULL,
     "grado_min_id" INTEGER NOT NULL,
     "grado_max_id" INTEGER NOT NULL,
+    "descripcion_cat" TEXT NOT NULL,
 
     CONSTRAINT "Categoria_pkey" PRIMARY KEY ("id")
 );
@@ -121,6 +124,7 @@ CREATE TABLE "Pago" (
     "monto" DECIMAL(65,30) NOT NULL,
     "estado" TEXT NOT NULL DEFAULT 'pendiente',
     "fecha_pago" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "metodo_pago_id" INTEGER NOT NULL,
 
     CONSTRAINT "Pago_pkey" PRIMARY KEY ("id")
 );
@@ -160,8 +164,17 @@ CREATE TABLE "Inscripcion_tutor" (
     "inscripcion_id" INTEGER NOT NULL,
     "tutor_id" TEXT NOT NULL,
     "aprobado" BOOLEAN NOT NULL DEFAULT false,
+    "fecha_aprobacion" TIMESTAMP(3),
 
     CONSTRAINT "Inscripcion_tutor_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Metodo_pago" (
+    "id" SERIAL NOT NULL,
+    "nombre" TEXT NOT NULL,
+
+    CONSTRAINT "Metodo_pago_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -192,6 +205,9 @@ CREATE UNIQUE INDEX "Tutor_usuario_id_key" ON "Tutor"("usuario_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Tutor_carnet_identidad_key" ON "Tutor"("carnet_identidad");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Metodo_pago_nombre_key" ON "Metodo_pago"("nombre");
 
 -- CreateIndex
 CREATE INDEX "_RolePermissions_B_index" ON "_RolePermissions"("B");
@@ -225,6 +241,9 @@ ALTER TABLE "Categoria" ADD CONSTRAINT "Categoria_grado_max_id_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "Pago" ADD CONSTRAINT "Pago_inscripcion_id_fkey" FOREIGN KEY ("inscripcion_id") REFERENCES "Inscripcion"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Pago" ADD CONSTRAINT "Pago_metodo_pago_id_fkey" FOREIGN KEY ("metodo_pago_id") REFERENCES "Metodo_pago"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Inscripcion" ADD CONSTRAINT "Inscripcion_tutor_id_fkey" FOREIGN KEY ("tutor_id") REFERENCES "Tutor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
