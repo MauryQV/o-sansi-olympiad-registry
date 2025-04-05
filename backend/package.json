@@ -2,8 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "start": "node src/index.js", 
+    "dev": "nodemon src/index.js", 
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,10 +20,10 @@
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "nodemon": "^3.1.9",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "nodemon": "^3.1.9",
     "prisma": "^6.5.0"
   }
 }
