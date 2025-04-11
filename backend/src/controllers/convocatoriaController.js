@@ -42,7 +42,11 @@ export const obtenerConvocatorias = async (req, res, next) => {
 
 export const obtenerConvocatoriaPorId = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) {
+            return res.status(400).json({ message: 'ID inválido' });
+        }
+
         const convocatoria = await convocatoriaService.obtenerConvocatoriaPorId(id);
         if (!convocatoria) {
             return res.status(404).json({ message: 'Convocatoria no encontrada' });
@@ -51,7 +55,7 @@ export const obtenerConvocatoriaPorId = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
 
 export const obtenerConvocatoriaPorEstados = async (req, res, next) => {
     try {

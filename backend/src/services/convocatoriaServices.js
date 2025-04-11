@@ -21,22 +21,22 @@ export const asignarCategoriaAConvocatoria = async (convocatoriaId, categoriaId)
 }
 
 export const obtenerConvocatorias = async () => {
-    return await prisma.convocatoria.findMany({
-        include: { Area_convocatoria: true }
-    });
+    return await prisma.convocatoria.findMany();
 };
 
 //pasar un id y devolver la convocatoria con ese id
 export const obtenerConvocatoriaPorId = async (id) => {
     return await prisma.convocatoria.findUnique({
         where: { id },
-        include: { Area_convocatoria: true }
     });
 }
 
 export const obtenerConvocatoriaPorEstados = async (estado) => {
     return await prisma.convocatoria.findMany({
-        where: { estado },
-        include: { Area_convocatoria: true }
+        where: {
+            estado_convocatoria: {
+                nombre: estado,
+            },
+        },
     });
-}
+};
