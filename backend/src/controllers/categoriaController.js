@@ -13,7 +13,7 @@ export const asignarCategoria = async (req, res, next) => {
     try {
         const { convocatoriaId, categoriaId } = req.body;
         const result = await categoriaService.asignarCategoriaAConvocatoria(convocatoriaId, categoriaId);
-        res.json(result);
+        res.status(201).json(result);
     } catch (error) {
         next(error);
     }
@@ -22,7 +22,7 @@ export const asignarCategoria = async (req, res, next) => {
 export const obtenerCategorias = async (req, res, next) => {
     try {
         const categorias = await categoriaService.obtenerCategorias();
-        res.json(categorias);
+        res.status(200).json(categorias);
     } catch (error) {
         next(error);
     }
