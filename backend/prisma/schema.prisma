@@ -87,14 +87,16 @@ model Colegio {
 }
 
 model Convocatoria {
-  id                     Int                      @id @default(autoincrement())
-  nombre_convocatoria    String
-  fecha_inicio           DateTime
-  fecha_fin              DateTime
-  competicion_inicio     DateTime
-  competicion_fin        DateTime
-  Area_convocatoria      Area_convocatoria[]
-  Categoria_convocatoria Categoria_convocatoria[]
+  id                       Int                      @id @default(autoincrement())
+  nombre_convocatoria      String
+  fecha_inicio             DateTime
+  fecha_fin                DateTime
+  competicion_inicio       DateTime
+  competicion_fin          DateTime
+  descripcion_convocatoria String
+  estado                   String                   @default("borrador")
+  Area_convocatoria        Area_convocatoria[]
+  Categoria_convocatoria   Categoria_convocatoria[]
 }
 
 model Area {
