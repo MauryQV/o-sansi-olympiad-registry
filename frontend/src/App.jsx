@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar"; // Importamos la barra de navegación
 import InicioAdministrador from "./components/InicioAdministrador";
 import TablaArea from "./components/TablaArea";
-import FormularioInscripcion from './components/FormularioInscripcion.jsx'
+import FormularioInscripcion from './components/RegistroUsuario.jsx'
 import Disciplinas from "./components/Disciplinas.jsx";
 import RegistrarTutores from "./components/RegistrarTutores.jsx";
+import RegistroUsuario from "./components/RegistroUsuario.jsx";
 
 
 function App() {
@@ -55,7 +56,7 @@ const AdminRedirect = ({ setIsAdmin }) => {
                   </ul>
                 }
               />
-              <Route path="/inscripciones" element={<FormularioInscripcion/>} />
+              <Route path="/inscripciones" element={<RegistroUsuario/>} />
               <Route path="/disciplinas" element={<Disciplinas />} />
               <Route path="/ingresar" element={<InicioAdministrador setIsAdmin={setIsAdmin} />} />
               <Route path="/admin" element={<AdminRedirect setIsAdmin={setIsAdmin} />} />

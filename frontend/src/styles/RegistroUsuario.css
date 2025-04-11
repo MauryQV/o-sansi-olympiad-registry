@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap');
+
+body {
+  font-family: 'Comfortaa', cursive;
+  background-color: #e5e5e5;
+  margin: 0;
+  padding: 0;
+}
+
+.registro-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 30px;
+}
+
+.registro-title {
+  font-size: 26px;
+  color: #0284C7;
+  margin-bottom: 15px;
+}
+
+.registro-container {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.08);
+  width: 720px; /* Aumentado */
+  max-width: 95%;
+}
+
+.registro-container h2 {
+  margin: 0;
+  font-size: 22px;
+  text-align: center;
+}
+
+.registro-container p {
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.registro-toggle {
+  display: flex;
+  margin-bottom: 25px;
+  gap: 10px;
+}
+
+.registro-toggle button {
+  flex: 1;
+  padding: 10px 0;
+  font-weight: bold;
+  font-size: 15px;
+  background-color: #eee;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.registro-toggle button.active {
+  background-color: #0284C7;
+  color: white;
+}
+
+.registro-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.registro-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.registro-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-bottom: 25px;
+  min-width: 48%;
+}
+
+.registro-group-full {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
+}
+
+.registro-group label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.registro-group input,
+.registro-group select {
+  padding: 11px;
+  font-family: 'Comfortaa', cursive;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.registro-group input::placeholder,
+.registro-group select::placeholder {
+  color: #aaa;
+}
+
+.registro-group input.error,
+.registro-group select.error {
+  border: 1px solid red;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.registro-btn {
+  background-color: #0284C7;
+  color: white;
+  padding: 13px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-family: 'Comfortaa', cursive;
+  font-size: 15px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.registro-btn:hover {
+  background-color: #0284C7;
+}
+
+.registro-login {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 15px;
+}
+
+.registro-login a {
+  color: #0284C7;
+  text-decoration: none;
+}
+
+.registro-login a:hover {
+  text-decoration: underline;
+}
+
+.registro-tutor-vacio {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.registro-group input.error,
+.registro-group select.error {
+  border: 1px solid red;
+}
+
+.registro-btn.cancelar {
+  background-color: #ccc;
+  color: #333;
+  margin-top: 10px;
+}
+
+.registro-btn.cancelar:hover {
+  background-color: #bbb;
+}
