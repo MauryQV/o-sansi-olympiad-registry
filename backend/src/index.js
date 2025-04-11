@@ -6,7 +6,9 @@ import authRoutes from './routes/authRoutes.js'
 import convocatoriaRoutes from './routes/convocatoriaRoutes.js';
 import areaRoutes from './routes/areaRoutes.js';
 import categoriaRoutes from './routes/categoriaRoutes.js';
+
 import locationRoutes from './routes/locationRoutes.js';
+
 const port = process.env.PORT;
 
 
