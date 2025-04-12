@@ -64,7 +64,7 @@ export const obtenerCategorias = async () => {
         include: {
             grado_min: true,
             grado_max: true,
-            //Categoria_convocatoria: true, 
+            Categoria_convocatoria: true,
         },
     });
 };

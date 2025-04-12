@@ -8,53 +8,57 @@ datasource db {
 }
 
 model Usuario {
-  id         String      @id @default(uuid())
-  email      String      @unique
-  rol_id     Int
-  createdAt  DateTime    @default(now())
-  competidor Competidor?
-  tutor      Tutor?
-  role       Rol         @relation(fields: [rol_id], references: [id])
+  id                 String      @id @default(uuid())
+  correo_electronico String      @unique
+  nombre             String
+  apellido           String
+  rol_id             Int
+  createdAt          DateTime    @default(now())
+  competidor         Competidor?
+  tutor              Tutor?
+  role               Rol         @relation(fields: [rol_id], references: [id])
 }
 
 model Rol {
-  id       Int       @id @default(autoincrement())
-  nombre   String    @unique
+  id       Int           @id @default(autoincrement())
+  nombre   String        @unique
   usuarios Usuario[]
-  permisos Permiso[] @relation("RolePermissions")
+  roles    Rol_permiso[]
 }
 
 model Permiso {
-  id          Int    @id @default(autoincrement())
-  nombre      String @unique
+  id          Int           @id @default(autoincrement())
+  nombre      String        @unique
   descripcion String
-  roles       Rol[]  @relation("RolePermissions")
+  roles       Rol_permiso[]
+}
+
+model Rol_permiso {
+  id         Int     @id @default(autoincrement())
+  rol_id     Int
+  permiso_id Int
+  rol        Rol     @relation(fields: [rol_id], references: [id])
+  permiso    Permiso @relation(fields: [permiso_id], references: [id])
 }
 
 model Competidor {
-  id                 String        @id @default(uuid())
-  usuario_id         String        @unique
+  id                 String              @id @default(uuid())
+  usuario_id         String              @unique
   colegio_id         Int
   provincia_id       Int
-  nombre             String
-  apellido           String
-  carnet_identidad   String        @unique
+  carnet_identidad   String              @unique
   fecha_nacimiento   DateTime
   correo_electronico String
-  colegio            Colegio       @relation(fields: [colegio_id], references: [id])
-  provincia          Provincia     @relation(fields: [provincia_id], references: [id])
-  usuario            Usuario       @relation(fields: [usuario_id], references: [id])
-  Inscripciones      Inscripcion[]
+  colegio            Colegio             @relation(fields: [colegio_id], references: [id])
+  provincia          Provincia           @relation(fields: [provincia_id], references: [id])
+  usuario            Usuario             @relation(fields: [usuario_id], references: [id])
+  Inscripciones      Inscripcion_tutor[]
 }
 
 model Tutor {
   id                  String              @id @default(uuid())
   usuario_id          String              @unique
-  nombre              String
-  apellido            String
   carnet_identidad    String              @unique
-  correo_electronico  String
-  Inscripciones       Inscripcion[]
   Inscripciones_tutor Inscripcion_tutor[]
   usuario             Usuario             @relation(fields: [usuario_id], references: [id])
 }
@@ -129,13 +133,10 @@ model Pago {
 }
 
 model Inscripcion {
-  id                  Int                 @id @default(autoincrement())
-  tutor_id            String
-  competidor_id       String
+  id Int @id @default(autoincrement())
+
   fecha_inscripcion   DateTime            @default(now())
   estado_inscripcion  String              @default("pendiente")
-  competidor          Competidor          @relation(fields: [competidor_id], references: [id])
-  tutor               Tutor               @relation(fields: [tutor_id], references: [id])
   Inscripciones_tutor Inscripcion_tutor[]
   pagos               Pago[]
 }
@@ -160,10 +161,12 @@ model Inscripcion_tutor {
   id               Int         @id @default(autoincrement())
   inscripcion_id   Int
   tutor_id         String
+  competidor_id    String
+  competidor       Competidor  @relation(fields: [competidor_id], references: [id])
+  tutor            Tutor       @relation(fields: [tutor_id], references: [id])
   aprobado         Boolean     @default(false)
   fecha_aprobacion DateTime?
   inscripcion      Inscripcion @relation(fields: [inscripcion_id], references: [id])
-  tutor            Tutor       @relation(fields: [tutor_id], references: [id])
 }
 
 model Metodo_pago {

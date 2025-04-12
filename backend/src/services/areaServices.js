@@ -13,6 +13,6 @@ export const crearArea = async (nombre) => {
     return await prisma.area.create({ data: { nombre_area: nombre } });
 };
 
-export const obtenerAreas = async () => {
+export const getAreas = async () => {
     return await prisma.area.findMany();
 };
