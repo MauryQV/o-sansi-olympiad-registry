@@ -4,3 +4,4 @@ node_modules
 .env.production
 supabase.exe.qodo/
 .qodo/
+.qodo
