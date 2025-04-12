@@ -1,5 +1,5 @@
 export const errorHandler = (err, req, res, next) => {
-    console.error(err);
+    console.error('Error Handler:', err);
     
     // Errores de validación (duplicados, coherencia de fechas/grados)
     if (err.message.includes('Ya existe') || 
@@ -24,7 +24,20 @@ export const errorHandler = (err, req, res, next) => {
     }
     
     // Error de base de datos de Prisma
-    if (err.code && err.code.startsWith('P')) {
+    if (err.code && (err.code.startsWith('P') || err.name === 'PrismaClientKnownRequestError')) {
+        // Si es un error específico de columna que no existe
+        if (err.message.includes('does not exist in the current database')) {
+            const matches = err.message.match(/`([^`]+)`/g);
+            if (matches && matches.length > 0) {
+                const columna = matches[0].replace(/`/g, '');
+                return res.status(400).json({ 
+                    error: `Error en la estructura de la base de datos: La columna ${columna} no existe.`,
+                    type: 'database_schema_error',
+                    code: err.code
+                });
+            }
+        }
+        
         return res.status(400).json({ 
             error: 'Error en la base de datos: ' + err.message,
             type: 'database_error',

@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes.js'
 import convocatoriaRoutes from './routes/convocatoriaRoutes.js';
 import areaRoutes from './routes/areaRoutes.js';
 import categoriaRoutes from './routes/categoriaRoutes.js';
+import tutorRoutes from './routes/tutorRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
 const app = express();
@@ -19,6 +20,7 @@ app.use('/api', authRoutes);
 app.use('/api', convocatoriaRoutes);
 app.use('/api', areaRoutes);
 app.use('/api', categoriaRoutes);
+app.use('/api', tutorRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
