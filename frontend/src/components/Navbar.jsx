@@ -48,9 +48,11 @@ const Navbar = ({ rol, setRol }) => {
 
               {rol === 'admin' && (
                 <>
-                  <li><Link to="/" className="menu-item">Inicio (Admin)</Link></li>
-                  <li><Link to="/registrar-tutores" className="menu-item">Registrar tutores</Link></li>
-                  <li><Link to="/registrar-disciplinas" className="menu-item">Registrar disciplinas</Link></li>
+                  <li><Link to="/inicio-admin" className="menu-item">Inicio (Admin)</Link></li>
+                  <li><Link to="/areas" className="menu-item">Áreas</Link></li>
+                  <li><Link to="/convocatorias" className="menu-item">Convocatorias</Link></li>
+                  <li><Link to="/usuarios" className="menu-item">Usuarios</Link></li>
+                  <li><Link to="/reportes" className="menu-item">Reportes</Link></li>
                   <li>
                     <button className="menu-item" onClick={() => setRol(null)}>Cerrar sesión</button>
                   </li>
@@ -59,24 +61,25 @@ const Navbar = ({ rol, setRol }) => {
 
               {rol === 'tutor' && (
                 <>
-                  <li><Link to="/">Inicio (Tutor)</Link></li>
-                  <li><Link to="/perfil-tutor">Mi perfil</Link></li>
+                  <li><Link to="/inicio-tutor" className="menu-item">Inicio (Tutor)</Link></li>
+                  <li><Link to="/solicitudes" className="menu-item">Solicitudes</Link></li>
                   <li><button className="menu-item" onClick={() => setRol(null)}>Cerrar sesión</button></li>
                 </>
               )}
 
               {rol === 'competidor' && (
                 <>
-                  <li><Link to="/">Inicio (Competidor)</Link></li>
-                  <li><Link to="/mi-area">Mi Área</Link></li>
+                  <li><Link to="/inicio-competidor" className="menu-item">Inicio (Competidor)</Link></li>
+                  <li><Link to="/inscripcion" className="menu-item">Inscripción</Link></li>
+                  <li><Link to="/pagos-competidor" className="menu-item">Pagos</Link></li>
                   <li><button className="menu-item" onClick={() => setRol(null)}>Cerrar sesión</button></li>
                 </>
               )}
 
               {rol === 'cajero' && (
                 <>
-                  <li><Link to="/">Inicio (Cajero)</Link></li>
-                  <li><Link to="/pagos">Gestión de pagos</Link></li>
+                  <li><Link to="/inicio-cajero" className="menu-item">Inicio (Cajero)</Link></li>
+                  <li><Link to="/pagos" className="menu-item">Pagos</Link></li>
                   <li><button className="menu-item" onClick={() => setRol(null)}>Cerrar sesión</button></li>
                 </>
               )}

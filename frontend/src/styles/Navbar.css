@@ -63,12 +63,16 @@ h3{
     gap: 6rem;
     margin-bottom: 0;
     margin-right: 2rem;
-    
+  
+}
+#links li {
+  display: flex;
+  justify-content: center;
+}
+.menu-item:hover {
+  color: #0284C7;
+}
 
-}
-.enlace-admin{
-    margin-left: 30rem;
-}
 .menu-item {
     color:#000;
     display: flex;

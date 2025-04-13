@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from "react-route
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar"; // Importamos la barra de navegación
 import Login from "./components/Login";
+import InicioAdmin from "./components/InicioAdmin";
 import Registro from "./components/Registro";
 //import InicioAdministrador from "./components/InicioAdministrador";
 import TablaArea from "./components/TablaArea";
@@ -70,6 +71,7 @@ const AdminRedirect = ({ setIsAdmin }) => {
           <Route path="/disciplinas" element={<Disciplinas />} />
           <Route path="/acerca" element={<h2>Acerca de nosotros.</h2>} />
           <Route path="/login" element={<Login setRol={setRol} />} />
+          <Route path="/inicio-admin" element={<InicioAdmin setRol={setRol} />} />
 
           <Route path="/registro" element={<Registro />} />
         </Routes>
