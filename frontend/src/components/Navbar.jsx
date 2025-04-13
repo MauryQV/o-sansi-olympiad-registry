@@ -1,23 +1,18 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import '../styles/Navbar.css'
 
-const Navbar = ({ isAdmin, setIsAdmin }) => {
+const Navbar = ({ rol, setRol }) => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+
+
 
   return (
     <nav className="nav">
-      
-      
-        <div className="texto-imagen">
-          <img className="imagen-nav" src="/src/image/logo.png"></img>
-          <div className="titulos">
-            <h1 className="text-xl font-bold">UNIVERSIDAD MAYOR DE SAN SIMON</h1>
-            <h3 className="titulo-abajo">Olimpiadas en Ciencia y Tecnología San Simón - Oh! SanSi!</h3>
-          </div>
-          <img className="imagen-nav" src="/src/image/fcyt.svg"></img>
-        </div>
+
         {/*}
         {/* Menú para móviles 
         <div className="md:hidden">
@@ -29,66 +24,76 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
 
         {/* Menú de navegación */}
         <div className="link-pagina">
-          <ul className={`menu ${isOpen ? "open" : "hidden"}`} id="links">
-            {!isAdmin ? (  // Si no es admin, mostramos el menú normal
-            <>
-              <li>
-                <Link to="/" className="menu-item">
-                  <img src="/src/image/inicio.svg" alt="Inicio" className="icon" />
-                  &nbsp;&nbsp;Inicio
-                </Link>
-              </li>
-              <li>
-                <Link to="/inscripciones" className="menu-item">
-                <img src="/src/image/inscripciones.svg" alt="Inscripciones" className="icon" />
-                &nbsp;&nbsp;Inscripciones
-                </Link>
-              </li>
-              <li>
-                <Link to="/disciplinas" className="menu-item">
-                <img src="/src/image/disciplinas.svg" alt="Disciplinas" className="icon" />
-                &nbsp;&nbsp;Disciplinas
-                </Link>
-              </li>
-              <li className="enlace-admin">
-                  <Link to="/ingresar" className="menu-item">
-                  <img src="/src/image/candado.svg" alt="Ingresar" className="icon" />
-                  &nbsp;&nbsp;Ingresar
-                  </Link>
-              </li>
-            </>
-            ):( // Si es admin, mostramos el menú para administradores
-              <>
-                <li>
-                  <Link to="/" className="menu-item">
-                    <img src="/src/image/inicio.svg" alt="Inicio" className="icon" />
-                    &nbsp;&nbsp;Inicio
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/registrar-tutores" className="menu-item">
-                  <img src="/src/image/inscripciones.svg" alt="registrar tutores" className="icon" />
-                  &nbsp;&nbsp;registrar tutores
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/registrar-disciplinas" className="menu-item">
-                  <img src="/src/image/inscripciones.svg" alt="registrar disciplinas" className="icon" />
-                  &nbsp;&nbsp;registrar disciplinas
-                  </Link>
-                </li>
-                <li className="enlace-admin">
-                  <Link to="/admin" className="menu-item">
-                  <img src="/src/image/admin.svg" alt="admin" className="icon" />
-                  &nbsp;&nbsp;Salir
-                  </Link>
-                </li>
-              </>
+          <div className="imagen-completa">
+            <img className="imagen-nav" src="/src/image/logo.png"></img>
+            <div className="linea-vertical"></div>
+
+            <div className="texto-sansi">
+              <span>Olimpiadas</span>
+              <span>Científicas</span>
+              <span>Estudiantiles</span>
+            </div>
+          </div>
+          <div className="links-derecha">
+            <ul className={`menu ${isOpen ? "open" : "hidden"}`} id="links">
+
+              {!rol && (
+                <>
+                  <li><Link to="/" className="menu-item">Inicio</Link></li>
+                  <li><Link to="/inscripciones" className="menu-item">Áreas</Link></li>
+                  <li><Link to="/disciplinas" className="menu-item">Convocatorias</Link></li>
+                  <li><Link to="/acerca" className="menu-item">Acerca de..</Link></li>
+                </>
+              )}
+
+              {rol === 'admin' && (
+                <>
+                  <li><Link to="/inicio-admin" className="menu-item">Inicio (Admin)</Link></li>
+                  <li><Link to="/areas" className="menu-item">Áreas</Link></li>
+                  <li><Link to="/convocatorias" className="menu-item">Convocatorias</Link></li>
+                  <li><Link to="/usuarios" className="menu-item">Usuarios</Link></li>
+                  <li><Link to="/reportes" className="menu-item">Reportes</Link></li>
+                  <li>
+                    <button className="menu-rol" onClick={() => setRol(null)}>Admin</button>
+                  </li>
+                </>
+              )}
+
+              {rol === 'tutor' && (
+                <>
+                  <li><Link to="/inicio-tutor" className="menu-item">Inicio (Tutor)</Link></li>
+                  <li><Link to="/solicitudes" className="menu-item">Solicitudes</Link></li>
+                  <li><button className="menu-rol" onClick={() => setRol(null)}>Tutor</button></li>
+                </>
+              )}
+
+              {rol === 'competidor' && (
+                <>
+                  <li><Link to="/inicio-competidor" className="menu-item">Inicio (Competidor)</Link></li>
+                  <li><Link to="/inscripcion" className="menu-item">Inscripción</Link></li>
+                  <li><Link to="/pagos-competidor" className="menu-item">Pagos</Link></li>
+                  <li><button className="menu-rol" onClick={() => setRol(null)}>Competidor</button></li>
+                </>
+              )}
+
+              {rol === 'cajero' && (
+                <>
+                  <li><Link to="/inicio-cajero" className="menu-item">Inicio (Cajero)</Link></li>
+                  <li><Link to="/pagos" className="menu-item">Pagos</Link></li>
+                  <li><button className="menu-rol" onClick={() => setRol(null)}>Cajero</button></li>
+                </>
+              )}
+
+            </ul>
+            {!rol && (
+              <div className="botones-sesion">
+                <Link to="/login" className="btn-login">Iniciar Sesión</Link>
+                <Link to="/registro" className="btn-registrarse">Registrarse</Link>
+              </div>
             )}
+          </div>
 
 
-
-          </ul>
         </div>
       
     </nav>
