@@ -71,7 +71,7 @@ const AdminRedirect = ({ setIsAdmin }) => {
           <Route path="/acerca" element={<h2>Acerca de nosotros.</h2>} />
           <Route path="/login" element={<Login setRol={setRol} />} />
           <Route path="/inicio-admin" element={<InicioAdmin setRol={setRol} />} />
-
+          <Route path="/areas-admin" element={<TablaArea setRol={setRol} />} />
           <Route path="/registro" element={<RegistroUsuario />} />
         </Routes>
       </div>

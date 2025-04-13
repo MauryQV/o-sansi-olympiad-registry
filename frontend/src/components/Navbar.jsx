@@ -49,7 +49,7 @@ const Navbar = ({ rol, setRol }) => {
               {rol === 'admin' && (
                 <>
                   <li><Link to="/inicio-admin" className="menu-item">Inicio (Admin)</Link></li>
-                  <li><Link to="/areas" className="menu-item">Áreas</Link></li>
+                  <li><Link to="/areas-admin" className="menu-item">Áreas</Link></li>
                   <li><Link to="/convocatorias" className="menu-item">Convocatorias</Link></li>
                   <li><Link to="/usuarios" className="menu-item">Usuarios</Link></li>
                   <li><Link to="/reportes" className="menu-item">Reportes</Link></li>
