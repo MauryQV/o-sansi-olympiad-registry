@@ -87,19 +87,23 @@ model Colegio {
 }
 
 model Convocatoria {
-  id                     Int                      @id @default(autoincrement())
-  nombre_convocatoria    String
-  fecha_inicio           DateTime
-  fecha_fin              DateTime
-  competicion_inicio     DateTime
-  competicion_fin        DateTime
-  Area_convocatoria      Area_convocatoria[]
-  Categoria_convocatoria Categoria_convocatoria[]
+  id                       Int                      @id @default(autoincrement())
+  nombre_convocatoria      String
+  id_estado_convocatoria   Int
+  estado_convocatoria      estado_convocatoria      @relation(fields: [id_estado_convocatoria], references: [id])
+  fecha_inicio             DateTime
+  fecha_fin                DateTime
+  competicion_inicio       DateTime
+  competicion_fin          DateTime
+  descripcion_convocatoria String
+  Area_convocatoria        Area_convocatoria[]
+  Categoria_convocatoria   Categoria_convocatoria[]
 }
 
 model Area {
   id                Int                 @id @default(autoincrement())
   nombre_area       String
+  descripcion_area  String
   Area_convocatoria Area_convocatoria[]
 }
 
@@ -173,4 +177,10 @@ model Metodo_pago {
   id     Int    @id @default(autoincrement())
   nombre String @unique
   Pago   Pago[]
+}
+
+model estado_convocatoria {
+  id           Int            @id @default(autoincrement())
+  nombre       String         @unique
+  Convocatoria Convocatoria[]
 }
