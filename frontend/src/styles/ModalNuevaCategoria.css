@@ -162,8 +162,9 @@ body {
   margin-top: 12px;
   background: #f8f9fa;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 12px;
+  font-size: 20px;
 }
 
 /* Cada categoría individual */
@@ -205,4 +206,19 @@ body {
 .categoria-item button svg {
   vertical-align: middle;
 }
+.input-error {
+  border-color: red;
+}
 
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+.error {
+  color: red;
+  font-size: 13px;
+  margin-top: 5px;
+  display: block;
+}

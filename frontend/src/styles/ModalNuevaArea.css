@@ -117,3 +117,13 @@
   color: red;
   font-weight: bold;
 }
+.input-error {
+  border-color: red;
+}
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}

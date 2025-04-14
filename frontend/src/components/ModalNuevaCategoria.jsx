@@ -16,6 +16,7 @@ const ModalNuevaCategoria = ({
   const [gradosPrimaria, setGradosPrimaria] = useState([]);
   const [gradosSecundaria, setGradosSecundaria] = useState([]);
   const [areaSeleccionadaInterna, setAreaSeleccionada] = useState(areaSeleccionada || '');
+  const [nombreError, setNombreError] = useState('');
 
   useEffect(() => {
     if (categoriaAEditar) {
@@ -46,7 +47,11 @@ const ModalNuevaCategoria = ({
 
   const enviarFormulario = (e) => {
     e.preventDefault();
-    if (nombre.trim() && descripcion.trim() && (gradosPrimaria.length > 0 || gradosSecundaria.length > 0) && areaSeleccionadaInterna) {
+    if (!nombre.trim()) {
+      setNombreError('El nombre es obligatorio.');
+      return;
+    }
+    if (descripcion.trim() && (gradosPrimaria.length > 0 || gradosSecundaria.length > 0) && areaSeleccionadaInterna) {
       const nuevaCategoria = {
         nombre,
         descripcion,
@@ -67,6 +72,7 @@ const ModalNuevaCategoria = ({
       setGradosPrimaria([]);
       setGradosSecundaria([]);
       setAreaSeleccionada('');
+      setNombreError('');
     }
   };
 
@@ -83,10 +89,23 @@ const ModalNuevaCategoria = ({
             <input
               type="text"
               value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              placeholder="Ejemplo: Nivel Básico"
+              onChange={(e) => {
+                const value = e.target.value;
+                const regex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s3-6]*$/;
+                if (value.length <= 15 && regex.test(value)) {
+                  setNombre(value);
+                  setNombreError('');
+                } else if (value.length > 15) {
+                  setNombreError('Máximo 30 caracteres.');
+                } else {
+                  setNombreError('Solo letras, espacios y números del 3 al 6.');
+                }
+              }}
+              placeholder="Ejemplo: Nivel 3 Básico"
               required
+              maxLength={15}
             />
+            {nombreError && <span className="error">{nombreError}</span>}
           </label>
 
           <label>
