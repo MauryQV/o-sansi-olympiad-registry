@@ -1,0 +1,100 @@
+.registro-competidores-contenedor {
+    font-family: 'Comfortaa', sans-serif;
+    padding: 20px;
+    background: #f4f6f9;
+    color: #000;
+  }
+  
+  .dashboard-titulo {
+    margin-bottom: 20px;
+  }
+  
+  .seccion-resumen-estadisticas {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .tarjeta-estadistica {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  .contenedor-info-tarjetas {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .tarjeta-inscripcion-activa,
+  .tarjeta-convocatoria-activa {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+  }
+  
+  .titulo-tarjeta {
+    margin-bottom: 10px;
+  }
+  
+  .estado-inscripcion {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 12px;
+    border-radius: 15px;
+    margin-top: 10px;
+  }
+  
+  .validada {
+    background-color: #d4edda;
+    color: #2e7d32;
+  }
+  
+  .en-inscripcion {
+    background-color: #e3f2fd;
+    color: #1565c0;
+  }
+  
+  .pendiente {
+    background-color: #fff3cd;
+    color: #b28704;
+  }
+  
+  .seccion-tabla-pagos {
+    margin-top: 20px;
+  }
+  
+  .titulo-tabla-pagos {
+    margin-bottom: 10px;
+  }
+  
+  .tabla-pagos {
+    width: 100%;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+    border-collapse: collapse;
+    overflow: hidden;
+  }
+  
+  .tabla-pagos th,
+  .tabla-pagos td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .boton-ver-detalles {
+    background-color: #e0e0e0;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  

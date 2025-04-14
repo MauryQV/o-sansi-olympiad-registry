@@ -10,6 +10,9 @@ import TablaArea from "./components/TablaArea";
 import Disciplinas from "./components/Disciplinas.jsx";
 import RegistrarTutores from "./components/RegistrarTutores.jsx";
 import RegistroUsuario from "./components/RegistroUsuario.jsx";
+import RegistroCompetidores from "./components/RegistroCompetidores.jsx";
+import FormularioInscripcion from "./components/FormularioInscripcion.jsx";
+import Pagos from "./components/Pagos.jsx";
 
 
 function App() {
@@ -73,6 +76,10 @@ const AdminRedirect = ({ setIsAdmin }) => {
           <Route path="/inicio-admin" element={<InicioAdmin setRol={setRol} />} />
           <Route path="/areas-admin" element={<TablaArea setRol={setRol} />} />
           <Route path="/registro" element={<RegistroUsuario />} />
+          <Route path="/inicio-competidor" element={<RegistroCompetidores />} />
+          <Route path="/inscripcion" element={<FormularioInscripcion />} />
+          <Route path="/pagos-competidor" element={<Pagos />} />
+
         </Routes>
       </div>
     </Router>
