@@ -194,7 +194,7 @@ html, body {
   }
   
   .forminsc-boton-finalizar {
-    background-color: #28a745;
+    background-color: #007bff;
     color: white;
     padding: 12px 28px;
     border: none;
@@ -205,6 +205,6 @@ html, body {
   }
   
   .forminsc-boton-finalizar:hover {
-    background-color: #218838;
+    background-color: #084284;
   }
   

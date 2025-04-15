@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import '../styles/FormularioInscripcion.css';
 
 const FormularioInscripcion = () => {
   const [area, setArea] = useState('');
+  const [categoria, setCategoria] = useState('');
   const [grado, setGrado] = useState('');
   const [nivel, setNivel] = useState('');
   const [tutores, setTutores] = useState([]);
@@ -11,12 +12,44 @@ const FormularioInscripcion = () => {
   const [relacion, setRelacion] = useState('');
   const [errores, setErrores] = useState({});
 
+  const [areasDisponibles, setAreasDisponibles] = useState([]);
+  const [categoriasPorArea, setCategoriasPorArea] = useState({});
+  const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
+  const [gradosDisponibles, setGradosDisponibles] = useState([]);
+  const [nivelesDisponibles, setNivelesDisponibles] = useState([]);
+  const [tutoresDisponibles, setTutoresDisponibles] = useState([]);
+
+  useEffect(() => {
+    // Simulación de peticiones a la base de datos
+    setAreasDisponibles(['Matemática', 'Química', 'Física']);
+    setCategoriasPorArea({
+      Matemática: ['Primaria', 'Secundaria'],
+      Química: ['Nivel 1', 'Nivel 2'],
+      Física: ['Nivel A', 'Nivel B']
+    });
+    setGradosDisponibles(['1°', '2°', '3°', '4°', '5°', '6°']);
+    setNivelesDisponibles(['Primaria', 'Secundaria']);
+    setTutoresDisponibles([
+      { nombre: 'Ana Martínez', correo: 'ana@mail.com', telefono: '70123456', relacion: 'Madre' },
+      { nombre: 'Carlos Ramírez', correo: 'carlos@mail.com', telefono: '78912345', relacion: 'Padre' }
+    ]);
+  }, []);
+
+  useEffect(() => {
+    if (area && categoriasPorArea[area]) {
+      setCategoriasDisponibles(categoriasPorArea[area]);
+    } else {
+      setCategoriasDisponibles([]);
+    }
+  }, [area, categoriasPorArea]);
+
   const agregarTutor = () => {
     if (nuevoTutor && relacion && tutores.length < 3) {
-      const nuevo = {
+      const tutor = tutoresDisponibles.find(t => t.nombre === nuevoTutor);
+      const nuevo = tutor || {
         nombre: nuevoTutor,
-        correo: 'ana.martinez@mail.com', // Simulado
-        telefono: '70123456',            // Simulado
+        correo: 'sincorreo@mail.com',
+        telefono: '00000000',
         relacion: relacion,
       };
       setTutores([...tutores, nuevo]);
@@ -34,6 +67,7 @@ const FormularioInscripcion = () => {
   const validarFormulario = () => {
     const nuevosErrores = {};
     if (!area) nuevosErrores.area = true;
+    if (!categoria) nuevosErrores.categoria = true;
     if (!grado) nuevosErrores.grado = true;
     if (!nivel) nuevosErrores.nivel = true;
     if (tutores.length === 0) nuevosErrores.tutores = true;
@@ -50,6 +84,7 @@ const FormularioInscripcion = () => {
         confirmButtonColor: '#3085d6',
       });
       setArea('');
+      setCategoria('');
       setGrado('');
       setNivel('');
       setTutores([]);
@@ -69,83 +104,65 @@ const FormularioInscripcion = () => {
       <h1 className="forminsc-titulo">Inscripción a Olimpiadas Científicas</h1>
       <p className="forminsc-subtitulo">Complete el formulario para inscribirse en una competencia</p>
 
-      {/* Información de la competencia */}
       <section className="forminsc-seccion">
         <h2 className="forminsc-seccion-titulo">Información de la Competencia</h2>
-        <p className="forminsc-descripcion">Seleccione el área y categoría en la que desea participar</p>
 
         <div className="forminsc-fila">
           <div className="forminsc-campo">
-            <label>Área <span className="forminsc-requerido">*</span></label>
-            <select
-              className={errores.area ? 'forminsc-input-error' : ''}
-              value={area}
-              onChange={(e) => setArea(e.target.value)}
-            >
+            <label>Área *</label>
+            <select value={area} onChange={(e) => setArea(e.target.value)} className={errores.area ? 'forminsc-input-error' : ''}>
               <option value="">Seleccione un área</option>
-              <option value="matematica">Matemática</option>
-              <option value="quimica">Química</option>
+              {areasDisponibles.map((a, i) => (
+                <option key={i} value={a}>{a}</option>
+              ))}
             </select>
           </div>
+
           <div className="forminsc-campo">
-            <label>Categoría <span className="forminsc-requerido">*</span></label>
-            <select disabled>
-              <option value="">Primero seleccione un área</option>
+            <label>Categoría *</label>
+            <select value={categoria} onChange={(e) => setCategoria(e.target.value)} disabled={categoriasDisponibles.length === 0} className={errores.categoria ? 'forminsc-input-error' : ''}>
+              <option value="">Seleccione una categoría</option>
+              {categoriasDisponibles.map((c, i) => (
+                <option key={i} value={c}>{c}</option>
+              ))}
             </select>
           </div>
         </div>
 
         <div className="forminsc-fila">
           <div className="forminsc-campo">
-            <label>Grado <span className="forminsc-requerido">*</span></label>
-            <select
-              className={errores.grado ? 'forminsc-input-error' : ''}
-              value={grado}
-              onChange={(e) => setGrado(e.target.value)}
-            >
-              <option value="">Seleccione su grado actual</option>
-              <option value="5">5°</option>
-              <option value="6">6°</option>
+            <label>Grado *</label>
+            <select value={grado} onChange={(e) => setGrado(e.target.value)} className={errores.grado ? 'forminsc-input-error' : ''}>
+              <option value="">Seleccione su grado</option>
+              {gradosDisponibles.map((g, i) => (
+                <option key={i} value={g}>{g}</option>
+              ))}
             </select>
           </div>
+
           <div className="forminsc-campo">
-            <label>Nivel Educativo <span className="forminsc-requerido">*</span></label>
-            <select
-              className={errores.nivel ? 'forminsc-input-error' : ''}
-              value={nivel}
-              onChange={(e) => setNivel(e.target.value)}
-            >
-              <option value="">Seleccione su nivel educativo</option>
-              <option value="primaria">Primaria</option>
-              <option value="secundaria">Secundaria</option>
+            <label>Nivel Educativo *</label>
+            <select value={nivel} onChange={(e) => setNivel(e.target.value)} className={errores.nivel ? 'forminsc-input-error' : ''}>
+              <option value="">Seleccione un nivel</option>
+              {nivelesDisponibles.map((n, i) => (
+                <option key={i} value={n}>{n}</option>
+              ))}
             </select>
           </div>
         </div>
       </section>
 
-      {/* Tutores */}
       <section className="forminsc-seccion">
         <h2 className="forminsc-seccion-titulo">Tutores</h2>
-        <p className="forminsc-descripcion">Seleccione de uno a tres tutores para su inscripción</p>
 
         <div className="forminsc-fila-buscador-alineado">
           <div className="forminsc-input-con-icono">
-            <input
-              className="forminsc-input"
-              type="text"
-              placeholder="Buscar tutor por nombre..."
-              value={nuevoTutor}
-              onChange={(e) => setNuevoTutor(e.target.value)}
-            />
+            <input type="text" className="forminsc-input" placeholder="Buscar tutor..." value={nuevoTutor} onChange={(e) => setNuevoTutor(e.target.value)} />
             <span className="forminsc-icono-lupa">🔍</span>
           </div>
-          <select
-            className="forminsc-select"
-            value={relacion}
-            onChange={(e) => setRelacion(e.target.value)}
-          >
+          <select className="forminsc-select" value={relacion} onChange={(e) => setRelacion(e.target.value)}>
             <option value="">Relación</option>
-            <option value="padre">Madre/Padre</option>
+            <option value="padre">Padre/Madre</option>
             <option value="tutor">Tutor</option>
             <option value="profesor">Profesor/a</option>
           </select>
@@ -163,26 +180,21 @@ const FormularioInscripcion = () => {
             <thead>
               <tr>
                 <th>Nombre</th>
-                <th>Correo Electrónico</th>
+                <th>Correo</th>
                 <th>Teléfono</th>
                 <th>Relación</th>
-                <th>Acciones</th>
+                <th>Acción</th>
               </tr>
             </thead>
             <tbody>
-              {tutores.map((tutor, index) => (
-                <tr key={index}>
+              {tutores.map((tutor, i) => (
+                <tr key={i}>
                   <td>{tutor.nombre}</td>
                   <td>{tutor.correo}</td>
                   <td>{tutor.telefono}</td>
                   <td>{tutor.relacion}</td>
                   <td>
-                    <button
-                      className="forminsc-btn-eliminar-tutor"
-                      onClick={() => eliminarTutor(index)}
-                    >
-                      🗑️
-                    </button>
+                    <button onClick={() => eliminarTutor(i)} className="forminsc-btn-eliminar-tutor">🗑️</button>
                   </td>
                 </tr>
               ))}
@@ -195,7 +207,6 @@ const FormularioInscripcion = () => {
         </p>
       </section>
 
-      {/* Botón Final */}
       <div className="forminsc-finalizar-wrapper">
         <button className="forminsc-boton-finalizar" onClick={manejarEnvio}>
           Completar inscripción
