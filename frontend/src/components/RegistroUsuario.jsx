@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import '../styles/RegistroUsuario.css';
+import emailjs from '@emailjs/browser';
 
 const RegistroUsuario = () => {
   const [userType, setUserType] = useState('competidor');
@@ -69,17 +70,55 @@ const RegistroUsuario = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+  
     if (validateForm()) {
-      const data = currentFormData;
-      console.log('Datos válidos:', data);
+      const data = { ...currentFormData, userType };
+  
+      //Si es un tutor, generar la contraseña y enviar correo
+      if (userType === 'tutor') {
+        const generatedPassword = generatePassword(); 
+  
+        emailjs.send(
+          'service_e6438fg',           
+          'template_xuuktam',          
+          {
+            user_name: data.firstName + ' ' + data.lastName,
+            user_email: data.email,
+            generated_password: generatedPassword
+          },
+          'Du0qkTZtuLZTpN6Z7'            
+        ).then(
+          (response) => {
+            console.log('Correo enviado:', response.status, response.text);
+          },
+          (error) => {
+            console.error('Error al enviar correo:', error);
+          }
+        );
+      }
+      // Mostrar confirmación
       Swal.fire({
         icon: 'success',
         title: '¡Registro exitoso!',
         text: 'Por favor, inicia sesión para continuar.',
         confirmButtonColor: '#0284C7'
       });
+  
+      console.log('Datos válidos:', data);
     }
   };
+  
+
+  const generatePassword = () => {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let pass = '';
+    for (let i = 0; i < 8; i++) {
+      const random = Math.floor(Math.random() * caracteres.length);
+      pass += caracteres[random];
+    }
+    return pass;
+  };
+  
 
   const renderFormFields = () => {
     const data = currentFormData;
