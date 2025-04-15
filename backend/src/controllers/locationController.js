@@ -1,12 +1,30 @@
-import * as locationServices from '../services/locationServices.js';
+import * as locationService from "../services/locationServices.js";
 
-
-export const getAllLocations = async (req, res, next) => {
+export const getDepartamentos = async (req, res, next) => {
     try {
-        const locations = await locationServices.getDepartamentos();
-        res.status(200).json(locations);
+        const departamentos = await locationService.getDepartamentos();
+        res.json(departamentos);
     } catch (error) {
         next(error);
     }
-}
+};
+
+export const getProvinciasByDepartamento = async (req, res, next) => {
+    try {
+        const { departamentoId } = req.params;
+        const provincias = await locationService.getProvinciasByDepartamento(parseInt(departamentoId, 10));
+        res.json(provincias);
+    } catch (error) {
+        next(error);
+    }
+};
+export const getColegiosByProvincia = async (req, res, next) => {
+    try {
+        const { provinciaId } = req.params;
+        const colegios = await locationService.getColegiosByProvincia(parseInt(provinciaId, 10));
+        res.json(colegios);
+    } catch (error) {
+        next(error);
+    }
+};
 
