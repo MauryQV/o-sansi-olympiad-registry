@@ -10,5 +10,3 @@ router.get("/departamentos/:departamentoId/provincias", locationController.getPr
 router.get("/provincias/:provinciaId/colegios", locationController.getColegiosByProvincia);
 
 export default router;
-
-//hola mundo

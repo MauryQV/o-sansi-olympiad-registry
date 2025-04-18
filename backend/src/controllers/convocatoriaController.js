@@ -1,23 +1,12 @@
 import * as convocatoriaService from '../services/convocatoriaServices.js';
 
-
-export const crearConvocatoria = async (req, res, next) => {
+export const crearConvocatoriaController = async (req, res) => {
     try {
-        const convocatoria = await convocatoriaService.crearConvocatoria(req.body);
-        res.status(201).json(convocatoria);
+        const convocatoria = await convocatoriaService.crearConvocatoriaConRelaciones(req.body);
+        res.status(201).json({ message: 'Convocatoria creada con éxito', convocatoria });
     } catch (error) {
-        next(error);
-    }
-};
-
-
-export const asignarArea = async (req, res, next) => {
-    try {
-        const { convocatoriaId, areaId } = req.body;
-        const result = await convocatoriaService.asignarAreaAConvocatoria(convocatoriaId, areaId);
-        res.json(result);
-    } catch (error) {
-        next(error);
+        console.error('[ERROR AL CREAR]', error.message);
+        res.status(400).json({ error: error.message || 'Error al crear la convocatoria' });
     }
 };
 
@@ -69,3 +58,14 @@ export const obtenerConvocatoriaPorEstados = async (req, res, next) => {
         next(error);
     }
 }
+
+export const actualizarConvocatoriaController = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await convocatoriaService.actualizarConvocatoria(id, req.body);
+        res.status(200).json({ message: 'Convocatoria actualizada', result });
+    } catch (error) {
+        console.error('[ERROR ACTUALIZAR]', error.message);
+        res.status(400).json({ error: error.message });
+    }
+};
