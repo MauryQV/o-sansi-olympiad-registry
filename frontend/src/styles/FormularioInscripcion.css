@@ -207,4 +207,37 @@ html, body {
   .forminsc-boton-finalizar:hover {
     background-color: #084284;
   }
+  .forminsc-finalizar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+.forminsc-lista-sugerencias {
+  background-color: white;
+  border: 1px solid #ccc;
+  margin-top: 4px;
+  list-style: none;
+  padding: 0;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.forminsc-sugerencia-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.forminsc-sugerencia-item:hover {
+  background-color: #f1f1f1;
+}
+.forminsc-input-con-icono {
+  position: relative;
+  flex: 1;
+}
+
   

@@ -20,7 +20,6 @@ const FormularioInscripcion = () => {
   const [tutoresDisponibles, setTutoresDisponibles] = useState([]);
 
   useEffect(() => {
-    // Simulación de peticiones a la base de datos
     setAreasDisponibles(['Matemática', 'Química', 'Física']);
     setCategoriasPorArea({
       Matemática: ['Primaria', 'Secundaria'],
@@ -159,6 +158,25 @@ const FormularioInscripcion = () => {
           <div className="forminsc-input-con-icono">
             <input type="text" className="forminsc-input" placeholder="Buscar tutor..." value={nuevoTutor} onChange={(e) => setNuevoTutor(e.target.value)} />
             <span className="forminsc-icono-lupa">🔍</span>
+            {nuevoTutor && tutoresDisponibles.length > 0 && (
+              <ul className="forminsc-lista-sugerencias">
+                {tutoresDisponibles
+                  .filter((t) => t.nombre.toLowerCase().includes(nuevoTutor.toLowerCase()))
+                  .slice(0, 5)
+                  .map((t, index) => (
+                    <li
+                      key={index}
+                      className="forminsc-sugerencia-item"
+                      onClick={() => {
+                        setNuevoTutor(t.nombre);
+                        setRelacion(t.relacion);
+                      }}
+                    >
+                      {t.nombre}
+                    </li>
+                  ))}
+              </ul>
+            )}
           </div>
           <select className="forminsc-select" value={relacion} onChange={(e) => setRelacion(e.target.value)}>
             <option value="">Relación</option>
