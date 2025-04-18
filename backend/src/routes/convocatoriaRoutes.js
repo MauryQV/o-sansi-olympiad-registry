@@ -15,4 +15,6 @@ router.get('/convocatoria/estado/:estado', convocatoriaController.obtenerConvoca
 
 router.patch('/actualizar-convocatoria/:id', convocatoriaController.actualizarConvocatoriaController);
 
+router.get('/convocatoria/areas/:id', convocatoriaController.obtenerConvocatoriaConAreas);
+
 export default router;

@@ -2,12 +2,17 @@ import * as areaService from '../services/areaServices.js';
 
 export const crearArea = async (req, res, next) => {
     try {
-        const area = await areaService.crearArea(req.body.nombre);
+        const { nombre_area, descripcion_area } = req.body;
+
+        if (!nombre_area) {
+            return res.status(400).json({ message: "El campo 'nombre_area' es obligatorio" });
+        }
+
+        const area = await areaService.crearArea(nombre_area, descripcion_area);
         res.status(201).json(area);
     } catch (error) {
         next(error);
     }
-
 };
 
 export const obtenerAreas = async (req, res, next) => {
@@ -35,7 +40,7 @@ export const obtenerAreaPorId = async (req, res, next) => {
 
 export const actualizarArea = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const id = parseInt(req.params.id, 10);
         const { nombre_area, descripcion_area } = req.body;
         const area = await areaService.updateArea(id, nombre_area, descripcion_area);
         if (!area) {

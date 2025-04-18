@@ -42,17 +42,16 @@ model Rol_permiso {
 }
 
 model Competidor {
-  id                 String              @id @default(uuid())
-  usuario_id         String              @unique
-  colegio_id         Int
-  provincia_id       Int
-  carnet_identidad   String              @unique
-  fecha_nacimiento   DateTime
-  correo_electronico String
-  colegio            Colegio             @relation(fields: [colegio_id], references: [id])
-  provincia          Provincia           @relation(fields: [provincia_id], references: [id])
-  usuario            Usuario             @relation(fields: [usuario_id], references: [id])
-  Inscripciones      Inscripcion_tutor[]
+  id               String              @id @default(uuid())
+  usuario_id       String              @unique
+  colegio_id       Int
+  provincia_id     Int
+  carnet_identidad String              @unique
+  fecha_nacimiento DateTime
+  colegio          Colegio             @relation(fields: [colegio_id], references: [id])
+  provincia        Provincia           @relation(fields: [provincia_id], references: [id])
+  usuario          Usuario             @relation(fields: [usuario_id], references: [id])
+  Inscripciones    Inscripcion_tutor[]
 }
 
 model Tutor {
@@ -87,17 +86,16 @@ model Colegio {
 }
 
 model Convocatoria {
-  id                       Int                      @id @default(autoincrement())
+  id                       Int                 @id @default(autoincrement())
   nombre_convocatoria      String
   id_estado_convocatoria   Int
-  estado_convocatoria      estado_convocatoria      @relation(fields: [id_estado_convocatoria], references: [id])
+  estado_convocatoria      estado_convocatoria @relation(fields: [id_estado_convocatoria], references: [id])
   fecha_inicio             DateTime
   fecha_fin                DateTime
   competicion_inicio       DateTime
   competicion_fin          DateTime
   descripcion_convocatoria String
   Area_convocatoria        Area_convocatoria[]
-  Categoria_convocatoria   Categoria_convocatoria[]
 }
 
 model Area {
@@ -105,17 +103,18 @@ model Area {
   nombre_area       String
   descripcion_area  String
   Area_convocatoria Area_convocatoria[]
+  area_categoria    Categoria_area[]
 }
 
 model Categoria {
-  id                     Int                      @id @default(autoincrement())
+  id                     Int              @id @default(autoincrement())
   nombre_categoria       String
   grado_min_id           Int
   grado_max_id           Int
   descripcion_cat        String
-  grado_max              Grado                    @relation("GradoMax", fields: [grado_max_id], references: [id])
-  grado_min              Grado                    @relation("GradoMin", fields: [grado_min_id], references: [id])
-  Categoria_convocatoria Categoria_convocatoria[]
+  grado_max              Grado            @relation("GradoMax", fields: [grado_max_id], references: [id])
+  grado_min              Grado            @relation("GradoMin", fields: [grado_min_id], references: [id])
+  Categoria_convocatoria Categoria_area[]
 }
 
 model Grado {
@@ -153,12 +152,12 @@ model Area_convocatoria {
   convocatoria    Convocatoria @relation(fields: [convocatoria_id], references: [id])
 }
 
-model Categoria_convocatoria {
-  id              Int          @id @default(autoincrement())
-  categoria_id    Int
-  convocatoria_id Int
-  categoria       Categoria    @relation(fields: [categoria_id], references: [id])
-  convocatoria    Convocatoria @relation(fields: [convocatoria_id], references: [id])
+model Categoria_area {
+  id           Int       @id @default(autoincrement())
+  categoria_id Int
+  area_id      Int
+  categoria    Categoria @relation(fields: [categoria_id], references: [id])
+  area         Area      @relation(fields: [area_id], references: [id])
 }
 
 model Inscripcion_tutor {

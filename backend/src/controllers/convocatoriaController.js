@@ -69,3 +69,17 @@ export const actualizarConvocatoriaController = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+export const obtenerConvocatoriaConAreas = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const convocatoria = await convocatoriaService.obtenerConvocatoriaConAreas(id);
+        if (!convocatoria) {
+            return res.status(404).json({ message: 'Convocatoria no encontrada' });
+        }
+        res.json(convocatoria);
+    } catch (error) {
+        console.error('[ERROR OBTENER CON AREAS]', error.message);
+        res.status(400).json({ error: error.message });
+    }
+};

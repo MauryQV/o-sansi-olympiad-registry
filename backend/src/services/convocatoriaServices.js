@@ -60,6 +60,7 @@ export const asignarCategoriaAConvocatoria = async (convocatoriaId, categoriaId)
 
 export const obtenerConvocatorias = async () => {
     return await prisma.convocatoria.findMany();
+
 };
 
 //pasar un id y devolver la convocatoria con ese id
@@ -79,11 +80,22 @@ export const obtenerConvocatoriaPorEstados = async (estado) => {
     });
 };
 
+export const obtenerConvocatoriaConAreas = async (id) => {
+    return await prisma.convocatoria.findUnique({
+        where: { id: parseInt(id) },
+        include: {
+            Area_convocatoria: {
+                include: { area: true }
+            }
+        }
+    });
+};
 
 export const actualizarConvocatoria = async (id, data) => {
     const {
         nombre_convocatoria,
         descripcion_convocatoria,
+        id_estado_convocatoria,
         fecha_inicio,
         fecha_fin,
         competicion_inicio,
@@ -98,6 +110,7 @@ export const actualizarConvocatoria = async (id, data) => {
     if (fecha_fin) updateData.fecha_fin = new Date(fecha_fin);
     if (competicion_inicio) updateData.competicion_inicio = new Date(competicion_inicio);
     if (competicion_fin) updateData.competicion_fin = new Date(competicion_fin);
+    if (id_estado_convocatoria) updateData.id_estado_convocatoria = id_estado_convocatoria;
 
     if (updateData.fecha_inicio && updateData.fecha_fin && updateData.fecha_inicio >= updateData.fecha_fin) {
         throw new Error('fecha_inicio debe ser antes que fecha_fin');
