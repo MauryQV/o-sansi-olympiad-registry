@@ -5,12 +5,14 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar"; // Importamos la barra de navegación
 import Login from "./components/Login";
 import InicioAdmin from "./components/InicioAdmin";
-import Registro from "./components/Registro";
 //import InicioAdministrador from "./components/InicioAdministrador";
 import TablaArea from "./components/TablaArea";
-import FormularioInscripcion from './components/FormularioInscripcion.jsx'
 import Disciplinas from "./components/Disciplinas.jsx";
 import RegistrarTutores from "./components/RegistrarTutores.jsx";
+import RegistroUsuario from "./components/RegistroUsuario.jsx";
+import RegistroCompetidores from "./components/RegistroCompetidores.jsx";
+import FormularioInscripcion from "./components/FormularioInscripcion.jsx";
+import Pagos from "./components/Pagos.jsx";
 
 
 function App() {
@@ -67,13 +69,17 @@ const AdminRedirect = ({ setIsAdmin }) => {
               </ul>
             }
           />
-          <Route path="/inscripciones" element={<FormularioInscripcion />} />
+          <Route path="/inscripciones" element={<RegistroUsuario />} />
           <Route path="/disciplinas" element={<Disciplinas />} />
           <Route path="/acerca" element={<h2>Acerca de nosotros.</h2>} />
           <Route path="/login" element={<Login setRol={setRol} />} />
           <Route path="/inicio-admin" element={<InicioAdmin setRol={setRol} />} />
+          <Route path="/areas-admin" element={<TablaArea setRol={setRol} />} />
+          <Route path="/registro" element={<RegistroUsuario />} />
+          <Route path="/inicio-competidor" element={<RegistroCompetidores />} />
+          <Route path="/inscripcion" element={<FormularioInscripcion />} />
+          <Route path="/pagos-competidor" element={<Pagos />} />
 
-          <Route path="/registro" element={<Registro />} />
         </Routes>
       </div>
     </Router>

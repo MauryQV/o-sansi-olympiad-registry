@@ -1,0 +1,93 @@
+.pagoscomp-container-principal {
+  width: 100%;
+  min-height: 100vh;
+  padding: 50px 6%;
+  box-sizing: border-box;
+  font-family: 'Comfortaa', sans-serif;
+  background-color: #f3f5f8;
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pagoscomp-titulo-seccion {
+  width: 100%;
+  max-width: 1000px;
+  font-size: 26px;
+  margin-bottom: 28px;
+  align-self: flex-start;
+}
+
+.pagoscomp-tarjeta-listado {
+  width: 100%;
+  max-width: 1000px;
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #dfe3e8;
+}
+
+.pagoscomp-subtitulo-tabla {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.pagoscomp-tabla-pagos {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.pagoscomp-tabla-pagos thead {
+  background-color: #f3f4f6;
+}
+
+.pagoscomp-tabla-pagos th,
+.pagoscomp-tabla-pagos td {
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.pagoscomp-estado-pendiente {
+  background-color: #fcefc7;
+  color: #8b6c00;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pagoscomp-columna-acciones {
+  display: flex;
+  gap: 10px;
+}
+
+.pagoscomp-boton-ver,
+.pagoscomp-boton-descargar {
+  font-size: 15px;
+  border: 1.5px solid #222;
+  background-color: #fff;
+  color: #111;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pagoscomp-boton-ver:hover {
+  background-color: #e6f0ff;
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.pagoscomp-boton-descargar:hover {
+  background-color: #f0fff4;
+  border-color: #28a745;
+  color: #28a745;
+}

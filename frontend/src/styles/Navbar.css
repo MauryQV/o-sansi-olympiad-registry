@@ -81,6 +81,19 @@ h3{
     text-decoration: none;
   }
   
+  .menu-rol {
+    font-size: 20px;
+    color:#000;
+    display: flex;
+    align-items: center; /* Alinea la imagen y el texto verticalmente */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    text-decoration: none;
+  }
+
+  .menu-rol:hover {
+    color: #0284C7;
+  }
+
   .menu-item img {
     margin-right: 8px; /* Espaciado entre la imagen y el texto */
   }
