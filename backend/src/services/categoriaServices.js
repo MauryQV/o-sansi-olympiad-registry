@@ -1,16 +1,39 @@
 import prisma from '../config/prismaClient.js';
 
-export const crearCategoria = async (data) => {
-    return await prisma.categoria.create({ data })
-};
+export const crearCategoriaConArea = async (data) => {
+    const {
+        nombre_categoria,
+        descripcion_cat,
+        grado_min_id,
+        grado_max_id,
+        area_id //selecciona el area_id desde el front react :V
+    } = data;
 
-export const asignarCategoriaAConvocatoria = async (convocatoriaId, categoriaId) => {
-    return await prisma.Categoria_convocatoria.create({
+    if (!area_id) {
+        throw new Error('Debes seleccionar un área para la categoría');
+    }
+
+    const nuevaCategoria = await prisma.categoria.create({
         data: {
-            convocatoria_id: convocatoriaId,
-            categoria_id: categoriaId
+            nombre_categoria,
+            descripcion_cat,
+            grado_min_id,
+            grado_max_id,
+        },
+    });
+
+
+    await prisma.categoria_area.create({
+        data: {
+            categoria_id: nuevaCategoria.id,
+            area_id
         }
     });
+
+    return {
+        ...nuevaCategoria,
+        area_id
+    };
 };
 
 export const obtenerCategorias = async () => {
@@ -18,7 +41,7 @@ export const obtenerCategorias = async () => {
         include: {
             grado_min: true,
             grado_max: true,
-            Categoria_convocatoria: true,
+
         },
     });
 };
