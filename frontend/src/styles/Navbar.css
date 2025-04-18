@@ -1,31 +1,40 @@
-.nav{
-    background-color: #25326c; 
-    width: auto; /* Ocupa todo el ancho */
-    display:flex;
-    flex-direction: column;
-    margin:0;
-    align-items: flex-end; /* Alinea los elementos en la parte inferior */
-    padding: 10px 20px; /* Espaciado interno */
-    justify-content: space-between; /* Separa la imagen y la lista */
-}
-.texto-imagen{
+.nav {
+    background-color: #fff;
+    width: 100%;
     display: flex;
-    flex-direction: row;  /* Alinea en fila (horizontalmente) */
-    justify-content: space-between; /* Distribuye los elementos */
-    align-items: center; /* Centra los elementos horizontalmente */
-    gap: 11rem; /* Espacio entre los elementos */
-}
-
-.titulos{
-    color:white;
- 
-}
+    align-items: center;         /* Centra verticalmente */
+    justify-content: center;     /* Centra horizontalmente */
+    padding: 10px 20px;
+  }
+  .link-pagina {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+   
+    margin:0 ;
+  }
+  
+  .imagen-completa {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: 8rem;
+    margin-left: 1rem;
+  }
+  
+  .links-derecha {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
 
 .imagen-nav{
-    height: 10rem;
+    width: 5.9rem;
+    height: 4.5rem;
 }
 .text-xl {
-    font-size: 2.4rem; /* Ajusta el tamaño según necesites */
+    font-size: 1rem; /* Ajusta el tamaño según necesites */
     align-items: center;
     text-decoration: underline;
     margin: 0.3rem;
@@ -33,26 +42,92 @@
 h3{
     margin: 0.1rem;
 }
+.linea-vertical {
+    width: 2px;
+    height: 3.5rem;
+    background-color: black;
+    margin-right: 0.3rem;
+  }
+  
+  .texto-sansi {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    color: #000;
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
 #links{
     list-style: none; 
     display: flex; /* Pone los elementos en línea (horizontal) */
-    gap: 9rem;
+    gap: 6rem;
     margin-bottom: 0;
     margin-right: 2rem;
-    
+  
+}
+#links li {
+  display: flex;
+  justify-content: center;
+}
+.menu-item:hover {
+  color: #0284C7;
+}
 
-}
-.enlace-admin{
-    margin-left: 30rem;
-}
 .menu-item {
-    color:#fff;
+    color:#000;
     display: flex;
     align-items: center; /* Alinea la imagen y el texto verticalmente */
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     text-decoration: none;
   }
   
+  .menu-rol {
+    font-size: 20px;
+    color:#000;
+    display: flex;
+    align-items: center; /* Alinea la imagen y el texto verticalmente */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    text-decoration: none;
+  }
+
+  .menu-rol:hover {
+    color: #0284C7;
+  }
+
   .menu-item img {
     margin-right: 8px; /* Espaciado entre la imagen y el texto */
   }
+  .botones-sesion {
+    display: flex;
+    gap: 1rem;
+    margin-left: 1rem;
+    position: relative;
+  }
+  
+  
+  .btn-login{
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.6); /* sombra fuerte */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .btn-registrarse {
+    background-color: #0284C7;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.6); /* sombra fuerte */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+  }
+  
