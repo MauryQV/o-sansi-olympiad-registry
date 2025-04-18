@@ -9,8 +9,8 @@ import categoriaRoutes from './routes/categoriaRoutes.js';
 
 import locationRoutes from './routes/locationRoutes.js';
 
-const port = process.env.PORT;
 
+const port = process.env.PORT;
 
 
 app.use('/api', authRoutes);

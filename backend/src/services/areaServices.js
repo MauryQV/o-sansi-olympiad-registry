@@ -11,9 +11,11 @@ export const getAreas = async () => {
     return await prisma.area.findMany();
 };
 
+
 export const getAreaById = async (id) => {
     return await prisma.area.findUnique({ where: { id } });
 }
+
 
 export const updateArea = async (id, nombre_area, descripcion_area) => {
     return await prisma.area.update({

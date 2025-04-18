@@ -1,8 +1,14 @@
-import express from 'express';
-import * as locationController from '../controllers/locationController.js';
+import { Router } from "express";
+import * as locationController from "../controllers/locationController.js";
 
-const router = express.Router();
+const router = Router();
 
-router.get('/departamentos', locationController.getAllLocations);
+router.get("/departamentos", locationController.getDepartamentos);
+
+router.get("/departamentos/:departamentoId/provincias", locationController.getProvinciasByDepartamento);
+
+router.get("/provincias/:provinciaId/colegios", locationController.getColegiosByProvincia);
 
 export default router;
+
+//hola mundo
