@@ -73,9 +73,7 @@ const RegistroUsuario = () => {
   
     if (validateForm()) {
       const data = { ...currentFormData, userType };
-  
-      //Si es un tutor, generar la contraseña y enviar correo
-      if (userType === 'tutor') {
+      if (userType === 'tutor' || 'competidor') {
         const generatedPassword = generatePassword(); 
   
         emailjs.send(
@@ -96,7 +94,6 @@ const RegistroUsuario = () => {
           }
         );
       }
-      // Mostrar confirmación
       Swal.fire({
         icon: 'success',
         title: '¡Registro exitoso!',
@@ -108,7 +105,6 @@ const RegistroUsuario = () => {
     }
   };
   
-
   const generatePassword = () => {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let pass = '';

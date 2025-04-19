@@ -1,0 +1,93 @@
+.card-convocatoria {
+  width: 30%;
+  min-width: 340px;
+  background-color: white;
+  border: 1px solid #d0d0d0;
+  border-radius: 16px;
+  padding: 1rem;
+  font-family: 'Comfortaa', sans-serif;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.card-convocatoria:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #111;
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-icons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-icons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.card-icons svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.5;
+  color: #111;
+}
+
+.card-icons .btn-delete svg {
+  color: red;
+}
+
+.card-estado {
+  font-size: 0.7rem;
+  margin-bottom: 0.3rem;
+}
+
+.card-descripcion {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.6rem;
+}
+
+.card-fecha {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin: 0.25rem 0;
+}
+
+.card-fecha span:first-child {
+  font-weight: bold;
+  color: #111;
+}
+
+.card-fecha span:last-child {
+  color: #111;
+}
+
+.card-areas {
+  font-size: 0.8rem;
+  color: #444;
+  margin-top: 0.5rem;
+}
