@@ -8,53 +8,58 @@ datasource db {
 }
 
 model Usuario {
-  id         String      @id @default(uuid())
-  email      String      @unique
-  rol_id     Int
-  role       Rol         @relation(fields: [rol_id], references: [id])
-  createdAt  DateTime    @default(now())
-  competidor Competidor?
-  tutor      Tutor?
+  id                 String      @id @default(uuid())
+  correo_electronico String      @unique
+  nombre             String
+  apellido           String
+  rol_id             Int
+  createdAt          DateTime    @default(now())
+  competidor         Competidor?
+  tutor              Tutor?
+  role               Rol         @relation(fields: [rol_id], references: [id])
 }
 
 model Rol {
-  id       Int       @id @default(autoincrement())
-  nombre   String    @unique
-  permisos Permiso[] @relation("RolePermissions")
+  id       Int           @id @default(autoincrement())
+  nombre   String        @unique
+  roles    Rol_permiso[]
   usuarios Usuario[]
 }
 
 model Permiso {
-  id          Int    @id @default(autoincrement())
-  nombre      String @unique
+  id          Int           @id @default(autoincrement())
+  nombre      String        @unique
   descripcion String
-  roles       Rol[]  @relation("RolePermissions")
+  roles       Rol_permiso[]
+}
+
+model Rol_permiso {
+  id         Int     @id @default(autoincrement())
+  rol_id     Int
+  permiso_id Int
+  permiso    Permiso @relation(fields: [permiso_id], references: [id])
+  rol        Rol     @relation(fields: [rol_id], references: [id])
 }
 
 model Competidor {
-  id               String        @id @default(uuid())
-  usuario_id       String        @unique
-  usuario          Usuario       @relation(fields: [usuario_id], references: [id])
+  id               String              @id @default(uuid())
+  usuario_id       String              @unique
   colegio_id       Int
-  colegio          Colegio       @relation(fields: [colegio_id], references: [id])
   provincia_id     Int
-  provincia        Provincia     @relation(fields: [provincia_id], references: [id])
-  nombre           String
-  apellido         String
-  carnet_identidad String        @unique
+  carnet_identidad String              @unique
   fecha_nacimiento DateTime
-  Inscripciones    Inscripcion[]
+  colegio          Colegio             @relation(fields: [colegio_id], references: [id])
+  provincia        Provincia           @relation(fields: [provincia_id], references: [id])
+  usuario          Usuario             @relation(fields: [usuario_id], references: [id])
+  Inscripciones    Inscripcion_tutor[]
 }
 
 model Tutor {
   id                  String              @id @default(uuid())
   usuario_id          String              @unique
-  usuario             Usuario             @relation(fields: [usuario_id], references: [id])
-  nombre              String
-  apellido            String
   carnet_identidad    String              @unique
-  Inscripciones       Inscripcion[]
   Inscripciones_tutor Inscripcion_tutor[]
+  usuario             Usuario             @relation(fields: [usuario_id], references: [id])
 }
 
 model Departamento {
@@ -67,9 +72,9 @@ model Provincia {
   id               Int          @id @default(autoincrement())
   nombre_provincia String
   departamento_id  Int
-  departamento     Departamento @relation(fields: [departamento_id], references: [id])
   Colegio          Colegio[]
   Competidor       Competidor[]
+  departamento     Departamento @relation(fields: [departamento_id], references: [id])
 }
 
 model Colegio {
@@ -81,86 +86,90 @@ model Colegio {
 }
 
 model Convocatoria {
-  id                     Int                      @id @default(autoincrement())
-  nombre_convocatoria    String
-  fecha_inicio           DateTime
-  fecha_fin              DateTime
-  competicion_inicio     DateTime
-  competicion_fin        DateTime
-  Area_convocatoria      Area_convocatoria[]
-  Categoria_convocatoria Categoria_convocatoria[]
+  id                       Int                 @id @default(autoincrement())
+  nombre_convocatoria      String
+  id_estado_convocatoria   Int
+  estado_convocatoria      estado_convocatoria @relation(fields: [id_estado_convocatoria], references: [id])
+  fecha_inicio             DateTime
+  fecha_fin                DateTime
+  competicion_inicio       DateTime
+  competicion_fin          DateTime
+  descripcion_convocatoria String
+  Area_convocatoria        Area_convocatoria[]
 }
+
 
 model Area {
   id                Int                 @id @default(autoincrement())
   nombre_area       String
+  descripcion_area  String
   Area_convocatoria Area_convocatoria[]
+  area_categoria    Categoria_area[]
 }
 
 model Categoria {
-  id                     Int                      @id @default(autoincrement())
+  id                     Int              @id @default(autoincrement())
   nombre_categoria       String
   grado_min_id           Int
-  grado_min              Grado                    @relation(name: "GradoMin", fields: [grado_min_id], references: [id])
   grado_max_id           Int
-  grado_max              Grado                    @relation(name: "GradoMax", fields: [grado_max_id], references: [id])
-  Categoria_convocatoria Categoria_convocatoria[]
+  descripcion_cat        String
+  grado_max              Grado            @relation("GradoMax", fields: [grado_max_id], references: [id])
+  grado_min              Grado            @relation("GradoMin", fields: [grado_min_id], references: [id])
+  Categoria_convocatoria Categoria_area[]
 }
 
 model Grado {
   id             Int         @id @default(autoincrement())
   nombre_grado   String
-  categorias_min Categoria[] @relation(name: "GradoMin")
-  categorias_max Categoria[] @relation(name: "GradoMax")
+  categorias_max Categoria[] @relation("GradoMax")
+  categorias_min Categoria[] @relation("GradoMin")
 }
 
 model Pago {
   id             Int         @id @default(autoincrement())
   inscripcion_id Int
-  inscripcion    Inscripcion @relation(fields: [inscripcion_id], references: [id])
   monto          Decimal
   estado         String      @default("pendiente")
   fecha_pago     DateTime    @default(now())
   metodo_pago_id Int
+  inscripcion    Inscripcion @relation(fields: [inscripcion_id], references: [id])
   metodo_pago    Metodo_pago @relation(fields: [metodo_pago_id], references: [id])
 }
 
 model Inscripcion {
   id                  Int                 @id @default(autoincrement())
-  tutor_id            String
-  tutor               Tutor               @relation(fields: [tutor_id], references: [id])
-  competidor_id       String
-  competidor          Competidor          @relation(fields: [competidor_id], references: [id])
   fecha_inscripcion   DateTime            @default(now())
   estado_inscripcion  String              @default("pendiente")
-  pagos               Pago[]
   Inscripciones_tutor Inscripcion_tutor[]
+  pagos               Pago[]
 }
 
 model Area_convocatoria {
   id              Int          @id @default(autoincrement())
   area_id         Int
-  area            Area         @relation(fields: [area_id], references: [id])
   convocatoria_id Int
+  area            Area         @relation(fields: [area_id], references: [id])
   convocatoria    Convocatoria @relation(fields: [convocatoria_id], references: [id])
 }
 
-model Categoria_convocatoria {
-  id              Int          @id @default(autoincrement())
-  categoria_id    Int
-  categoria       Categoria    @relation(fields: [categoria_id], references: [id])
-  convocatoria_id Int
-  convocatoria    Convocatoria @relation(fields: [convocatoria_id], references: [id])
+model Categoria_area {
+  id           Int       @id @default(autoincrement())
+  categoria_id Int
+  area_id      Int
+  categoria    Categoria @relation(fields: [categoria_id], references: [id])
+  area         Area      @relation(fields: [area_id], references: [id])
 }
 
 model Inscripcion_tutor {
   id               Int         @id @default(autoincrement())
   inscripcion_id   Int
-  inscripcion      Inscripcion @relation(fields: [inscripcion_id], references: [id])
   tutor_id         String
-  tutor            Tutor       @relation(fields: [tutor_id], references: [id])
+  competidor_id    String
   aprobado         Boolean     @default(false)
   fecha_aprobacion DateTime?
+  competidor       Competidor  @relation(fields: [competidor_id], references: [id])
+  inscripcion      Inscripcion @relation(fields: [inscripcion_id], references: [id])
+  tutor            Tutor       @relation(fields: [tutor_id], references: [id])
 }
 
 model Metodo_pago {
@@ -168,3 +177,22 @@ model Metodo_pago {
   nombre String @unique
   Pago   Pago[]
 }
+
+model estado_convocatoria {
+  id           Int            @id @default(autoincrement())
+  nombre       String         @unique
+  Convocatoria Convocatoria[]
+}
+
+// Modelo para inscripción de participantes en áreas con restricción de máximo 2 por participante
+model Inscripcion_area {
+  id                Int          @id @default(autoincrement())
+  competidor_id     String
+  area_id           Int
+  convocatoria_id   Int
+  fecha_inscripcion DateTime     @default(now())
+  competidor        Competidor   @relation(fields: [competidor_id], references: [id])
+  area              Area         @relation(fields: [area_id], references: [id])
+  convocatoria      Convocatoria @relation(fields: [convocatoria_id], references: [id])
+}
+
