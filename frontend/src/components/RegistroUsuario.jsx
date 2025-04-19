@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/RegistroUsuario.css';
+import axios from 'axios';
+
 
 const RegistroUsuario = () => {
   const [userType, setUserType] = useState('competidor');
@@ -13,6 +15,46 @@ const RegistroUsuario = () => {
     province: '',
     school: ''
   });
+
+  const [departamentos, setDepartamentos] = useState([]);
+  const [provincias, setProvincias] = useState([]);
+  const [colegios, setColegios] = useState([]);
+
+
+
+  useEffect(() => {
+    axios.get('http://localhost:7777/api/departamentos')
+      .then((res) => {
+        setDepartamentos(res.data);
+      })
+      .catch((err) => {
+        console.error('Error al cargar departamentos:', err);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (formData.department) {
+      axios.get(`http://localhost:7777/api/departamentos/${formData.department}/provincias`)
+        .then((res) => {
+          setProvincias(res.data);
+          setFormData((prev) => ({ ...prev, province: '', school: '' }));
+          setColegios([]);
+        })
+        .catch((err) => console.error('Error al cargar provincias', err));
+    }
+  }, [formData.department]);
+
+  useEffect(() => {
+    if (formData.province) {
+      axios.get(`http://localhost:7777/api/provincias/${formData.province}/colegios`)
+        .then((res) => {
+          setColegios(res.data);
+          setFormData((prev) => ({ ...prev, school: '' }));
+        })
+        .catch((err) => console.error('Error al cargar colegios', err));
+    }
+  }, [formData.province]);
+  
 
   const [errors, setErrors] = useState({});
 
@@ -165,7 +207,10 @@ const RegistroUsuario = () => {
                     className={errors.department ? 'error' : ''}
                   >
                     <option value="">Seleccionar departamento</option>
-                    <option value="cochabamba">Cochabamba</option>
+                    {departamentos.map(dep => (
+                      <option key={dep.id} value={dep.id}>{dep.nombre_departamento}</option>
+                       ))}
+
                   </select>
                   {errors.department && <span className="error-message">{errors.department}</span>}
               </div>
@@ -178,7 +223,9 @@ const RegistroUsuario = () => {
                   className={errors.province ? 'error' : ''}
                 >
                   <option value="">Seleccionar provincia</option>
-                  <option value="Cercado">Cercado</option>
+                  {provincias.map(prov => (
+  <option key={prov.id} value={prov.id}>{prov.nombre_provincia}</option>
+))}
                 </select>
                 {errors.province && <span className="error-message">{errors.province}</span>}
 
@@ -194,7 +241,9 @@ const RegistroUsuario = () => {
                 className={errors.school ? 'error' : ''}
               >
                 <option value="">Seleccionar centro educativo</option>
-                <option value="maryknoll">Maryknoll</option>
+                {colegios.map(col => (
+  <option key={col.id} value={col.id}>{col.nombre_colegio}</option>
+))}
               </select>
               {errors.school && <span className="error-message">{errors.school}</span>}
             </div>
