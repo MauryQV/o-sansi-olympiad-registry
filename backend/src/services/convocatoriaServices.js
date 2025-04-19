@@ -1,7 +1,7 @@
 import prisma from '../config/prismaClient.js';
 
 
-export const crearConvocatoria = async (data) => {
+/*export const crearConvocatoria = async (data) => {
     // Verificar si ya existe una convocatoria con el mismo nombre
     const convocatoriaExistente = await prisma.convocatoria.findFirst({
         where: { nombre_convocatoria: data.nombre_convocatoria }
@@ -35,6 +35,8 @@ export const crearConvocatoria = async (data) => {
 
     return await prisma.convocatoria.create({ data });
 
+    */
+
 const crearConvocatoria = async (data) => {
     return await prisma.convocatoria.create({
         data,
@@ -42,7 +44,6 @@ const crearConvocatoria = async (data) => {
 };
 
 export const asignarAreaAConvocatoria = async (convocatoriaId, areaId) => {
-    // Verificar si el área ya está asignada a esta convocatoria
     const asignacionExistente = await prisma.area_convocatoria.findFirst({
         where: {
             convocatoria_id: convocatoriaId,
@@ -167,7 +168,7 @@ export const actualizarConvocatoria = async (id, data) => {
         throw new Error('competicion_inicio debe ser antes que competicion_fin');
     }
 
-
+    //hey
     const updated = await prisma.convocatoria.update({
         where: { id: parseInt(id) },
         data: updateData,

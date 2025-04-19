@@ -39,22 +39,9 @@ export const crearCategoria = async (data) => {
     return await prisma.categoria.create({ data });
 };
 
-export const asignarCategoriaAConvocatoria = async (convocatoriaId, categoriaId) => {
-    // Verificar si la categoría ya está asignada a esta convocatoria
-    const asignacionExistente = await prisma.Categoria_convocatoria.findFirst({
-        where: {
-            convocatoria_id: convocatoriaId,
-            categoria_id: categoriaId
-        }
-    });
 
-    if (asignacionExistente) {
-        throw new Error('Esta categoría ya está asignada a la convocatoria');
-    }
 
-    return await prisma.Categoria_convocatoria.create({
-
- export const crearCategoriaConArea = async (data) => {
+export const crearCategoriaConArea = async (data) => {
     const {
         nombre_categoria,
         descripcion_cat,

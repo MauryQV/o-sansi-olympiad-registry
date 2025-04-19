@@ -52,6 +52,7 @@ model Competidor {
   provincia        Provincia           @relation(fields: [provincia_id], references: [id])
   usuario          Usuario             @relation(fields: [usuario_id], references: [id])
   Inscripciones    Inscripcion_tutor[]
+  Inscripcion_area Inscripcion_area[]
 }
 
 model Tutor {
@@ -96,8 +97,8 @@ model Convocatoria {
   competicion_fin          DateTime
   descripcion_convocatoria String
   Area_convocatoria        Area_convocatoria[]
+  Inscripcion_area         Inscripcion_area[]
 }
-
 
 model Area {
   id                Int                 @id @default(autoincrement())
@@ -105,6 +106,7 @@ model Area {
   descripcion_area  String
   Area_convocatoria Area_convocatoria[]
   area_categoria    Categoria_area[]
+  Inscripcion_area  Inscripcion_area[]
 }
 
 model Categoria {
@@ -195,4 +197,3 @@ model Inscripcion_area {
   area              Area         @relation(fields: [area_id], references: [id])
   convocatoria      Convocatoria @relation(fields: [convocatoria_id], references: [id])
 }
-
