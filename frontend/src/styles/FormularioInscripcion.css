@@ -1,0 +1,243 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    box-sizing: border-box;
+    background-color: #f0f2f5;
+  }
+  
+  .forminsc-contenedor {
+    width: 100%;
+    min-height: 100vh;
+    padding: 40px 5%;
+    font-family: 'Comfortaa', sans-serif;
+    color: #111;
+    box-sizing: border-box;
+  }
+  
+  .forminsc-titulo {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  
+  .forminsc-subtitulo {
+    text-align: center;
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 30px;
+  }
+  
+  .forminsc-seccion {
+    width: 100%;
+    max-width: 950px;
+    background: white;
+    padding: 24px;
+    margin: 0 auto 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  
+  .forminsc-seccion-titulo {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  
+  .forminsc-descripcion {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 18px;
+  }
+  
+  .forminsc-fila {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .forminsc-campo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .forminsc-campo label {
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  
+  .forminsc-campo select,
+  .forminsc-input,
+  .forminsc-select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-family: inherit;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+  }
+  
+  .forminsc-input:focus,
+  .forminsc-select:focus,
+  .forminsc-campo select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .forminsc-requerido {
+    color: red;
+    margin-left: 3px;
+  }
+  
+  .forminsc-input-error {
+    border: 2px solid #dc3545 !important;
+  }
+  
+  .forminsc-mensaje-error {
+    color: #dc3545;
+    font-weight: bold;
+  }
+  
+  .forminsc-fila-buscador-alineado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  
+  .forminsc-input-con-icono {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .forminsc-input-con-icono input {
+    padding-right: 30px;
+    width: 100%;
+  }
+  
+  .forminsc-icono-lupa {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 14px;
+    color: #aaa;
+  }
+  
+  .forminsc-boton-anadir {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .forminsc-boton-anadir:hover {
+    background-color: #0056b3;
+  }
+  
+  .forminsc-tabla-tutores {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  
+  .forminsc-tabla-tutores thead {
+    background-color: #e9f1f7;
+    color: #111;
+  }
+  
+  .forminsc-tabla-tutores th,
+  .forminsc-tabla-tutores td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .forminsc-tabla-tutores td:last-child {
+    text-align: center;
+  }
+  
+  .forminsc-btn-eliminar-tutor {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .forminsc-btn-eliminar-tutor:hover {
+    color: #a71d2a;
+  }
+  
+  .forminsc-mensaje {
+    font-size: 14px;
+    color: #777;
+    margin-top: 10px;
+  }
+  
+  .forminsc-finalizar-wrapper {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .forminsc-boton-finalizar {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .forminsc-boton-finalizar:hover {
+    background-color: #084284;
+  }
+  .forminsc-finalizar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+.forminsc-lista-sugerencias {
+  background-color: white;
+  border: 1px solid #ccc;
+  margin-top: 4px;
+  list-style: none;
+  padding: 0;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.forminsc-sugerencia-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.forminsc-sugerencia-item:hover {
+  background-color: #f1f1f1;
+}
+.forminsc-input-con-icono {
+  position: relative;
+  flex: 1;
+}
+
+  
