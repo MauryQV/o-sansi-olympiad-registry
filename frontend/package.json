@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
     "lucide": "^0.486.0",
