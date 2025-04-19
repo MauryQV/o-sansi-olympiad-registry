@@ -1,12 +1,16 @@
 {
-  "name": "backend",
+  "name": "olympiad-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend for Olympic Programming Contest Registry",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js", 
-    "dev": "nodemon src/index.js", 
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:areas": "node test/testAreaCategoria.js",
+    "test:limites": "node test/testMaximoAreas.js",
+    "test:simulacion": "node test/testAreasSimulacion.js",
+    "test:concepto": "node test/testAreasRestriccion.js",
+    "test:validador": "node test/probarRestriccion.js",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +27,8 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.26.9",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.9",
     "prisma": "^6.5.0"
   }

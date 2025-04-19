@@ -53,6 +53,7 @@ model Competidor {
   provincia          Provincia           @relation(fields: [provincia_id], references: [id])
   usuario            Usuario             @relation(fields: [usuario_id], references: [id])
   Inscripciones      Inscripcion_tutor[]
+  Inscripcion_area   Inscripcion_area[]
 }
 
 model Tutor {
@@ -98,6 +99,7 @@ model Convocatoria {
   Area_convocatoria        Area_convocatoria[]
   Categoria_convocatoria   Categoria_convocatoria[]
   estado_convocatoria      estado_convocatoria      @relation(fields: [id_estado_convocatoria], references: [id])
+  Inscripcion_area         Inscripcion_area[]
 }
 
 model Area {
@@ -105,6 +107,7 @@ model Area {
   nombre_area       String
   descripcion_area  String
   Area_convocatoria Area_convocatoria[]
+  Inscripcion_area  Inscripcion_area[]
 }
 
 model Categoria {
@@ -182,4 +185,16 @@ model estado_convocatoria {
   id           Int            @id @default(autoincrement())
   nombre       String         @unique
   Convocatoria Convocatoria[]
+}
+
+// Modelo para inscripción de participantes en áreas con restricción de máximo 2 por participante
+model Inscripcion_area {
+  id                Int          @id @default(autoincrement())
+  competidor_id     String
+  area_id           Int
+  convocatoria_id   Int
+  fecha_inscripcion DateTime     @default(now())
+  competidor        Competidor   @relation(fields: [competidor_id], references: [id])
+  area              Area         @relation(fields: [area_id], references: [id])
+  convocatoria      Convocatoria @relation(fields: [convocatoria_id], references: [id])
 }
