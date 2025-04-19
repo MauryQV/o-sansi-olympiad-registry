@@ -9,6 +9,11 @@ import tutorRoutes from './routes/tutorRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
 const app = express();
+import competidorRoutes from './routes/competidorRoutes.js';
+import locationRoutes from './routes/locationRoutes.js';
+
+
+
 const port = process.env.PORT;
 
 // Middleware
@@ -21,6 +26,9 @@ app.use('/api', convocatoriaRoutes);
 app.use('/api', areaRoutes);
 app.use('/api', categoriaRoutes);
 app.use('/api', tutorRoutes);
+app.use('/api', locationRoutes);
+app.use('/api', competidorRoutes);
+
 
 // Ruta de prueba
 app.get('/', (req, res) => {
