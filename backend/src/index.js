@@ -1,6 +1,13 @@
 import express from 'express'
 import "dotenv/config";
+<<<<<<< HEAD
+import cors from 'cors'
+const app = express();
+app.use(express.json());
+app.use(cors())
+=======
 import cors from 'cors';
+>>>>>>> 6c755996bb209892cdb7452b07a63851abc06db7
 import authRoutes from './routes/authRoutes.js'
 import convocatoriaRoutes from './routes/convocatoriaRoutes.js';
 import areaRoutes from './routes/areaRoutes.js';

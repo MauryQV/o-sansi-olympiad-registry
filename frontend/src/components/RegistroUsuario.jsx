@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
 import Swal from 'sweetalert2';
+import React, { useState, useEffect } from 'react';
 import '../styles/RegistroUsuario.css';
 import emailjs from '@emailjs/browser';
+import axios from 'axios';
+
 
 const RegistroUsuario = () => {
   const [userType, setUserType] = useState('competidor');
@@ -26,6 +28,50 @@ const RegistroUsuario = () => {
   const setCurrentFormData = userType === 'competidor' ? setFormDataCompetidor : setFormDataTutor;
   const currentErrors = userType === 'competidor' ? errorsCompetidor : errorsTutor;
   const setCurrentErrors = userType === 'competidor' ? setErrorsCompetidor : setErrorsTutor;
+    
+ 
+
+  const [departamentos, setDepartamentos] = useState([]);
+  const [provincias, setProvincias] = useState([]);
+  const [colegios, setColegios] = useState([]);
+
+
+
+  useEffect(() => {
+    axios.get('http://localhost:7777/api/departamentos')
+      .then((res) => {
+        setDepartamentos(res.data);
+      })
+      .catch((err) => {
+        console.error('Error al cargar departamentos:', err);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (formData.department) {
+      axios.get(`http://localhost:7777/api/departamentos/${formData.department}/provincias`)
+        .then((res) => {
+          setProvincias(res.data);
+          setFormData((prev) => ({ ...prev, province: '', school: '' }));
+          setColegios([]);
+        })
+        .catch((err) => console.error('Error al cargar provincias', err));
+    }
+  }, [formData.department]);
+
+  useEffect(() => {
+    if (formData.province) {
+      axios.get(`http://localhost:7777/api/provincias/${formData.province}/colegios`)
+        .then((res) => {
+          setColegios(res.data);
+          setFormData((prev) => ({ ...prev, school: '' }));
+        })
+        .catch((err) => console.error('Error al cargar colegios', err));
+    }
+  }, [formData.province]);
+  
+
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -164,12 +210,27 @@ const RegistroUsuario = () => {
                   <option value="cochabamba">Cochabamba</option>
                 </select>
                 {errs.department && <span className="error-message">{errs.department}</span>}
+                <select
+                    id="department"
+                    value={formData.department}
+                    onChange={handleChange}
+                    className={errors.department ? 'error' : ''}
+                  >
+                    <option value="">Seleccionar departamento</option>
+                    {departamentos.map(dep => (
+                      <option key={dep.id} value={dep.id}>{dep.nombre_departamento}</option>
+                       ))}
+
+                  </select>
+                  {errors.department && <span className="error-message">{errors.department}</span>}
               </div>
               <div className="registro-group">
                 <label>Provincia*</label>
                 <select id="province" value={data.province} onChange={handleChange} className={errs.province ? 'error' : ''}>
                   <option value="">Seleccionar provincia</option>
-                  <option value="Cercado">Cercado</option>
+                  {provincias.map(prov => (
+  <option key={prov.id} value={prov.id}>{prov.nombre_provincia}</option>
+))}
                 </select>
                 {errs.province && <span className="error-message">{errs.province}</span>}
               </div>
@@ -179,7 +240,9 @@ const RegistroUsuario = () => {
               <label>Centro Educativo*</label>
               <select id="school" value={data.school} onChange={handleChange} className={errs.school ? 'error' : ''}>
                 <option value="">Seleccionar centro educativo</option>
-                <option value="maryknoll">Maryknoll</option>
+                {colegios.map(col => (
+  <option key={col.id} value={col.id}>{col.nombre_colegio}</option>
+))}
               </select>
               {errs.school && <span className="error-message">{errs.school}</span>}
             </div>
