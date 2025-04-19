@@ -12,6 +12,7 @@ model Usuario {
   correo_electronico String      @unique
   nombre             String
   apellido           String
+  password           String
   rol_id             Int
   createdAt          DateTime    @default(now())
   competidor         Competidor?

@@ -1,5 +1,7 @@
 import prisma from '../config/prismaClient.js';
 import Joi from 'joi';
+import bcrypt from 'bcrypt';
+
 
 const ROL_COMPETIDOR_ID = 2;
 
@@ -13,8 +15,17 @@ const competidorSchema = Joi.object({
     provincia_id: Joi.number().integer().required(),
 });
 
+
+function generarPassword() {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let pass = '';
+    for (let i = 0; i < 10; i++) {
+        pass += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    }
+    return pass;
+}
+
 export const registrarCompetidor = async (data) => {
-    // 1. Validar datos de entrada
     const { error, value } = competidorSchema.validate(data);
     if (error) {
         throw new Error(`Datos inválidos: ${error.details[0].message}`);
@@ -45,13 +56,17 @@ export const registrarCompetidor = async (data) => {
         throw new Error('Ya existe un usuario o competidor con ese correo o carnet');
     }
 
-    // 3. Crear usuario
+    const contraseñaGenerada = generarPassword();
+
+    const hashedPassword = await bcrypt.hash(contraseñaGenerada, 10);
+
     const usuario = await prisma.usuario.create({
         data: {
             nombre,
             apellido,
             correo_electronico,
             rol_id: ROL_COMPETIDOR_ID,
+            password: hashedPassword,
         },
     });
 
@@ -62,14 +77,24 @@ export const registrarCompetidor = async (data) => {
             carnet_identidad,
             fecha_nacimiento: new Date(fecha_nacimiento),
             colegio_id,
-            provincia_id
+            provincia_id,
         },
         include: {
             colegio: true,
-            provincia: true,
-            usuario: true
+            provincia: {
+                include: {
+                    departamento: true,
+                },
+            },
+            usuario: true,
         },
     });
 
-    return competidor;
+    return {
+        competidor,
+        credenciales: {
+            correo_electronico,
+            contraseña: contraseñaGenerada,
+        },
+    };
 };

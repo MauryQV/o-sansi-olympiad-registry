@@ -10,6 +10,7 @@ router.post('/tutores/registro', validarDatosTutor, tutorController.registrarTut
 
 // Rutas protegidas (requieren autenticación)
 router.get('/tutores', authMiddleware, tutorController.obtenerTutores);
+
 router.get('/tutores/:id', authMiddleware, tutorController.obtenerTutorPorId);
 
 export default router; 
