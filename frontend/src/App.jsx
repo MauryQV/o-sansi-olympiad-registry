@@ -13,6 +13,7 @@ import RegistroUsuario from "./components/RegistroUsuario.jsx";
 import RegistroCompetidores from "./components/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/FormularioInscripcion.jsx";
 import Pagos from "./components/Pagos.jsx";
+import DetallePago from './components/DetallePago';
 
 
 function App() {
@@ -79,6 +80,8 @@ const AdminRedirect = ({ setIsAdmin }) => {
           <Route path="/inicio-competidor" element={<RegistroCompetidores />} />
           <Route path="/inscripcion" element={<FormularioInscripcion />} />
           <Route path="/pagos-competidor" element={<Pagos />} />
+          <Route path="/pagos/detalle/:boleta" element={<DetallePago />} />
+
 
         </Routes>
       </div>

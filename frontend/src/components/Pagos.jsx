@@ -1,5 +1,7 @@
 import React from 'react';
 import '../styles/Pagos.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const PagosVistaCompetidor = () => {
   const pagos = [
@@ -11,9 +13,10 @@ const PagosVistaCompetidor = () => {
       estado: 'Pendiente',
     },
   ];
+  const navigate = useNavigate();
 
   const verDetallePago = (boleta) => {
-    alert(`Ver detalles de: ${boleta}`);
+    navigate(`/pagos/detalle/${boleta}`)
   };
 
   const descargarBoletaPago = (boleta) => {
