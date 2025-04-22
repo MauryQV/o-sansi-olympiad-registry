@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import CardConvocatoria from './CardConvocatoria';
+import ModalNuevaConvocatoria from './ModalNuevaConvocatoria';
 import '../../styles/Convocatorias/Convocatorias.css';
 
 const Convocatorias = () => {
   const [convocatorias, setConvocatorias] = useState([]);
   const [filtroEstado, setFiltroEstado] = useState('Todos');
+  const [mostrarModal, setMostrarModal] = useState(false);
+
+  const agregarConvocatoria = (nueva) => {
+    setConvocatorias(prev => [...prev, { ...nueva, id: prev.length + 1 }]);
+    setMostrarModal(false);
+  };
 
   useEffect(() => {
     const datosSimulados = [
@@ -54,7 +61,9 @@ const Convocatorias = () => {
     <div className="convocatorias-wrapper">
       <div className="convocatorias-header">
         <h2>Gestión de Convocatorias</h2>
-        <button className="btn-nueva">+ Nueva Convocatoria</button>
+        <button className="btn-nueva" onClick={() => setMostrarModal(true)}>
+          + Nueva Convocatoria
+        </button>
       </div>
 
       <div className="filtro-convocatorias">
@@ -74,6 +83,14 @@ const Convocatorias = () => {
           <CardConvocatoria key={convocatoria.id} data={convocatoria} />
         ))}
       </div>
+
+      {mostrarModal && (
+        <ModalNuevaConvocatoria
+          visible={mostrarModal}
+          cerrar={() => setMostrarModal(false)}
+          agregar={agregarConvocatoria}
+        />
+      )}
     </div>
   );
 };

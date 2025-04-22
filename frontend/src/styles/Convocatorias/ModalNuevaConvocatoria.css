@@ -1,0 +1,124 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .modal-convocatoria {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    font-family: 'Comfortaa', sans-serif;
+  }
+  
+  .modal-convocatoria h3 {
+    margin-bottom: 0.3rem;
+  }
+  
+  .modal-convocatoria p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1.2rem;
+  }
+  
+  .modal-form .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.2rem;
+  }
+  
+  .modal-form .form-group label {
+    font-weight: bold;
+    margin-bottom: 0.4rem;
+  }
+  
+  .modal-form input,
+  .modal-form select,
+  .modal-form textarea {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.6rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+  }
+  
+  .modal-form textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .input-row {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .input-row .form-group {
+    flex: 1;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .modal-areas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem 0.8rem;
+    margin-top: 0.3rem;
+  }
+  
+  .checkbox-area {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    min-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.2s ease;
+  }
+  
+  .modal-botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+  
+  .modal-botones button {
+    font-family: inherit;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    padding: 0.5rem 1.2rem;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .modal-botones button[type="button"] {
+    background-color: #f0f0f0;
+    color: #1f1f1f;
+  }
+  
+  .modal-botones .btn-crear {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .modal-botones .btn-crear:hover {
+    background-color: #0056b3;
+  }
+  

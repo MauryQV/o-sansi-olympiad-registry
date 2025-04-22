@@ -32,8 +32,15 @@
 }
 
 .lista-convocatorias {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));  /* antes 320px */
   gap: 1.5rem;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
+  margin-top: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 1400px;  /* ampliar un poco si es necesario */
+  margin-left: auto;
+  margin-right: auto;
 }
+
+
