@@ -3,41 +3,34 @@ import EstadoBadge from './EstadoBadge';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 import '../../styles/Convocatorias/CardConvocatoria.css';
 
-const CardConvocatoria = ({ data }) => {
+const CardConvocatoria = ({ data, onVer }) => {
   return (
     <div className="card-convocatoria">
       <div className="card-header">
         <div className="card-title">{data.nombre}</div>
         <div className="card-icons">
-          <button className="btn-icono" title="Ver">
-            <Eye strokeWidth={2.5} color="#000000" />
+          <button title="Ver" onClick={() => onVer(data)}>
+            <Eye size={18} />
           </button>
-          <button className="btn-icono" title="Editar">
-            <Pencil strokeWidth={2.5} color="#000000" />
+          <button title="Editar">
+            <Pencil size={18} />
           </button>
-          <button className="btn-icono btn-delete" title="Eliminar">
-            <Trash2 strokeWidth={2.5} color="red" />
+          <button title="Eliminar" className="btn-delete">
+            <Trash2 size={18} />
           </button>
         </div>
       </div>
-
-      <div className="card-estado">
-        <EstadoBadge estado={data.estado} />
-      </div>
-
+      <EstadoBadge estado={data.estado} />
       <p className="card-descripcion">{data.descripcion}</p>
-
       <div className="card-fecha">
         <span>Inscripción:</span>
         <span>{data.inscripcionInicio} - {data.inscripcionFin}</span>
       </div>
-
       <div className="card-fecha">
         <span>Competencia:</span>
         <span>{data.competenciaInicio} - {data.competenciaFin}</span>
       </div>
-
-      <p className="card-areas">{data.areas} áreas seleccionadas</p>
+      <p className="card-areas">{data.areasSeleccionadas?.length || data.areas} áreas seleccionadas</p>
     </div>
   );
 };

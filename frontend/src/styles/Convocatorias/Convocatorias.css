@@ -33,12 +33,12 @@
 
 .lista-convocatorias {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));  /* antes 320px */
+  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));  
   gap: 1.5rem;
   margin-top: 2rem;
   justify-content: center;
   align-items: flex-start;
-  max-width: 1400px;  /* ampliar un poco si es necesario */
+  max-width: 1600px; 
   margin-left: auto;
   margin-right: auto;
 }

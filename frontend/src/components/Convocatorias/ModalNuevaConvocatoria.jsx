@@ -1,4 +1,3 @@
-// src/components/Convocatorias/ModalNuevaConvocatoria.jsx
 import React, { useState } from 'react';
 import '../../styles/Convocatorias/ModalNuevaConvocatoria.css';
 
@@ -14,6 +13,8 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, agregar }) => {
     areas: [],
   });
 
+  const [errores, setErrores] = useState({});
+
   const areasDisponibles = [
     'Matemática', 'Robótica', 'Astronomía y Astrofísica',
     'Biología', 'Química', 'Física', 'Informática'
@@ -22,6 +23,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, agregar }) => {
   const manejarCambio = (e) => {
     const { name, value } = e.target;
     setFormulario({ ...formulario, [name]: value });
+    setErrores({ ...errores, [name]: '' }); 
   };
 
   const manejarCheckbox = (area) => {
@@ -30,14 +32,59 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, agregar }) => {
       : [...formulario.areas, area];
 
     setFormulario({ ...formulario, areas: seleccionadas });
+    setErrores({ ...errores, areas: '' });
+  };
+
+  const validarFormulario = () => {
+    const nuevosErrores = {};
+
+    if (!formulario.nombre.trim()) {
+      nuevosErrores.nombre = 'El nombre la convocatoria es obligatorio.';
+    } else if (formulario.nombre.length > 100) {
+      nuevosErrores.nombre = 'Máximo 100 caracteres.';
+    }
+
+    if (!formulario.descripcion.trim()) {
+      nuevosErrores.descripcion = 'La descripción es obligatoria.';
+    } else if (formulario.descripcion.length > 1000) {
+      nuevosErrores.descripcion = 'Máximo 1000 caracteres.';
+    }
+
+    if (!formulario.inscripcionInicio) nuevosErrores.inscripcionInicio = 'Ingrese el inicio de inscripcion.';
+    if (!formulario.inscripcionFin) nuevosErrores.inscripcionFin = 'Ingrese el fin de inscripcion.';
+    if (!formulario.competenciaInicio) nuevosErrores.competenciaInicio = 'Ingrese el inicio de la competencia.';
+    if (!formulario.competenciaFin) nuevosErrores.competenciaFin = 'Ingrese el fin de la competencia.';
+
+    if (formulario.areas.length === 0) {
+      nuevosErrores.areas = 'Debe seleccionar al menos un área.';
+    }
+
+    setErrores(nuevosErrores);
+    return Object.keys(nuevosErrores).length === 0;
   };
 
   const manejarSubmit = (e) => {
     e.preventDefault();
+    if (!validarFormulario()) return;
+
     agregar({
       ...formulario,
-      areas: formulario.areas.length,
+      areasSeleccionadas: formulario.areas,
+      areas: formulario.areas.length
     });
+
+    setFormulario({
+      nombre: '',
+      estado: 'Borrador',
+      descripcion: '',
+      inscripcionInicio: '',
+      inscripcionFin: '',
+      competenciaInicio: '',
+      competenciaFin: '',
+      areas: [],
+    });
+
+    setErrores({});
   };
 
   if (!visible) return null;
@@ -58,11 +105,18 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, agregar }) => {
                 value={formulario.nombre}
                 onChange={manejarCambio}
                 placeholder="Ejemplo: Olimpiadas Científicas"
+                maxLength={100}
+                className={errores.nombre ? 'input-error' : ''}
               />
+              {errores.nombre && <span className="error-text">{errores.nombre}</span>}
             </div>
             <div className="form-group">
               <label>Estado *</label>
-              <select name="estado" value={formulario.estado} onChange={manejarCambio}>
+              <select
+                name="estado"
+                value={formulario.estado}
+                onChange={manejarCambio}
+              >
                 <option value="Borrador">Borrador</option>
                 <option value="En inscripción">En inscripción</option>
                 <option value="En competencia">En competencia</option>
@@ -78,7 +132,10 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, agregar }) => {
               value={formulario.descripcion}
               onChange={manejarCambio}
               placeholder="Breve descripción de la convocatoria"
+              maxLength={1000}
+              className={errores.descripcion ? 'input-error' : ''}
             />
+            {errores.descripcion && <span className="error-text">{errores.descripcion}</span>}
           </div>
 
           <div className="input-row">
@@ -89,7 +146,9 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, agregar }) => {
                 name="inscripcionInicio"
                 value={formulario.inscripcionInicio}
                 onChange={manejarCambio}
+                className={errores.inscripcionInicio ? 'input-error' : ''}
               />
+              {errores.inscripcionInicio && <span className="error-text">{errores.inscripcionInicio}</span>}
             </div>
             <div className="form-group">
               <label>Fecha Fin Inscripción *</label>
@@ -98,7 +157,9 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, agregar }) => {
                 name="inscripcionFin"
                 value={formulario.inscripcionFin}
                 onChange={manejarCambio}
+                className={errores.inscripcionFin ? 'input-error' : ''}
               />
+              {errores.inscripcionFin && <span className="error-text">{errores.inscripcionFin}</span>}
             </div>
           </div>
 
@@ -110,7 +171,9 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, agregar }) => {
                 name="competenciaInicio"
                 value={formulario.competenciaInicio}
                 onChange={manejarCambio}
+                className={errores.competenciaInicio ? 'input-error' : ''}
               />
+              {errores.competenciaInicio && <span className="error-text">{errores.competenciaInicio}</span>}
             </div>
             <div className="form-group">
               <label>Fecha Fin Competencia *</label>
@@ -119,13 +182,15 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, agregar }) => {
                 name="competenciaFin"
                 value={formulario.competenciaFin}
                 onChange={manejarCambio}
+                className={errores.competenciaFin ? 'input-error' : ''}
               />
+              {errores.competenciaFin && <span className="error-text">{errores.competenciaFin}</span>}
             </div>
           </div>
 
           <div className="form-group full-width">
             <label>Áreas de Competencia *</label>
-            <div className="modal-areas">
+            <div className={`modal-areas ${errores.areas ? 'input-error' : ''}`}>
               {areasDisponibles.map((area) => (
                 <label className="checkbox-area" key={area}>
                   <input
@@ -137,6 +202,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, agregar }) => {
                 </label>
               ))}
             </div>
+            {errores.areas && <span className="error-text">{errores.areas}</span>}
           </div>
 
           <div className="modal-botones">

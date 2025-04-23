@@ -1,6 +1,6 @@
 .card-convocatoria {
-  min-width: 460px;      /* antes 320px */
-  max-width: 500px;      /* opcional, para que no se desborde */
+  min-width: 460px;     
+  max-width: 500px;   
   width: 100%;
   background: white;
   border: 1px solid #ccc;
@@ -17,11 +17,9 @@
   font-size: 0.85rem;
   color: #666;
   margin-bottom: 0.6rem;
-
-  /* Agregar esto para truncar la descripción */
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 3;     /* cambia a 2 si quieres solo 2 líneas */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
