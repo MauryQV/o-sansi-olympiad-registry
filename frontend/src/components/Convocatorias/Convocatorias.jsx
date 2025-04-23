@@ -3,6 +3,7 @@ import CardConvocatoria from './CardConvocatoria';
 import ModalNuevaConvocatoria from './ModalNuevaConvocatoria';
 import ModalVisualizarConvocatoria from './ModalVisualizarConvocatoria';
 import ModalEditarConvocatoria from './ModalEditarConvocatoria';
+import ModalEliminarConvocatoria from './ModalEliminarConvocatoria';
 import '../../styles/Convocatorias/Convocatorias.css';
 
 const Convocatorias = () => {
@@ -13,6 +14,8 @@ const Convocatorias = () => {
   const [convocatoriaSeleccionada, setConvocatoriaSeleccionada] = useState(null);
   const [mostrarEditar, setMostrarEditar] = useState(false);
   const [convocatoriaEditando, setConvocatoriaEditando] = useState(null);
+  const [mostrarEliminar, setMostrarEliminar] = useState(false);
+  const [convocatoriaAEliminar, setConvocatoriaAEliminar] = useState(null);
 
   const agregarConvocatoria = (nueva) => {
     const conAreas = {
@@ -47,6 +50,16 @@ const Convocatorias = () => {
     setMostrarEditar(false);
   };  
 
+  const handleEliminar = (convocatoria) => {
+    setConvocatoriaAEliminar(convocatoria);
+    setMostrarEliminar(true);
+  };
+
+  const confirmarEliminacion = () => {
+    setConvocatorias(prev => prev.filter(c => c.id !== convocatoriaAEliminar.id));
+    setMostrarEliminar(false);
+  };
+  
   useEffect(() => {
     const datosSimulados = [
       {
@@ -114,6 +127,7 @@ const Convocatorias = () => {
             data={convocatoria}
             onVer={handleVer}
             onEditar={handleEditar}
+            onEliminar={handleEliminar}
           />
         ))}
       </div>
@@ -143,6 +157,14 @@ const Convocatorias = () => {
         />
       )}
 
+      {mostrarEliminar && (
+        <ModalEliminarConvocatoria
+          visible={mostrarEliminar}
+          cerrar={() => setMostrarEliminar(false)}
+          confirmar={confirmarEliminacion}
+          convocatoria={convocatoriaAEliminar}
+        />
+      )}
     </div>
   );
 };
