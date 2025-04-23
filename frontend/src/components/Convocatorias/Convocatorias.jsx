@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CardConvocatoria from './CardConvocatoria';
 import ModalNuevaConvocatoria from './ModalNuevaConvocatoria';
 import ModalVisualizarConvocatoria from './ModalVisualizarConvocatoria';
+import ModalEditarConvocatoria from './ModalEditarConvocatoria';
 import '../../styles/Convocatorias/Convocatorias.css';
 
 const Convocatorias = () => {
@@ -10,6 +11,8 @@ const Convocatorias = () => {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarVisual, setMostrarVisual] = useState(false);
   const [convocatoriaSeleccionada, setConvocatoriaSeleccionada] = useState(null);
+  const [mostrarEditar, setMostrarEditar] = useState(false);
+  const [convocatoriaEditando, setConvocatoriaEditando] = useState(null);
 
   const agregarConvocatoria = (nueva) => {
     const conAreas = {
@@ -32,6 +35,18 @@ const Convocatorias = () => {
     setMostrarVisual(true);
   };
 
+  const handleEditar = (convocatoria) => {
+    setConvocatoriaEditando(convocatoria);
+    setMostrarEditar(true);
+  };
+  
+  const actualizarConvocatoria = (actualizada) => {
+    setConvocatorias(prev =>
+      prev.map(c => c.id === actualizada.id ? actualizada : c)
+    );
+    setMostrarEditar(false);
+  };  
+
   useEffect(() => {
     const datosSimulados = [
       {
@@ -44,7 +59,7 @@ const Convocatorias = () => {
         competenciaFin: "20/05/2025",
         estado: "En inscripción",
         areas: 7,
-        areasSeleccionadas: ["Matemática", "Biología", "Informática","Fisica", "Quimica", "Astronomia", "Robotica"]
+        areasSeleccionadas: ["Matemática", "Biología", "Informática","Física", "Química", "Astronomía y Astrofísica", "Robótica"]
       },
       {
         id: 2,
@@ -68,7 +83,7 @@ const Convocatorias = () => {
         competenciaFin: "30/04/2023",
         estado: "Finalizada",
         areas: 5,
-        areasSeleccionadas: ["Matemática", "Fisica", "Quimica", "Astronomia", "Robotica"]
+        areasSeleccionadas: ["Matemática", "Física", "Química", "Astronomía y Astrofísica", "Robótica"]
       }
     ];
     setConvocatorias(datosSimulados);
@@ -98,6 +113,7 @@ const Convocatorias = () => {
             key={convocatoria.id}
             data={convocatoria}
             onVer={handleVer}
+            onEditar={handleEditar}
           />
         ))}
       </div>
@@ -117,6 +133,16 @@ const Convocatorias = () => {
           cerrar={() => setMostrarVisual(false)}
         />
       )}
+
+      {mostrarEditar && (
+        <ModalEditarConvocatoria
+          visible={mostrarEditar}
+          convocatoria={convocatoriaEditando}
+          cerrar={() => setMostrarEditar(false)}
+          guardar={actualizarConvocatoria}
+        />
+      )}
+
     </div>
   );
 };

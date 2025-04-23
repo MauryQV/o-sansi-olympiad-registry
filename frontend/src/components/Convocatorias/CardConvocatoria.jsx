@@ -3,7 +3,7 @@ import EstadoBadge from './EstadoBadge';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 import '../../styles/Convocatorias/CardConvocatoria.css';
 
-const CardConvocatoria = ({ data, onVer }) => {
+const CardConvocatoria = ({ data, onVer, onEditar }) => {
   return (
     <div className="card-convocatoria">
       <div className="card-header">
@@ -12,7 +12,7 @@ const CardConvocatoria = ({ data, onVer }) => {
           <button title="Ver" onClick={() => onVer(data)}>
             <Eye size={18} />
           </button>
-          <button title="Editar">
+          <button title="Editar" onClick={() => onEditar(data)}>
             <Pencil size={18} />
           </button>
           <button title="Eliminar" className="btn-delete">
