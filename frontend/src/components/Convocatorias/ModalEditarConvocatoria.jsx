@@ -1,4 +1,3 @@
-// src/components/Convocatorias/ModalEditarConvocatoria.jsx
 import React, { useState, useEffect } from 'react';
 import '../../styles/Convocatorias/ModalNuevaConvocatoria.css';
 
