@@ -48,7 +48,7 @@
 .reportes-minimal__filtro {
   display: flex;
   flex-direction: column;
-  min-width: 200px;
+  min-width: 400px;
 }
 
 .reportes-minimal__filtro label {
@@ -115,18 +115,18 @@
 }
 
 .estado--pendiente {
-  background-color: #e0ecff;
-  color: #2563eb;
+  background-color: #1666e7;
+  color: #ffffff;
 }
 
 .estado--completado {
-  background-color: #d1f7dc;
-  color: #059669;
+  background-color: #02810fee;
+  color: #ffffff;
 }
 
 .estado--cancelado {
-  background-color: #ffe0e0;
-  color: #ef4444;
+  background-color: #e63333;
+  color: #ffffff;
 }
 
 .reportes-minimal__total {
