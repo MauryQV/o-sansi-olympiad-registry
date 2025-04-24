@@ -1,0 +1,87 @@
+.gestion-usuario {
+    padding: 2rem;
+    background-color: #f5f7f9;
+
+  }
+  .gestion-boton{
+    display: flex;
+    gap:68rem;
+  }
+  .boton-nuevo-usuario {
+    background-color: #007bff;
+    color: white;
+    border: 50px;
+    border-color:#007bff ;
+    padding:0.6rem;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+  }
+  
+  .gestion-usuarios-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .usuarios-filtro { /*a*/
+    margin-bottom: 1rem;
+  }
+  
+  .gestion-usuario-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  
+  .gestion-usuario-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    width: 300px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .gestion-usuario-inicio-dato {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .usuario-nombre {
+    font-weight: bold;
+  }
+  
+  .usuario-iconos {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .usuario-info p {
+    margin: 0.25rem 0;
+  }
+  
+  .usuario-rol {
+    background-color: #0ea5e9;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    display: inline-block;
+  }
+  
+  .usuario-estado {
+    background-color: #8b5cf6;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    display: inline-block;
+  }
+  
+
+  
