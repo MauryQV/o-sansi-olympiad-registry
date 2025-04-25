@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "./node_modules/@prisma/client" // Ruta explícita
 }
 
 datasource db {
@@ -60,6 +61,7 @@ model Tutor {
   id                  String              @id @default(uuid())
   usuario_id          String              @unique
   carnet_identidad    String              @unique
+  numero_celular      String              @unique
   Inscripciones_tutor Inscripcion_tutor[]
   usuario             Usuario             @relation(fields: [usuario_id], references: [id])
 }

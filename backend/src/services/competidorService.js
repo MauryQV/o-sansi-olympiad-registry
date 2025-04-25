@@ -1,6 +1,7 @@
 import prisma from '../config/prismaClient.js';
 import Joi from 'joi';
 import bcrypt from 'bcrypt';
+import { generarPassword } from '../utils/passwordSecurity.js';
 
 
 const ROL_COMPETIDOR_ID = 2;
@@ -16,14 +17,6 @@ const competidorSchema = Joi.object({
 });
 
 
-function generarPassword() {
-    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let pass = '';
-    for (let i = 0; i < 10; i++) {
-        pass += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
-    }
-    return pass;
-}
 
 export const registrarCompetidor = async (data) => {
     const { error, value } = competidorSchema.validate(data);

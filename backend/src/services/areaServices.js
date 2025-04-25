@@ -21,6 +21,7 @@ export const crearArea = async (nombre_area, descripcion_area) => {
             nombre_area,
             descripcion_area,
         },
+
     });
 };
 
@@ -32,9 +33,17 @@ export const getAreas = async () => {
 
 
 export const getAreaById = async (id) => {
-    return await prisma.area.findUnique({ where: { id: parseInt(id, 10) } });
-}
-
+    return await prisma.area.findUnique({
+        where: { id: parseInt(id, 10) },
+        include: {
+            Area_convocatoria: {
+                include: {
+                    convocatoria: true,
+                },
+            },
+        },
+    });
+};
 
 export const updateArea = async (id, nombre_area, descripcion_area) => {
     return await prisma.area.update({
