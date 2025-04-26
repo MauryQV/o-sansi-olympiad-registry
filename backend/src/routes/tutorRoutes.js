@@ -1,15 +1,18 @@
 import express from 'express';
 import * as tutorController from '../controllers/tutorController.js';
-import { validarDatosTutor } from '../middlewares/tutorMiddleware.js';
-import { authMiddleware } from '../middlewares/authMiddleware.js';
+
 
 const router = express.Router();
 
-// Ruta para registro de tutores (pública)
-router.post('/tutores/registro', validarDatosTutor, tutorController.registrarTutor);
+router.post('/tutores/registro', tutorController.registrarTutor);
 
-// Rutas protegidas (requieren autenticación)
-router.get('/tutores', authMiddleware, tutorController.obtenerTutores);
-router.get('/tutores/:id', authMiddleware, tutorController.obtenerTutorPorId);
+router.get('/tutores', tutorController.obtenerTutores);
+
+router.get('/tutores/:id', tutorController.obtenerTutorPorId);
+
+router.get('/buscar-tutor', tutorController.buscarTutores);
+
+
+
 
 export default router; 

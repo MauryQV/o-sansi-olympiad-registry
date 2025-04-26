@@ -1,143 +1,107 @@
 import prisma from '../config/prismaClient.js';
-import supabase from '../config/supabaseClient.js';
+import Joi from 'joi';
+import bcrypt from 'bcrypt';
+import { generarPassword } from '../utils/passwordSecurity.js';
 
-/**
- * Crea un nuevo tutor y su usuario asociado
- */
-export const crearTutor = async (tutorData) => {
-    try {
-        // Verificar si ya existe un usuario con el mismo correo electrónico
-        const usuarioExistente = await prisma.usuario.findFirst({
-            where: {
-                correo_electronico: tutorData.correo_electronico
-            }
-        });
+const ROL_TUTOR_ID = 4;
 
-        if (usuarioExistente) {
-            throw new Error('Ya existe un usuario registrado con este correo electrónico');
-        }
+//joi
+const tutorSchema = Joi.object({
+    nombre: Joi.string().min(2).max(50).required(),
+    apellido: Joi.string().min(2).max(50).required(),
+    correo_electronico: Joi.string().email().required(),
+    carnet_identidad: Joi.string().min(5).max(20).required(),
+    numero_celular: Joi.string().pattern(/^\d{8,12}$/).required(),
+});
 
-        // Verificar si ya existe un tutor con el mismo carnet de identidad
-        const tutorExistente = await prisma.tutor.findFirst({
-            where: {
-                carnet_identidad: tutorData.carnet_identidad
-            }
-        });
+// Crear nuevo tutor
+export const crearTutor = async (data) => {
+    const { error, value } = tutorSchema.validate(data);
+    if (error) {
+        throw new Error(`Datos inválidos: ${error.details[0].message}`);
+    }
 
-        if (tutorExistente) {
-            throw new Error('Ya existe un tutor registrado con este carnet de identidad');
-        }
+    const { nombre, apellido, correo_electronico, carnet_identidad, numero_celular } = value;
 
-        // Registrar usuario en Supabase para autenticación
-        const { data: userData, error } = await supabase.auth.signUp({
-            email: tutorData.correo_electronico,
-            password: tutorData.password
-        });
+    const existente = await prisma.usuario.findFirst({
+        where: {
+            OR: [
+                { correo_electronico },
+                { tutor: { carnet_identidad } },
+            ],
+        },
+        include: { tutor: true },
+    });
 
-        if (error) {
-            throw new Error('Error al registrar el usuario: ' + error.message);
-        }
+    if (existente) {
+        throw new Error('Ya existe un usuario o tutor con ese correo o carnet de identidad');
+    }
 
-        // Obtener rol de tutor
-        const tutorRole = await prisma.rol.findFirst({
-            where: {
-                nombre: 'tutor'
-            }
-        });
+    const contraseñaGenerada = generarPassword();
+    const hashedPassword = await bcrypt.hash(contraseñaGenerada, 10);
 
-        if (!tutorRole) {
-            throw new Error('Rol de tutor no encontrado en el sistema');
-        }
+    const usuario = await prisma.usuario.create({
+        data: {
+            nombre,
+            apellido,
+            correo_electronico,
+            rol_id: ROL_TUTOR_ID,
+            password: hashedPassword,
+        },
+    });
 
-        // Crear primero el usuario con los datos personales
-        const usuario = await prisma.usuario.create({
-            data: {
-                id: userData.user.id,
-                correo_electronico: tutorData.correo_electronico,
-                nombre: tutorData.nombre,
-                apellido: tutorData.apellido,
-                rol_id: tutorRole.id
-            }
-        });
+    const tutor = await prisma.tutor.create({
+        data: {
+            usuario_id: usuario.id,
+            carnet_identidad,
+            numero_celular,
+        },
+    });
 
-        // Luego crear el tutor relacionado con el usuario
-        const tutor = await prisma.tutor.create({
-            data: {
-                usuario_id: usuario.id,
-                carnet_identidad: tutorData.carnet_identidad
-            },
-            include: {
-                usuario: true
-            }
-        });
-
-        // El objeto resultante ya incluye usuario con todos los datos personales
-        return {
+    return {
+        tutor: {
             id: tutor.id,
-            carnet_identidad: tutor.carnet_identidad,
-            nombre: tutor.usuario.nombre,
-            apellido: tutor.usuario.apellido,
-            correo_electronico: tutor.usuario.correo_electronico
-        };
-    } catch (error) {
-        console.error('Error en crearTutor:', error);
-        throw error;
-    }
+            carnet_identidad,
+            numero_celular,
+            usuario_id: usuario.id,
+            nombre: usuario.nombre,
+            apellido: usuario.apellido,
+            correo_electronico: usuario.correo_electronico,
+        },
+        credenciales: {
+            correo_electronico,
+            contraseña: contraseñaGenerada,
+        },
+    };
 };
 
-/**
- * Obtiene todos los tutores con sus datos de usuario
- */
+
 export const getTutores = async () => {
-    try {
-        return await prisma.tutor.findMany({
-            include: {
-                usuario: true
-            }
-        });
-    } catch (error) {
-        console.error('Error en getTutores:', error);
-        throw error;
-    }
+    return await prisma.tutor.findMany({
+        include: { usuario: true },
+    });
 };
 
-/**
- * Obtiene un tutor por ID con sus datos de usuario
- */
 export const getTutorById = async (id) => {
-    try {
-        return await prisma.tutor.findUnique({
-            where: { id },
-            include: {
-                usuario: true
+    return await prisma.tutor.findUnique({
+        where: { id },
+        include: { usuario: true },
+    });
+};
+
+
+export const buscarTutoresPorNombre = async (nombre) => {
+    return await prisma.tutor.findMany({
+        where: {
+            usuario: {
+                nombre: {
+                    contains: nombre,
+                    mode: 'insensitive'
+                }
             }
-        });
-    } catch (error) {
-        console.error('Error en getTutorById:', error);
-        throw error;
-    }
+        },
+        include: {
+            usuario: true
+        }
+    });
 };
-
-/**
- * Valida el formato del carnet de identidad (7 dígitos numéricos)
- */
-export const validarCarnetIdentidad = (carnet) => {
-    const regex = /^\d{7}$/;
-    return regex.test(carnet);
-};
-
-/**
- * Valida el formato de correo electrónico
- */
-export const validarCorreoElectronico = (correo) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(correo);
-};
-
-/**
- * Valida el formato del número de teléfono (celular boliviano)
- */
-export const validarTelefono = (telefono) => {
-    const regex = /^[67]\d{7}$/;
-    return regex.test(telefono);
-}; 

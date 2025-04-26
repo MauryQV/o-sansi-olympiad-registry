@@ -1,9 +1,14 @@
 import express from 'express';
 import * as convocatoriaController from '../controllers/convocatoriaController.js';
+import { verificarToken } from '../middlewares/authMiddleware.js';
+import { requirePermiso } from '../middlewares/permisoMiddleware.js';
 
 const router = express.Router();
 
-router.post('/crear-convocatoria', convocatoriaController.crearConvocatoriaController);
+router.post('/crear-convocatoria',
+    verificarToken,
+    requirePermiso("crear-convocatoria"),
+    convocatoriaController.crearConvocatoriaController);
 
 router.post('/asignar-categoria', convocatoriaController.asignarCategoria);
 
