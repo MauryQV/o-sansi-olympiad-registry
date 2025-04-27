@@ -11,12 +11,9 @@ import RegistroCompetidores from "./components/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/FormularioInscripcion.jsx";
 import Pagos from "./components/Pagos.jsx";
 import DetallePago from './components/DetallePago';
-<<<<<<< HEAD
 import AdminGestionUsuario from './components/AdminGestionUsuario.jsx';
-=======
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
 import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
->>>>>>> origin/develop
 
 function App() {
   const [rol, setRol] = useState(() => localStorage.getItem("rol"));
@@ -47,11 +44,8 @@ function App() {
           <Route path="/inscripcion" element={<FormularioInscripcion />} />
           <Route path="/pagos-competidor" element={<Pagos />} />
           <Route path="/pagos/detalle/:boleta" element={<DetallePago />} />
-<<<<<<< HEAD
           <Route path="/usuarios" element={<AdminGestionUsuario setRol={setRol} />} />
-=======
           <Route path="/solicitudes" element={<SolicitudesTutoria setRol={setRol} />} />
->>>>>>> origin/develop
 
 
         </Routes>
