@@ -186,14 +186,7 @@ const RegistroUsuario = () => {
           )}
   
           <button type="submit" className="registro-btn">Registrarse</button>
-          <button
-            type="button"
-            className="registro-btn cancelar"
-            onClick={() => window.location.href = '/'}
-          >
-            Cancelar
-          </button>
-  
+          
           <p className="registro-login">
             ¿Ya tienes una cuenta? <a href="/login">Inicia sesión aquí</a>
           </p>
