@@ -1,106 +1,241 @@
-import React, { useState, useEffect } from 'react';
-import CardConvocatoria from './CardConvocatoria';
-import ModalNuevaConvocatoria from './ModalNuevaConvocatoria';
-import ModalVisualizarConvocatoria from './ModalVisualizarConvocatoria';
-import ModalEditarConvocatoria from './ModalEditarConvocatoria';
-import ModalEliminarConvocatoria from './ModalEliminarConvocatoria';
-import '../../styles/Convocatorias/Convocatorias.css';
+import React, { useState, useEffect } from "react";
+import CardConvocatoria from "./CardConvocatoria";
+import ModalNuevaConvocatoria from "./ModalNuevaConvocatoria";
+import ModalVisualizarConvocatoria from "./ModalVisualizarConvocatoria";
+import ModalEditarConvocatoria from "./ModalEditarConvocatoria";
+import ModalEliminarConvocatoria from "./ModalEliminarConvocatoria";
+import "../../styles/Convocatorias/Convocatorias.css";
+import convocatoriaService from "../../services/convocatoriaService";
 
 const Convocatorias = () => {
   const [convocatorias, setConvocatorias] = useState([]);
-  const [filtroEstado, setFiltroEstado] = useState('Todos');
+  const [filtroEstado, setFiltroEstado] = useState("Todos");
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarVisual, setMostrarVisual] = useState(false);
-  const [convocatoriaSeleccionada, setConvocatoriaSeleccionada] = useState(null);
+  const [convocatoriaSeleccionada, setConvocatoriaSeleccionada] =
+    useState(null);
   const [mostrarEditar, setMostrarEditar] = useState(false);
   const [convocatoriaEditando, setConvocatoriaEditando] = useState(null);
   const [mostrarEliminar, setMostrarEliminar] = useState(false);
   const [convocatoriaAEliminar, setConvocatoriaAEliminar] = useState(null);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
 
-  const agregarConvocatoria = (nueva) => {
-    const conAreas = {
-      ...nueva,
-      id: convocatorias.length + 1,
-      areas: nueva.areasSeleccionadas.length
+  // Cargar convocatorias desde el backend
+  useEffect(() => {
+    const cargarConvocatorias = async () => {
+      try {
+        setCargando(true);
+        const data = await convocatoriaService.obtenerConvocatorias();
+
+        // Transformar los datos si es necesario para que coincidan con la estructura esperada
+        const convocatoriasFormateadas = data.map((conv) => ({
+          id: conv.id,
+          nombre: conv.nombre_convocatoria,
+          descripcion: conv.descripcion_convocatoria,
+          inscripcionInicio: new Date(conv.fecha_inicio).toLocaleDateString(
+            "es-ES"
+          ),
+          inscripcionFin: new Date(conv.fecha_fin).toLocaleDateString("es-ES"),
+          competenciaInicio: new Date(
+            conv.competicion_inicio
+          ).toLocaleDateString("es-ES"),
+          competenciaFin: new Date(conv.competicion_fin).toLocaleDateString(
+            "es-ES"
+          ),
+          estado:
+            conv.id_estado_convocatoria === 1
+              ? "En inscripción"
+              : conv.id_estado_convocatoria === 2
+              ? "En competencia"
+              : "Finalizada",
+          // Nota: Para obtener las áreas relacionadas, necesitaríamos hacer una llamada adicional
+          // o modificar el endpoint para incluir esta información
+        }));
+
+        setConvocatorias(convocatoriasFormateadas);
+        setError(null);
+      } catch (error) {
+        console.error("Error al cargar convocatorias:", error);
+        setError(
+          "Error al cargar convocatorias. Por favor, intenta de nuevo más tarde."
+        );
+      } finally {
+        setCargando(false);
+      }
     };
-    setConvocatorias(prev => [...prev, conAreas]);
-    setMostrarModal(false);
+
+    cargarConvocatorias();
+  }, []);
+
+  const agregarConvocatoria = async (nueva) => {
+    try {
+      // Transformar datos para que coincidan con la estructura esperada por el backend
+      const datosConvocatoria = {
+        nombre_convocatoria: nueva.nombre,
+        descripcion_convocatoria: nueva.descripcion,
+        fecha_inicio: nueva.inscripcionInicio,
+        fecha_fin: nueva.inscripcionFin,
+        competicion_inicio: nueva.competenciaInicio,
+        competicion_fin: nueva.competenciaFin,
+        id_estado_convocatoria:
+          nueva.estado === "En inscripción"
+            ? 1
+            : nueva.estado === "En competencia"
+            ? 2
+            : 3,
+        areaIds: nueva.areasSeleccionadas, // Suponiendo que son IDs
+      };
+
+      const response = await convocatoriaService.crearConvocatoria(
+        datosConvocatoria
+      );
+
+      // Recargar convocatorias después de crear una nueva
+      const data = await convocatoriaService.obtenerConvocatorias();
+      const convocatoriasFormateadas = data.map((conv) => ({
+        id: conv.id,
+        nombre: conv.nombre_convocatoria,
+        descripcion: conv.descripcion_convocatoria,
+        inscripcionInicio: new Date(conv.fecha_inicio).toLocaleDateString(
+          "es-ES"
+        ),
+        inscripcionFin: new Date(conv.fecha_fin).toLocaleDateString("es-ES"),
+        competenciaInicio: new Date(conv.competicion_inicio).toLocaleDateString(
+          "es-ES"
+        ),
+        competenciaFin: new Date(conv.competicion_fin).toLocaleDateString(
+          "es-ES"
+        ),
+        estado:
+          conv.id_estado_convocatoria === 1
+            ? "En inscripción"
+            : conv.id_estado_convocatoria === 2
+            ? "En competencia"
+            : "Finalizada",
+      }));
+
+      setConvocatorias(convocatoriasFormateadas);
+      setMostrarModal(false);
+    } catch (error) {
+      console.error("Error al crear convocatoria:", error);
+      // Aquí podrías mostrar un mensaje de error al usuario
+    }
   };
-  
 
   const filtrarConvocatorias = () => {
-    if (filtroEstado === 'Todos') return convocatorias;
-    return convocatorias.filter(c => c.estado === filtroEstado);
+    if (filtroEstado === "Todos") return convocatorias;
+    return convocatorias.filter((c) => c.estado === filtroEstado);
   };
 
-  const handleVer = (convocatoria) => {
-    setConvocatoriaSeleccionada(convocatoria);
-    setMostrarVisual(true);
+  const handleVer = async (convocatoria) => {
+    try {
+      // Obtener detalles adicionales de la convocatoria si es necesario
+      const detallesConvocatoria =
+        await convocatoriaService.obtenerConvocatoriaConAreas(convocatoria.id);
+      setConvocatoriaSeleccionada({
+        ...convocatoria,
+        areasDetalladas:
+          detallesConvocatoria.Area_convocatoria?.map((ac) => ac.area) || [],
+      });
+      setMostrarVisual(true);
+    } catch (error) {
+      console.error("Error al obtener detalles de la convocatoria:", error);
+    }
   };
 
-  const handleEditar = (convocatoria) => {
-    setConvocatoriaEditando(convocatoria);
-    setMostrarEditar(true);
+  const handleEditar = async (convocatoria) => {
+    try {
+      // Obtener detalles adicionales de la convocatoria para edición
+      const detallesConvocatoria =
+        await convocatoriaService.obtenerConvocatoriaConAreas(convocatoria.id);
+      setConvocatoriaEditando({
+        ...convocatoria,
+        areasSeleccionadas:
+          detallesConvocatoria.Area_convocatoria?.map((ac) => ac.area_id) || [],
+      });
+      setMostrarEditar(true);
+    } catch (error) {
+      console.error("Error al obtener detalles para edición:", error);
+    }
   };
-  
-  const actualizarConvocatoria = (actualizada) => {
-    setConvocatorias(prev =>
-      prev.map(c => c.id === actualizada.id ? actualizada : c)
-    );
-    setMostrarEditar(false);
-  };  
+
+  const actualizarConvocatoria = async (actualizada) => {
+    try {
+      // Transformar datos para actualización
+      const datosActualizacion = {
+        nombre_convocatoria: actualizada.nombre,
+        descripcion_convocatoria: actualizada.descripcion,
+        fecha_inicio: actualizada.inscripcionInicio,
+        fecha_fin: actualizada.inscripcionFin,
+        competicion_inicio: actualizada.competenciaInicio,
+        competicion_fin: actualizada.competenciaFin,
+        id_estado_convocatoria:
+          actualizada.estado === "En inscripción"
+            ? 1
+            : actualizada.estado === "En competencia"
+            ? 2
+            : 3,
+        areaIds: actualizada.areasSeleccionadas,
+      };
+
+      await convocatoriaService.actualizarConvocatoria(
+        actualizada.id,
+        datosActualizacion
+      );
+
+      // Recargar convocatorias
+      const data = await convocatoriaService.obtenerConvocatorias();
+      const convocatoriasFormateadas = data.map((conv) => ({
+        id: conv.id,
+        nombre: conv.nombre_convocatoria,
+        descripcion: conv.descripcion_convocatoria,
+        inscripcionInicio: new Date(conv.fecha_inicio).toLocaleDateString(
+          "es-ES"
+        ),
+        inscripcionFin: new Date(conv.fecha_fin).toLocaleDateString("es-ES"),
+        competenciaInicio: new Date(conv.competicion_inicio).toLocaleDateString(
+          "es-ES"
+        ),
+        competenciaFin: new Date(conv.competicion_fin).toLocaleDateString(
+          "es-ES"
+        ),
+        estado:
+          conv.id_estado_convocatoria === 1
+            ? "En inscripción"
+            : conv.id_estado_convocatoria === 2
+            ? "En competencia"
+            : "Finalizada",
+      }));
+
+      setConvocatorias(convocatoriasFormateadas);
+      setMostrarEditar(false);
+    } catch (error) {
+      console.error("Error al actualizar convocatoria:", error);
+    }
+  };
 
   const handleEliminar = (convocatoria) => {
     setConvocatoriaAEliminar(convocatoria);
     setMostrarEliminar(true);
   };
 
-  const confirmarEliminacion = () => {
-    setConvocatorias(prev => prev.filter(c => c.id !== convocatoriaAEliminar.id));
-    setMostrarEliminar(false);
+  const confirmarEliminacion = async () => {
+    try {
+      // Nota: Se necesitaría un endpoint para eliminar convocatorias
+      // Por ahora, solo actualizamos el estado local
+      setConvocatorias((prev) =>
+        prev.filter((c) => c.id !== convocatoriaAEliminar.id)
+      );
+      setMostrarEliminar(false);
+    } catch (error) {
+      console.error("Error al eliminar convocatoria:", error);
+    }
   };
-  
-  useEffect(() => {
-    const datosSimulados = [
-      {
-        id: 1,
-        nombre: "Olimpiadas Científicas Escolares 2025",
-        descripcion: "Convocatoria anual para los olimpíadas para las olimpíadas científicas.",
-        inscripcionInicio: "05/04/2025",
-        inscripcionFin: "30/04/2025",
-        competenciaInicio: "10/05/2025",
-        competenciaFin: "20/05/2025",
-        estado: "En inscripción",
-        areas: 7,
-        areasSeleccionadas: ["Matemática", "Biología", "Informática","Física", "Química", "Astronomía y Astrofísica", "Robótica"]
-      },
-      {
-        id: 2,
-        nombre: "Olimpiadas Científicas Escolares 2024",
-        descripcion: "Convocatoria anual para los olimpíadas para las olimpíadas científicas.",
-        inscripcionInicio: "10/02/2024",
-        inscripcionFin: "28/02/2024",
-        competenciaInicio: "15/03/2024",
-        competenciaFin: "25/03/2024",
-        estado: "Finalizada",
-        areas: 3,
-        areasSeleccionadas: ["Matemática", "Biología", "Informática"]
-      },
-      {
-        id: 3,
-        nombre: "Olimpiadas Científicas Escolares 2023",
-        descripcion: "Convocatoria anual para los olimpíadas para las olimpíadas científicas.",
-        inscripcionInicio: "13/03/2023",
-        inscripcionFin: "05/04/2023",
-        competenciaInicio: "20/04/2023",
-        competenciaFin: "30/04/2023",
-        estado: "Finalizada",
-        areas: 5,
-        areasSeleccionadas: ["Matemática", "Física", "Química", "Astronomía y Astrofísica", "Robótica"]
-      }
-    ];
-    setConvocatorias(datosSimulados);
-  }, []);
+
+  if (cargando)
+    return <div className="cargando">Cargando convocatorias...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="convocatorias-wrapper">
@@ -112,7 +247,10 @@ const Convocatorias = () => {
       </div>
 
       <div className="filtro-convocatorias">
-        <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
+        <select
+          value={filtroEstado}
+          onChange={(e) => setFiltroEstado(e.target.value)}
+        >
           <option value="Todos">Todos los estados</option>
           <option value="En inscripción">En inscripción</option>
           <option value="En competencia">En competencia</option>

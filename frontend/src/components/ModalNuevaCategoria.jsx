@@ -1,6 +1,6 @@
 // ModalNuevaCategoria.jsx
-import React, { useState, useEffect } from 'react';
-import '../styles/ModalNuevaCategoria.css';
+import React, { useState, useEffect } from "react";
+import "../styles/ModalNuevaCategoria.css";
 
 const ModalNuevaCategoria = ({
   mostrar,
@@ -11,12 +11,14 @@ const ModalNuevaCategoria = ({
   categoriaAEditar,
   onActualizarCategoria,
 }) => {
-  const [nombre, setNombre] = useState('');
-  const [descripcion, setDescripcion] = useState('');
+  const [nombre, setNombre] = useState("");
+  const [descripcion, setDescripcion] = useState("");
   const [gradosPrimaria, setGradosPrimaria] = useState([]);
   const [gradosSecundaria, setGradosSecundaria] = useState([]);
-  const [areaSeleccionadaInterna, setAreaSeleccionada] = useState(areaSeleccionada || '');
-  const [nombreError, setNombreError] = useState('');
+  const [areaSeleccionadaInterna, setAreaSeleccionada] = useState(
+    areaSeleccionada || ""
+  );
+  const [nombreError, setNombreError] = useState("");
 
   useEffect(() => {
     if (categoriaAEditar) {
@@ -29,29 +31,37 @@ const ModalNuevaCategoria = ({
   }, [categoriaAEditar]);
 
   const gradosDisponibles = [
-    { tipo: 'Primaria', niveles: ['3°', '4°', '5°', '6°'] },
-    { tipo: 'Secundaria', niveles: ['1°', '2°', '3°', '4°', '5°', '6°'] },
+    { tipo: "Primaria", niveles: ["3°", "4°", "5°", "6°"] },
+    { tipo: "Secundaria", niveles: ["1°", "2°", "3°", "4°", "5°", "6°"] },
   ];
 
   const toggleGrado = (grado, tipo) => {
-    if (tipo === 'Primaria') {
-      setGradosPrimaria(gradosPrimaria.includes(grado)
-        ? gradosPrimaria.filter(g => g !== grado)
-        : [...gradosPrimaria, grado]);
+    if (tipo === "Primaria") {
+      setGradosPrimaria(
+        gradosPrimaria.includes(grado)
+          ? gradosPrimaria.filter((g) => g !== grado)
+          : [...gradosPrimaria, grado]
+      );
     } else {
-      setGradosSecundaria(gradosSecundaria.includes(grado)
-        ? gradosSecundaria.filter(g => g !== grado)
-        : [...gradosSecundaria, grado]);
+      setGradosSecundaria(
+        gradosSecundaria.includes(grado)
+          ? gradosSecundaria.filter((g) => g !== grado)
+          : [...gradosSecundaria, grado]
+      );
     }
   };
 
   const enviarFormulario = (e) => {
     e.preventDefault();
     if (!nombre.trim()) {
-      setNombreError('El nombre es obligatorio.');
+      setNombreError("El nombre es obligatorio.");
       return;
     }
-    if (descripcion.trim() && (gradosPrimaria.length > 0 || gradosSecundaria.length > 0) && areaSeleccionadaInterna) {
+    if (
+      descripcion.trim() &&
+      (gradosPrimaria.length > 0 || gradosSecundaria.length > 0) &&
+      areaSeleccionadaInterna
+    ) {
       const nuevaCategoria = {
         nombre,
         descripcion,
@@ -67,12 +77,12 @@ const ModalNuevaCategoria = ({
       }
 
       cerrar();
-      setNombre('');
-      setDescripcion('');
+      setNombre("");
+      setDescripcion("");
       setGradosPrimaria([]);
       setGradosSecundaria([]);
-      setAreaSeleccionada('');
-      setNombreError('');
+      setAreaSeleccionada("");
+      setNombreError("");
     }
   };
 
@@ -81,8 +91,11 @@ const ModalNuevaCategoria = ({
   return (
     <div className="modal-fondo">
       <div className="modal-contenido">
-        <h3>{categoriaAEditar ? 'Editar Categoría' : 'Nueva Categoría'}</h3>
-        <p>Complete la información para {categoriaAEditar ? 'editar la categoría' : 'crear una categoría'}</p>
+        <h3>{categoriaAEditar ? "Editar Categoría" : "Nueva Categoría"}</h3>
+        <p>
+          Complete la información para{" "}
+          {categoriaAEditar ? "editar la categoría" : "crear una categoría"}
+        </p>
         <form onSubmit={enviarFormulario}>
           <label>
             Nombre de la Categoría <span className="obligatorio">*</span>
@@ -94,11 +107,11 @@ const ModalNuevaCategoria = ({
                 const regex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s3-6]*$/;
                 if (value.length <= 15 && regex.test(value)) {
                   setNombre(value);
-                  setNombreError('');
+                  setNombreError("");
                 } else if (value.length > 15) {
-                  setNombreError('Máximo 30 caracteres.');
+                  setNombreError("Máximo 30 caracteres.");
                 } else {
-                  setNombreError('Solo letras, espacios y números del 3 al 6.');
+                  setNombreError("Solo letras, espacios y números del 3 al 6.");
                 }
               }}
               placeholder="Ejemplo: Nivel 3 Básico"
@@ -127,7 +140,9 @@ const ModalNuevaCategoria = ({
             >
               <option value="">Seleccione un área</option>
               {areas.map((area, index) => (
-                <option key={index} value={area.nombre}>{area.nombre}</option>
+                <option key={index} value={area.nombre_area}>
+                  {area.nombre_area}
+                </option>
               ))}
             </select>
           </label>
@@ -138,12 +153,21 @@ const ModalNuevaCategoria = ({
 
           {gradosDisponibles.map((grupo, i) => (
             <div key={i}>
-              <p><strong>{grupo.tipo}</strong></p>
+              <p>
+                <strong>{grupo.tipo}</strong>
+              </p>
               <div className="grid-grados">
                 {grupo.niveles.map((nivel) => (
                   <div
                     key={nivel}
-                    className={`grado ${(grupo.tipo === 'Primaria' ? gradosPrimaria : gradosSecundaria).includes(nivel) ? 'seleccionado' : ''}`}
+                    className={`grado ${
+                      (grupo.tipo === "Primaria"
+                        ? gradosPrimaria
+                        : gradosSecundaria
+                      ).includes(nivel)
+                        ? "seleccionado"
+                        : ""
+                    }`}
                     onClick={() => toggleGrado(nivel, grupo.tipo)}
                   >
                     {nivel} grado
@@ -154,8 +178,12 @@ const ModalNuevaCategoria = ({
           ))}
 
           <div className="modal-botones">
-            <button type="button" className="btn-cancelar" onClick={cerrar}>Cancelar</button>
-            <button type="submit" className="btn-crear">{categoriaAEditar ? 'Actualizar' : 'Crear'}</button>
+            <button type="button" className="btn-cancelar" onClick={cerrar}>
+              Cancelar
+            </button>
+            <button type="submit" className="btn-crear">
+              {categoriaAEditar ? "Actualizar" : "Crear"}
+            </button>
           </div>
         </form>
       </div>
