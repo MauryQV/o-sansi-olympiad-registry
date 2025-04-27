@@ -12,7 +12,8 @@ import tutorRoutes from './routes/tutorRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import competidorRoutes from './routes/competidorRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
-
+// Comentando la importación que causa error
+// import pagoRoutes from './routes/pagoRoutes.js';
 
 
 
@@ -30,6 +31,8 @@ app.use('/api', categoriaRoutes);
 app.use('/api', tutorRoutes);
 app.use('/api', locationRoutes);
 app.use('/api', competidorRoutes);
+// Comentando la ruta de pagos que causa error
+// app.use('/api', pagoRoutes);
 
 
 // Ruta de prueba

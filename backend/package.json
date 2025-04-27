@@ -24,9 +24,11 @@
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "joi": "^17.13.3",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
+    "nodemon": "^3.1.10",
     "prisma": "^6.6.0"
   }
 }

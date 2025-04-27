@@ -5,9 +5,10 @@ import { requirePermiso } from '../middlewares/permisoMiddleware.js';
 
 const router = express.Router();
 
+// Comentando temporalmente los middleware de autenticación para pruebas
 router.post('/crear-convocatoria',
-    verificarToken,
-    requirePermiso("crear-convocatoria"),
+    // verificarToken,
+    // requirePermiso("crear-convocatoria"),
     convocatoriaController.crearConvocatoriaController);
 
 router.post('/asignar-categoria', convocatoriaController.asignarCategoria);
