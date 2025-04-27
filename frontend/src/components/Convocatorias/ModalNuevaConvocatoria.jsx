@@ -37,31 +37,58 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, agregar }) => {
 
   const validarFormulario = () => {
     const nuevosErrores = {};
-
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0); 
+    
+    const fechaInicioInscripcion = formulario.inscripcionInicio ? new Date(formulario.inscripcionInicio) : null;
+    const fechaFinInscripcion = formulario.inscripcionFin ? new Date(formulario.inscripcionFin) : null;
+    const fechaInicioCompetencia = formulario.competenciaInicio ? new Date(formulario.competenciaInicio) : null;
+    const fechaFinCompetencia = formulario.competenciaFin ? new Date(formulario.competenciaFin) : null;
+  
     if (!formulario.nombre.trim()) {
-      nuevosErrores.nombre = 'El nombre la convocatoria es obligatorio.';
+      nuevosErrores.nombre = 'El nombre de la convocatoria es obligatorio.';
     } else if (formulario.nombre.length > 100) {
       nuevosErrores.nombre = 'Máximo 100 caracteres.';
     }
-
+  
     if (!formulario.descripcion.trim()) {
       nuevosErrores.descripcion = 'La descripción es obligatoria.';
     } else if (formulario.descripcion.length > 1000) {
       nuevosErrores.descripcion = 'Máximo 1000 caracteres.';
     }
-
-    if (!formulario.inscripcionInicio) nuevosErrores.inscripcionInicio = 'Ingrese el inicio de inscripcion.';
-    if (!formulario.inscripcionFin) nuevosErrores.inscripcionFin = 'Ingrese el fin de inscripcion.';
-    if (!formulario.competenciaInicio) nuevosErrores.competenciaInicio = 'Ingrese el inicio de la competencia.';
-    if (!formulario.competenciaFin) nuevosErrores.competenciaFin = 'Ingrese el fin de la competencia.';
-
+  
+    if (!formulario.inscripcionInicio) {
+      nuevosErrores.inscripcionInicio = 'Ingrese el inicio de inscripción.';
+    } else if (fechaInicioInscripcion < hoy) {
+      nuevosErrores.inscripcionInicio = 'La fecha de inicio de inscripción debe ser mayor a la fecha de hoy.';
+    }
+  
+    if (!formulario.inscripcionFin) {
+      nuevosErrores.inscripcionFin = 'Ingrese el fin de inscripción.';
+    } else if (fechaFinInscripcion && fechaInicioInscripcion && fechaFinInscripcion <= fechaInicioInscripcion) {
+      nuevosErrores.inscripcionFin = 'La fecha fin de inscripción debe ser mayor a la fecha de inicio.';
+    }
+  
+    if (!formulario.competenciaInicio) {
+      nuevosErrores.competenciaInicio = 'Ingrese el inicio de competencia.';
+    } else if (fechaInicioCompetencia && fechaFinInscripcion && fechaInicioCompetencia <= fechaFinInscripcion) {
+      nuevosErrores.competenciaInicio = 'La fecha inicio de competencia debe ser después del fin de inscripción.';
+    }
+  
+    if (!formulario.competenciaFin) {
+      nuevosErrores.competenciaFin = 'Ingrese el fin de competencia.';
+    } else if (fechaFinCompetencia && fechaInicioCompetencia && fechaFinCompetencia <= fechaInicioCompetencia) {
+      nuevosErrores.competenciaFin = 'La fecha fin de competencia debe ser mayor al inicio de competencia.';
+    }
+  
     if (formulario.areas.length === 0) {
       nuevosErrores.areas = 'Debe seleccionar al menos un área.';
     }
-
+  
     setErrores(nuevosErrores);
     return Object.keys(nuevosErrores).length === 0;
   };
+  
 
   const manejarSubmit = (e) => {
     e.preventDefault();

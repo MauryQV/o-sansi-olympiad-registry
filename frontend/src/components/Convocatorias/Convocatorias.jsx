@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+import { parse, isAfter, isBefore, isWithinInterval } from 'date-fns';
 import CardConvocatoria from './CardConvocatoria';
 import ModalNuevaConvocatoria from './ModalNuevaConvocatoria';
 import ModalVisualizarConvocatoria from './ModalVisualizarConvocatoria';
@@ -26,12 +28,37 @@ const Convocatorias = () => {
     setConvocatorias(prev => [...prev, conAreas]);
     setMostrarModal(false);
   };
-  
 
-  const filtrarConvocatorias = () => {
-    if (filtroEstado === 'Todos') return convocatorias;
-    return convocatorias.filter(c => c.estado === filtroEstado);
+  const actualizarEstadosConvocatorias = (convocatorias) => {
+    const hoy = new Date();
+  
+    return convocatorias.map((convocatoria) => {
+      const inscripcionInicio = parse(convocatoria.inscripcionInicio, 'dd/MM/yyyy', new Date());
+      const inscripcionFin = parse(convocatoria.inscripcionFin, 'dd/MM/yyyy', new Date());
+      const competenciaInicio = parse(convocatoria.competenciaInicio, 'dd/MM/yyyy', new Date());
+      const competenciaFin = parse(convocatoria.competenciaFin, 'dd/MM/yyyy', new Date());
+  
+      let nuevoEstado = convocatoria.estado;
+  
+      if (isBefore(hoy, inscripcionInicio)) {
+        nuevoEstado = 'Borrador';
+      } else if (isWithinInterval(hoy, { start: inscripcionInicio, end: inscripcionFin })) {
+        nuevoEstado = 'En inscripción';
+      } else if (isWithinInterval(hoy, { start: competenciaInicio, end: competenciaFin })) {
+        nuevoEstado = 'En competencia';
+      } else if (isAfter(hoy, competenciaFin)) {
+        nuevoEstado = 'Finalizada';
+      }
+  
+      return { ...convocatoria, estado: nuevoEstado };
+    });
   };
+  
+  const filtrarConvocatorias = () => {
+    const actualizadas = actualizarEstadosConvocatorias(convocatorias);
+    if (filtroEstado === 'Todos') return actualizadas;
+    return actualizadas.filter(c => c.estado === filtroEstado);
+  };  
 
   const handleVer = (convocatoria) => {
     setConvocatoriaSeleccionada(convocatoria);
@@ -39,9 +66,20 @@ const Convocatorias = () => {
   };
 
   const handleEditar = (convocatoria) => {
+    if (convocatoria.estado === 'Finalizada') {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No se puede editar',
+        text: 'Esta convocatoria ya está finalizada y no puede ser editada.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Entendido'
+      });
+      return;
+    }
     setConvocatoriaEditando(convocatoria);
     setMostrarEditar(true);
   };
+  
   
   const actualizarConvocatoria = (actualizada) => {
     setConvocatorias(prev =>
@@ -51,10 +89,20 @@ const Convocatorias = () => {
   };  
 
   const handleEliminar = (convocatoria) => {
+    if (convocatoria.estado !== 'Borrador') {
+      Swal.fire({
+        icon: 'error',
+        title: 'No se puede eliminar',
+        text: 'La convocatoria no puede ser eliminada porque está en etapa de inscripción, competencia o finalizada.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Entendido'
+      });
+      return;
+    }
     setConvocatoriaAEliminar(convocatoria);
     setMostrarEliminar(true);
   };
-
+  
   const confirmarEliminacion = () => {
     setConvocatorias(prev => prev.filter(c => c.id !== convocatoriaAEliminar.id));
     setMostrarEliminar(false);
@@ -66,10 +114,10 @@ const Convocatorias = () => {
         id: 1,
         nombre: "Olimpiadas Científicas Escolares 2025",
         descripcion: "Convocatoria anual para los olimpíadas para las olimpíadas científicas.",
-        inscripcionInicio: "05/04/2025",
-        inscripcionFin: "30/04/2025",
-        competenciaInicio: "10/05/2025",
-        competenciaFin: "20/05/2025",
+        inscripcionInicio: "2025-04-05",
+        inscripcionFin: "2025-04-30",
+        competenciaInicio: "2025-05-10",
+        competenciaFin: "2025-05-20",
         estado: "En inscripción",
         areas: 7,
         areasSeleccionadas: ["Matemática", "Biología", "Informática","Física", "Química", "Astronomía y Astrofísica", "Robótica"]
@@ -78,10 +126,10 @@ const Convocatorias = () => {
         id: 2,
         nombre: "Olimpiadas Científicas Escolares 2024",
         descripcion: "Convocatoria anual para los olimpíadas para las olimpíadas científicas.",
-        inscripcionInicio: "10/02/2024",
-        inscripcionFin: "28/02/2024",
-        competenciaInicio: "15/03/2024",
-        competenciaFin: "25/03/2024",
+        inscripcionInicio: "2024-10-02",
+        inscripcionFin: "2024-02-28",
+        competenciaInicio: "2024-03-15",
+        competenciaFin: "2024-03-25",
         estado: "Finalizada",
         areas: 3,
         areasSeleccionadas: ["Matemática", "Biología", "Informática"]
@@ -90,10 +138,10 @@ const Convocatorias = () => {
         id: 3,
         nombre: "Olimpiadas Científicas Escolares 2023",
         descripcion: "Convocatoria anual para los olimpíadas para las olimpíadas científicas.",
-        inscripcionInicio: "13/03/2023",
-        inscripcionFin: "05/04/2023",
-        competenciaInicio: "20/04/2023",
-        competenciaFin: "30/04/2023",
+        inscripcionInicio: "2023-03-13",
+        inscripcionFin: "2023-04-05",
+        competenciaInicio: "2023-04-20",
+        competenciaFin: "2023-04-30",
         estado: "Finalizada",
         areas: 5,
         areasSeleccionadas: ["Matemática", "Física", "Química", "Astronomía y Astrofísica", "Robótica"]
@@ -114,6 +162,7 @@ const Convocatorias = () => {
       <div className="filtro-convocatorias">
         <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
           <option value="Todos">Todos los estados</option>
+          <option value="Borrador">Borrador</option>
           <option value="En inscripción">En inscripción</option>
           <option value="En competencia">En competencia</option>
           <option value="Finalizada">Finalizada</option>

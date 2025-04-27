@@ -43,8 +43,10 @@
     vertical-align: top;
   }
 
-  
-  
+  .tabla td:first-child {
+    font-weight: bold;
+  }
+
   .estado {
     padding: 0.35rem 0.9rem;
     border-radius: 20px;
