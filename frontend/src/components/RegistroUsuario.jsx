@@ -73,7 +73,7 @@ const RegistroUsuario = () => {
                 value={data.idNumber}
                 onChange={handleIdChange}
                 className={errors.idNumber ? 'error' : ''}
-                placeholder="12345678"
+                placeholder="12345678CB"
               />
               {errors.idNumber && <span className="error-message">{errors.idNumber}</span>}
             </div>
@@ -151,6 +151,7 @@ const RegistroUsuario = () => {
                     value={data.province}
                     onChange={handleInputChange}
                     className={errors.province ? 'error' : ''}
+                    disabled={!data.department}
                   >
                     <option value="">Seleccionar provincia</option>
                     {provincias.map(prov => (
@@ -170,6 +171,7 @@ const RegistroUsuario = () => {
                   value={data.school}
                   onChange={handleInputChange}
                   className={errors.school ? 'error' : ''}
+                  disabled={!data.province}
                 >
                   <option value="">Seleccionar centro educativo</option>
                   {colegios.map(col => (
@@ -193,7 +195,7 @@ const RegistroUsuario = () => {
           </button>
   
           <p className="registro-login">
-            ¿Ya tienes una cuenta? <a href="#">Inicia sesión aquí</a>
+            ¿Ya tienes una cuenta? <a href="/login">Inicia sesión aquí</a>
           </p>
         </form>
       </div>
