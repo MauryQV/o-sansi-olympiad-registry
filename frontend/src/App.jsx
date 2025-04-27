@@ -11,6 +11,8 @@ import RegistroCompetidores from "./components/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/FormularioInscripcion.jsx";
 import Pagos from "./components/Pagos.jsx";
 import DetallePago from './components/DetallePago';
+import Reportes from "./components/Reportes.jsx";
+import HistorialConvocatorias from "./components/HistorialConvocatorias.jsx";
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
 import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
 
@@ -32,7 +34,7 @@ function App() {
         <Routes>
           <Route path="/" element={<h2>Bienvenido a la aplicación</h2>} />
           <Route path="/inscripciones" element={<RegistroUsuario />} />
-          <Route path="/disciplinas" element={<Disciplinas />} />
+          <Route path="/disciplinas" element={<HistorialConvocatorias />} />
           <Route path="/acerca" element={<h2>Acerca de nosotros.</h2>} />
           <Route path="/login" element={<Login setRol={setRol} />} />
           <Route path="/inicio-admin" element={<InicioAdmin setRol={setRol} />} />
@@ -43,6 +45,8 @@ function App() {
           <Route path="/inscripcion" element={<FormularioInscripcion />} />
           <Route path="/pagos-competidor" element={<Pagos />} />
           <Route path="/pagos/detalle/:boleta" element={<DetallePago />} />
+          <Route path="/reportes" element={<Reportes />} />
+          
           <Route path="/solicitudes" element={<SolicitudesTutoria setRol={setRol} />} />
 
 
