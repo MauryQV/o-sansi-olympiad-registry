@@ -12,6 +12,7 @@ model Usuario {
   correo_electronico String      @unique
   nombre             String
   apellido           String
+  password           String
   rol_id             Int
   createdAt          DateTime    @default(now())
   competidor         Competidor?
@@ -59,6 +60,7 @@ model Tutor {
   id                  String              @id @default(uuid())
   usuario_id          String              @unique
   carnet_identidad    String              @unique
+  numero_celular      String              @unique
   Inscripciones_tutor Inscripcion_tutor[]
   usuario             Usuario             @relation(fields: [usuario_id], references: [id])
 }

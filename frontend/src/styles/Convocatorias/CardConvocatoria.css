@@ -1,16 +1,28 @@
 .card-convocatoria {
-  width: 30%;
-  min-width: 340px;
-  background-color: white;
-  border: 1px solid #d0d0d0;
+  min-width: 460px;     
+  max-width: 500px;   
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
   border-radius: 16px;
   padding: 1rem;
   font-family: 'Comfortaa', sans-serif;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s ease-in-out;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
+
+.card-descripcion {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.6rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
 
 .card-convocatoria:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);

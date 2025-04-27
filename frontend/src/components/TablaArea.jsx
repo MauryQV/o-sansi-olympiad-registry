@@ -9,13 +9,13 @@ import '../styles/TablaArea.css';
 
 const TablaArea = () => {
   const [areas, setAreas] = useState([
-    { nombre: 'Matemática', descripcion: 'Olimpiada de Matemática con énfasis en el razonamiento lógico y la resolución de problemas.', categorias: [] },
-    { nombre: 'Robótica', descripcion: 'Competencia de diseño, construcción y programación de robots para resolver desafíos específicos.', categorias: [] },
-    { nombre: 'Astronomía y Astrofísica', descripcion: 'Estudio de cuerpos celestes, fenómenos astronómicos y la física del universo.', categorias: [] },
-    { nombre: 'Biología', descripcion: 'Competencia sobre los principios fundamentales de la biología, desde células hasta ecosistemas.', categorias: [] },
-    { nombre: 'Química', descripcion: 'Olimpiada centrada en principios químicos, reacciones y aplicaciones prácticas.', categorias: [] },
-    { nombre: 'Física', descripcion: 'Competencia sobre principios físicos, leyes naturales y sus aplicaciones.', categorias: [] },
-    { nombre: 'Informática', descripcion: 'Desafíos de programación, algoritmos y resolución de problemas computacionales.', categorias: [] }
+    { nombre: 'Matemática', descripcion: 'Olimpiada de Matemática con énfasis en el razonamiento lógico y la resolución de problemas.', costo: 25, categorias: [] },
+    { nombre: 'Robótica', descripcion: 'Competencia de diseño, construcción y programación de robots para resolver desafíos específicos.', costo: 30, categorias: [] },
+    { nombre: 'Astronomía y Astrofísica', descripcion: 'Estudio de cuerpos celestes, fenómenos astronómicos y la física del universo.', costo: 20, categorias: [] },
+    { nombre: 'Biología', descripcion: 'Competencia sobre los principios fundamentales de la biología, desde células hasta ecosistemas.', costo: 22, categorias: [] },
+    { nombre: 'Química', descripcion: 'Olimpiada centrada en principios químicos, reacciones y aplicaciones prácticas.', costo: 28, categorias: [] },
+    { nombre: 'Física', descripcion: 'Competencia sobre principios físicos, leyes naturales y sus aplicaciones.', costo: 26, categorias: [] },
+    { nombre: 'Informática', descripcion: 'Desafíos de programación, algoritmos y resolución de problemas computacionales.', costo: 30, categorias: [] }
   ]);
 
   const [mostrarModalArea, setMostrarModalArea] = useState(false);
@@ -113,7 +113,7 @@ const TablaArea = () => {
   const cerrarModalCategoria = () => {
     setMostrarModalCategoria(false);
     setCategoriaEditando(null);
-    setModalKey(Date.now()); // Reinicia el modal para limpiar campos
+    setModalKey(Date.now());
   };
 
   return (
@@ -139,8 +139,14 @@ const TablaArea = () => {
                 <button onClick={() => preguntarEliminar(index)}><FaTrashAlt /></button>
               </div>
             </div>
+
+            {/* Mostrar Costo */}
+            <p className="area-costo">Costo: <strong>{area.costo} Bs</strong></p>
+
+            {/* Descripción */}
             <p>{area.descripcion}</p>
 
+            {/* Categorías */}
             {area.categorias.length > 0 && (
               <div className="categorias-box">
                 <h4>Categorías / Niveles</h4>
@@ -189,6 +195,7 @@ const TablaArea = () => {
         ))}
       </div>
 
+      {/* Modales */}
       <ModalNuevaArea
         mostrar={mostrarModalArea}
         cerrar={() => setMostrarModalArea(false)}
