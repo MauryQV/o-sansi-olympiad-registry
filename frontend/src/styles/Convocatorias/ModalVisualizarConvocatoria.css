@@ -1,0 +1,93 @@
+.visual-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: 1rem;
+  }
+  
+  .visual-modal-container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 700px;
+    font-family: 'Comfortaa', sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-height: 90vh;         
+    overflow-y: auto;        
+  }
+  
+  .visual-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .visual-modal-titulo {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #111;
+  }
+  
+  .visual-modal-label {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #000000;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  
+  .visual-modal-texto {
+    font-size: 0.85rem;
+    color: #555;
+    white-space: pre-wrap;   
+  }
+  
+  .visual-modal-seccion {
+    margin-bottom: 1rem;
+  }
+  
+  .visual-modal-periodos {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .visual-modal-areas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .visual-area-tag {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    background-color: #f9f9f9;
+    font-size: 0.8rem;
+    color: #333;
+  }
+  
+  .visual-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .visual-modal-cerrar-btn {
+    padding: 0.5rem 1rem;
+    background: #eee;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
