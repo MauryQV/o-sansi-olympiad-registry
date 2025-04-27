@@ -1,0 +1,66 @@
+.modal-eliminar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-eliminar {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 500px;
+    font-family: 'Comfortaa', sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: left;
+  }
+  
+  .modal-eliminar-titulo {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+    color: #111;
+  }
+  
+  .modal-eliminar-texto {
+    font-size: 0.9rem;
+    color: #444;
+    margin-bottom: 1.5rem;
+  }
+  
+  .modal-eliminar-botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+  }
+  
+  .btn-cancelar {
+    background-color: #f2f2f2;
+    border: none;
+    color: #333;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .btn-eliminar {
+    background-color: #e53935;
+    border: none;
+    color: white;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .btn-eliminar:hover {
+    background-color: #c62828;
+  }
+  

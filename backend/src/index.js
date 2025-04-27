@@ -15,6 +15,7 @@ import locationRoutes from './routes/locationRoutes.js';
 
 
 
+
 const port = process.env.PORT;
 
 // Middleware

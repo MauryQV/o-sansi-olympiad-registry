@@ -1,41 +1,49 @@
-import { registerUser, loginUser, logoutUser } from "../services/authService.js";
-import prisma from "../config/prismaClient.js";
+import prisma from '../config/prismaClient.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-export const register = async (req, res) => {
-    try {
-        const { email, password, role } = req.body;
-        const user = await registerUser(email, password, role);
-
-        await prisma.user.create({
-            data: {
-                id: user.id,
-                email,
-                role: role || "user",
-            },
-        });
-
-        res.status(201).json({ message: "Usuario registrado con éxito", user });
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-};
+const JWT_SECRET = process.env.JWT_SECRET
 
 export const login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const { user, token } = await loginUser(email, password);
+    const { correo_electronico, password } = req.body;
 
-        res.json({ message: "Inicio de sesión exitoso", user, token });
-    } catch (error) {
-        res.status(401).json({ error: error.message });
-    }
-};
-
-export const logout = async (req, res) => {
     try {
-        await logoutUser();
-        res.json({ message: "Sesión cerrada" });
-    } catch (error) {
-        res.status(500).json({ error: "Error al cerrar sesión" });
+        const usuario = await prisma.usuario.findUnique({
+            where: { correo_electronico },
+        });
+
+        if (!usuario || !usuario.password) {
+            return res.status(401).json({ error: 'Correo o contraseña inválidos' });
+        }
+
+        const validPassword = await bcrypt.compare(password, usuario.password);
+        if (!validPassword) {
+            return res.status(401).json({ error: 'Correo o contraseña inválidos' });
+        }
+
+        // Generar token
+        const token = jwt.sign(
+            {
+                id: usuario.id,
+                rol_id: usuario.rol_id,
+                correo_electronico: usuario.correo_electronico,
+            },
+            JWT_SECRET,
+            { expiresIn: '2h' }
+        );
+
+        res.json({
+            token,
+            usuario: {
+                id: usuario.id,
+                nombre: usuario.nombre,
+                apellido: usuario.apellido,
+                correo: usuario.correo_electronico,
+                rol_id: usuario.rol_id,
+            },
+        });
+    } catch (err) {
+        console.error('Error en login:', err.message);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
