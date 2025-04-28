@@ -159,7 +159,7 @@
     background-color: #0066cc;
   }
   .error-campo {
-    color: red; /* ✅ Ahora sí rojo */
+    color: red !important;/* ✅ Ahora sí rojo */
     font-size: 0.75rem; /* ✅ Un tamaño legible */
     margin-top: 0.2rem;
     margin-bottom: 0.5rem;

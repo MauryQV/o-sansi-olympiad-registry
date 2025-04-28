@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import '../styles/ModalNuevoUsuario.css';
 import { X } from 'lucide-react';
 
-const ModalNuevoUsuario = ({ onClose }) => {
+const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
   const [formData, setFormData] = useState({
     nombre: '',
     correo: '',
@@ -14,6 +14,8 @@ const ModalNuevoUsuario = ({ onClose }) => {
   });
 
   const [errores, setErrores] = useState({});
+
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -79,9 +81,17 @@ const ModalNuevoUsuario = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     if (validarFormulario()) {
-      console.log('Formulario válido:', formData);
+      onAgregarUsuario(formData);
+      setFormData({
+        nombre: '',
+        correo: '',
+        telefono: '',
+        rol: '',
+        contraseña: '',
+        activo: true
+      });
       onClose();
     }
   };

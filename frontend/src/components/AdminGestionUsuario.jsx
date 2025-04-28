@@ -63,6 +63,10 @@ const Usuarios = () => {
     setModalEliminarAbierto(true);
   };
 
+  const agregarUsuario = (nuevoUsuario) => {
+    setUsuarios([...usuarios, { id: Date.now(), ...nuevoUsuario, estado: 'Activo' }]);
+  };
+
 
 
   return (
@@ -124,7 +128,10 @@ const Usuarios = () => {
             </div>
 
             {modalNuevoUsuarioAbierto && (
-              <ModalNuevoUsuario onClose={() => setModalNuevoUsuarioAbierto(false)} />
+              <ModalNuevoUsuario 
+                onClose={() => setModalNuevoUsuarioAbierto(false)}
+                onAgregarUsuario={agregarUsuario} 
+              />
             )}
 
             {modalEditarAbierto && usuarioSeleccionado && (
