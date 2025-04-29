@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import { Search, Trash2 } from 'lucide-react';
 import '../styles/FormularioInscripcion.css';
 
 const FormularioInscripcion = () => {
@@ -10,6 +11,7 @@ const FormularioInscripcion = () => {
   const [tutores, setTutores] = useState([]);
   const [nuevoTutor, setNuevoTutor] = useState('');
   const [relacion, setRelacion] = useState('');
+  const [areaTutorSeleccionada, setAreaTutorSeleccionada] = useState('');
   const [errores, setErrores] = useState({});
 
   const [areasDisponibles, setAreasDisponibles] = useState([]);
@@ -18,19 +20,28 @@ const FormularioInscripcion = () => {
   const [gradosDisponibles, setGradosDisponibles] = useState([]);
   const [nivelesDisponibles, setNivelesDisponibles] = useState([]);
   const [tutoresDisponibles, setTutoresDisponibles] = useState([]);
-
+// datos de  prueba  
   useEffect(() => {
-    setAreasDisponibles(['Matemática', 'Química', 'Física']);
+    setAreasDisponibles(['Matemática', 'Química', 'Física', 'Biología', 'Robótica']);
     setCategoriasPorArea({
       Matemática: ['Primaria', 'Secundaria'],
       Química: ['Nivel 1', 'Nivel 2'],
-      Física: ['Nivel A', 'Nivel B']
+      Física: ['Nivel A', 'Nivel B'],
+      Biología: ['Celular', 'Ecología'],
+      Robótica: ['Junior', 'Senior']
     });
     setGradosDisponibles(['1°', '2°', '3°', '4°', '5°', '6°']);
     setNivelesDisponibles(['Primaria', 'Secundaria']);
     setTutoresDisponibles([
-      { nombre: 'Ana Martínez', correo: 'ana@mail.com', telefono: '70123456', relacion: 'Madre' },
-      { nombre: 'Carlos Ramírez', correo: 'carlos@mail.com', telefono: '78912345', relacion: 'Padre' }
+      { nombre: 'Ana Martínez', correo: 'ana1@mail.com', telefono: '70123456', relacion: 'Madre', area: 'Biología' },
+      { nombre: 'Ana Martínez', correo: 'ana2@mail.com', telefono: '70123457', relacion: 'Tutor', area: 'Física' },
+      { nombre: 'Carlos Ramírez', correo: 'carlos@mail.com', telefono: '78912345', relacion: 'Padre', area: 'Física' },
+      { nombre: 'Luisa Gómez', correo: 'luisa@mail.com', telefono: '71234567', relacion: 'Tutor', area: 'Matemática' },
+      { nombre: 'Pedro López', correo: 'pedro@mail.com', telefono: '73456789', relacion: 'Profesor/a', area: 'Robótica' },
+      { nombre: 'Ana Martínez', correo: 'ana3@mail.com', telefono: '70123458', relacion: 'Tutor', area: 'Física' },
+      { nombre: 'Luis Torres', correo: 'luis@mail.com', telefono: '79999999', relacion: 'Padre', area: 'Matemática' },
+      { nombre: 'Marta Vega', correo: 'marta@mail.com', telefono: '75551234', relacion: 'Tutor', area: 'Biología' },
+      { nombre: 'Rosa Díaz', correo: 'rosa@mail.com', telefono: '72112233', relacion: 'Profesor/a', area: 'Biología' }
     ]);
   }, []);
 
@@ -43,17 +54,19 @@ const FormularioInscripcion = () => {
   }, [area, categoriasPorArea]);
 
   const agregarTutor = () => {
-    if (nuevoTutor && relacion && tutores.length < 3) {
-      const tutor = tutoresDisponibles.find(t => t.nombre === nuevoTutor);
+    if (nuevoTutor && relacion && areaTutorSeleccionada && tutores.length < 3) {
+      const tutor = tutoresDisponibles.find(t => t.nombre === nuevoTutor && t.area === areaTutorSeleccionada);
       const nuevo = tutor || {
         nombre: nuevoTutor,
         correo: 'sincorreo@mail.com',
         telefono: '00000000',
         relacion: relacion,
+        area: areaTutorSeleccionada
       };
       setTutores([...tutores, nuevo]);
       setNuevoTutor('');
       setRelacion('');
+      setAreaTutorSeleccionada('');
     }
   };
 
@@ -97,6 +110,7 @@ const FormularioInscripcion = () => {
       });
     }
   };
+  const tutoresFiltrados = tutoresDisponibles.filter(t => t.area === areaTutorSeleccionada);
 
   return (
     <div className="forminsc-contenedor">
@@ -157,10 +171,12 @@ const FormularioInscripcion = () => {
         <div className="forminsc-fila-buscador-alineado">
           <div className="forminsc-input-con-icono">
             <input type="text" className="forminsc-input" placeholder="Buscar tutor..." value={nuevoTutor} onChange={(e) => setNuevoTutor(e.target.value)} />
-            <span className="forminsc-icono-lupa">🔍</span>
-            {nuevoTutor && tutoresDisponibles.length > 0 && (
+            <span className="forminsc-icono-lupa">
+              <Search size={18} />
+            </span>
+            {nuevoTutor && tutoresFiltrados.length > 0 && (
               <ul className="forminsc-lista-sugerencias">
-                {tutoresDisponibles
+                {tutoresFiltrados
                   .filter((t) => t.nombre.toLowerCase().includes(nuevoTutor.toLowerCase()))
                   .slice(0, 5)
                   .map((t, index) => (
@@ -181,8 +197,14 @@ const FormularioInscripcion = () => {
           <select className="forminsc-select" value={relacion} onChange={(e) => setRelacion(e.target.value)}>
             <option value="">Relación</option>
             <option value="padre">Padre/Madre</option>
-            <option value="tutor">Tutor</option>
+           
             <option value="profesor">Profesor/a</option>
+          </select>
+          <select className="forminsc-select" value={areaTutorSeleccionada} onChange={(e) => setAreaTutorSeleccionada(e.target.value)}>
+            <option value="">Área del Tutor</option>
+            {areasDisponibles.map((a, i) => (
+              <option key={i} value={a}>{a}</option>
+            ))}
           </select>
           <button className="forminsc-boton-anadir" onClick={agregarTutor}>+ Añadir</button>
         </div>
@@ -201,6 +223,7 @@ const FormularioInscripcion = () => {
                 <th>Correo</th>
                 <th>Teléfono</th>
                 <th>Relación</th>
+                <th>Área</th>
                 <th>Acción</th>
               </tr>
             </thead>
@@ -211,8 +234,11 @@ const FormularioInscripcion = () => {
                   <td>{tutor.correo}</td>
                   <td>{tutor.telefono}</td>
                   <td>{tutor.relacion}</td>
+                  <td>{tutor.area}</td>
                   <td>
-                    <button onClick={() => eliminarTutor(i)} className="forminsc-btn-eliminar-tutor">🗑️</button>
+                    <button onClick={() => eliminarTutor(i)} className="forminsc-btn-eliminar-tutor">
+                      <Trash2 size={16} />
+                    </button>
                   </td>
                 </tr>
               ))}

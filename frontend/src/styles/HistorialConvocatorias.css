@@ -10,7 +10,7 @@ body {
   flex: 1;
   padding: 2rem;
   padding-bottom: 0;
-  max-width: 1300px;     /* ajusta el ancho máximo de las tarjetas */
+  max-width: 1300px !important;     /* ajusta el ancho máximo de las tarjetas */
   margin: 0 auto;        /* centra el contenedor */
 }
 
