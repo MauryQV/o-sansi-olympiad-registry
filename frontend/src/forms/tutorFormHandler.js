@@ -21,7 +21,7 @@ export const validateTutorForm = (tutorData, setErrors) => {
     if (!/^[a-zA-Z\s]{2,25}$/.test(tutorData.lastName)) {
         errors.lastName = 'Debe ingresar un apellido válido.';
     }
-    if (!/^\d{5,8}$/.test(tutorData.idNumber)) {
+    if (!/^[a-zA-Z0-9]{5,10}$/.test(tutorData.idNumber)) {
         errors.idNumber = 'Carnet inválido.';
     }
     if (!/^[67]\d{7}$/.test(tutorData.phone)) {
@@ -48,7 +48,7 @@ export const createNameChangeHandler = (setState) => (e) => {
 };
 
 export const createIdChangeHandler = (setState) => (e) => {
-    const filtered = e.target.value.replace(/\D/g, '').slice(0, 8);
+    const filtered = e.target.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10);
     setState(prev => ({ ...prev, idNumber: filtered }));
 };
 

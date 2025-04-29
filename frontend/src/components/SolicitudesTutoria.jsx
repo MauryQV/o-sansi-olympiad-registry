@@ -21,7 +21,7 @@ const SolicitudesTutoria = () => {
     );
 
     Swal.fire({
-        icon: nuevoEstado === 'Aceptada' ? 'success' : 'error', // cambia a 'error' en caso de rechazo
+        icon: nuevoEstado === 'Aceptada' ? 'success' : 'error',
         title: `Solicitud ${nuevoEstado === 'Aceptada' ? 'aceptada' : 'rechazada'}`,
         text: `Has ${nuevoEstado === 'Aceptada' ? 'validado' : 'rechazado'} la solicitud del competidor.`,
         confirmButtonColor: nuevoEstado === 'Aceptada' ? '#3085d6' : '#d33',

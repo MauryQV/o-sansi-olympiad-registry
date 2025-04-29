@@ -222,3 +222,30 @@ body {
   margin-top: 5px;
   display: block;
 }
+/* Para evitar que los selects agranden el borde al ser inválidos */
+.modal-contenido select.input-error {
+  border-color: red;
+}
+
+/* Para que el textarea no se expanda en ancho */
+.modal-contenido textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical; /* Solo crece hacia abajo */
+}
+
+/* Suavizar transiciones en los inputs y selects */
+.modal-contenido input,
+.modal-contenido textarea,
+.modal-contenido select {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Estilo especial para mostrar el área seleccionada en modo solo lectura */
+.input-area-disabled {
+  background-color: #f0f0f0; /* Fondo gris clarito */
+  color: #666;               /* Texto gris oscuro */
+  border: 1px solid #ccc;     /* Borde igual que los inputs normales */
+  cursor: not-allowed;        /* Cursor de prohibido */
+  pointer-events: none;       /* No permite interactuar */
+}

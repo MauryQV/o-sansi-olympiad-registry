@@ -8,6 +8,11 @@
     display: inline-block;
   }
   
+  .estado-badge.borrador {
+    background-color: #17a2b8;
+    color: white;
+  }
+  
   .estado-badge.en-inscripción {
     background-color: #007bff;
     color: white;
