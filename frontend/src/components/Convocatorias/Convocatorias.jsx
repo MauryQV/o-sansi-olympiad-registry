@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaPencilAlt, FaRegTrashAlt, FaEye } from "react-icons/fa";
@@ -11,6 +12,17 @@ import convocatoriaService from "../../services/convocatoriaService";
 import MenuPrincipal from "../../components/MenuPrincipal";
 import Loader from "../Loader";
 import ModalConfirmacion from "../ModalConfirmacion";
+=======
+import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+import CardConvocatoria from './CardConvocatoria';
+import ModalNuevaConvocatoria from './ModalNuevaConvocatoria';
+import ModalVisualizarConvocatoria from './ModalVisualizarConvocatoria';
+import ModalEditarConvocatoria from './ModalEditarConvocatoria';
+import ModalEliminarConvocatoria from './ModalEliminarConvocatoria';
+import { obtenerConvocatorias } from '../../services/convocatoriaService';
+import '../../styles/Convocatorias/Convocatorias.css';
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
 
 const Convocatorias = () => {
   const { mostrarToast } = useToast();
@@ -24,7 +36,51 @@ const Convocatorias = () => {
   const [convocatoriaEliminar, setConvocatoriaEliminar] = useState(null);
   const [filtroEstado, setFiltroEstado] = useState("Todos");
 
+<<<<<<< HEAD
   // Obtener convocatorias al cargar el componente
+=======
+  const cargarConvocatorias = async () => {
+    try {
+      const data = await obtenerConvocatorias();
+      setConvocatorias(data);
+    } catch (error) {
+      console.error('Error cargando convocatorias:', error);
+      Swal.fire('Error', 'No se pudieron cargar las convocatorias', 'error');
+    }
+  };
+
+  const handleVer = (convocatoria) => {
+    setConvocatoriaSeleccionada(convocatoria);
+    setMostrarVisual(true);
+  };
+
+  const handleEditar = (convocatoria) => {
+    if (convocatoria.estado === 'FINALIZADA') {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No se puede editar',
+        text: 'Esta convocatoria ya está finalizada y no puede ser editada.',
+      });
+      return;
+    }
+    setConvocatoriaEditando(convocatoria);
+    setMostrarEditar(true);
+  };
+
+  const handleEliminar = (convocatoria) => {
+    if (convocatoria.estado !== 'BORRADOR') {
+      Swal.fire({
+        icon: 'error',
+        title: 'No se puede eliminar',
+        text: 'La convocatoria no puede ser eliminada porque no está en estado de borrador.',
+      });
+      return;
+    }
+    setConvocatoriaAEliminar(convocatoria);
+    setMostrarEliminar(true);
+  };
+
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
   useEffect(() => {
     cargarConvocatorias();
   }, []);
@@ -168,6 +224,7 @@ const Convocatorias = () => {
       <div className="convocatorias-container">
         <h1>Convocatorias</h1>
 
+<<<<<<< HEAD
         <div className="convocatorias-header">
           <div className="convocatorias-filtros">
             <label>Filtrar por estado:</label>
@@ -208,18 +265,49 @@ const Convocatorias = () => {
             </button>
           </div>
         )}
+=======
+      <div className="filtro-convocatorias">
+        <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
+          <option value="Todos">Todos los estados</option>
+          <option value="BORRADOR">Borrador</option>
+          <option value="EN INSCRIPCION">En inscripción</option>
+          <option value="EN COMPETENCIA">En competencia</option>
+          <option value="FINALIZADA">Finalizada</option>
+        </select>
+      </div>
+
+      <div className="lista-convocatorias">
+        {convocatorias
+          .filter(c => filtroEstado === 'Todos' || c.estado.nombre === filtroEstado)
+          .map(convocatoria => (
+            <CardConvocatoria
+              key={convocatoria.id}
+              data={convocatoria}
+              onVer={handleVer}
+              onEditar={handleEditar}
+              onEliminar={handleEliminar}
+            />
+          ))}
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
       </div>
 
       {modalNueva && (
         <ModalNuevaConvocatoria
+<<<<<<< HEAD
           visible={modalNueva}
           cerrar={() => setModalNueva(false)}
           guardar={crearConvocatoria}
+=======
+          visible={mostrarModal}
+          cerrar={() => setMostrarModal(false)}
+          recargarConvocatorias={cargarConvocatorias}
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
         />
       )}
 
       {modalEditar && convocatoriaSeleccionada && (
         <ModalEditarConvocatoria
+<<<<<<< HEAD
           visible={modalEditar}
           cerrar={() => {
             setModalEditar(false);
@@ -240,6 +328,21 @@ const Convocatorias = () => {
             setModalConfirmacion(false);
             setConvocatoriaEliminar(null);
           }}
+=======
+          visible={mostrarEditar}
+          convocatoria={convocatoriaEditando}
+          cerrar={() => setMostrarEditar(false)}
+          recargarConvocatorias={cargarConvocatorias}
+        />
+      )}
+
+      {mostrarEliminar && (
+        <ModalEliminarConvocatoria
+          visible={mostrarEliminar}
+          convocatoria={convocatoriaAEliminar}
+          cerrar={() => setMostrarEliminar(false)}
+          recargarConvocatorias={cargarConvocatorias}
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
         />
       )}
     </div>

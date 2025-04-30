@@ -5,15 +5,14 @@ import ModalNuevaArea from "./ModalNuevaArea";
 import ModalConfirmacionEliminar from "./ModalConfirmacionEliminar";
 import ModalConfirmacionEliminarCategoria from "./ModalConfirmacionEliminarCategoria";
 import ModalNuevaCategoria from "./ModalNuevaCategoria";
-import "../styles/TablaArea.css";
-import areaService from "../services/areaService";
-import categoriaService from "../services/categoriaService";
+import "../../styles/TablaArea.css";
+import areaService from "../../services/areaService";
+import categoriaService from "../../services/categoriaService";
 
 const TablaArea = () => {
   const [areas, setAreas] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-
   const [mostrarModalArea, setMostrarModalArea] = useState(false);
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [areaAEliminar, setAreaAEliminar] = useState(null);
@@ -141,17 +140,24 @@ const TablaArea = () => {
 
   const preguntarEliminar = (index) => {
     setIndexAEliminar(index);
-    setAreaAEliminar(areas[index].nombre);
+    setAreaAEliminar(areas[index].nombre_area || areas[index].nombre);
     setMostrarConfirmacion(true);
   };
 
   const confirmarEliminacion = async () => {
-    // Nota: La implementación de eliminación de área puede requerir un endpoint
-    // adicional en el backend que actualmente no existe
-    // Por ahora, solo actualicamos el estado local
-    setAreas(areas.filter((_, i) => i !== indexAEliminar));
-    setMostrarConfirmacion(false);
-    mostrarToast(`Área "${areaAEliminar}" eliminada correctamente`);
+    try {
+      // Intentar eliminar el área en el backend
+      await areaService.eliminarArea(areas[indexAEliminar].id);
+
+      // Si la eliminación en el backend fue exitosa, actualizamos el estado local
+      setAreas(areas.filter((_, i) => i !== indexAEliminar));
+      mostrarToast(`Área "${areaAEliminar}" eliminada correctamente`);
+    } catch (error) {
+      console.error("Error al eliminar área:", error);
+      mostrarToast("Error al eliminar el área");
+    } finally {
+      setMostrarConfirmacion(false);
+    }
   };
 
   const cerrarModalCategoria = () => {
@@ -189,7 +195,7 @@ const TablaArea = () => {
                   <FaEdit />
                 </button>
                 <button onClick={() => preguntarEliminar(index)}>
-                  <FaTrashAlt />
+                  <FaTrashAlt style={{ color: "red" }} />
                 </button>
               </div>
             </div>
@@ -229,7 +235,7 @@ const TablaArea = () => {
                             setMostrarConfirmacionCategoria(true);
                           }}
                         >
-                          <FaTrashAlt size={14} />
+                          <FaTrashAlt size={14} style={{ color: "red" }} />
                         </button>
                       </div>
                     </div>

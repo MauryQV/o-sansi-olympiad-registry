@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import "../../styles/Convocatorias/ModalNuevaConvocatoria.css";
 import areaService from "../../services/areaService";
@@ -13,12 +14,34 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
     competenciaFin: "",
     areas: [],
     areasSeleccionadas: [],
+=======
+import React, { useState, useEffect } from 'react';
+import { getAreas } from '../../services/areaService';
+import { getEstadosConvocatoria } from '../../services/estadoService';
+import { crearConvocatoria } from '../../services/convocatoriaService';
+import '../../styles/Convocatorias/ModalNuevaConvocatoria.css';
+import Swal from 'sweetalert2';
+
+const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
+  const [formulario, setFormulario] = useState({
+    nombre: '',
+    id_estado_convocatoria: '',
+    descripcion: '',
+    inscripcionInicio: '',
+    inscripcionFin: '',
+    competenciaInicio: '',
+    competenciaFin: '',
+    areasSeleccionadas: []
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
   });
 
+  const [areasDisponibles, setAreasDisponibles] = useState([]);
+  const [estadosDisponibles, setEstadosDisponibles] = useState([]);
   const [errores, setErrores] = useState({});
   const [areasDisponibles, setAreasDisponibles] = useState([]);
   const [cargando, setCargando] = useState(false);
 
+<<<<<<< HEAD
   // Cargar áreas desde el backend
   useEffect(() => {
     const cargarAreas = async () => {
@@ -35,10 +58,31 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
 
     cargarAreas();
   }, []);
+=======
+  useEffect(() => {
+    if (visible) {
+      cargarDatos();
+    }
+  }, [visible]);
+
+  const cargarDatos = async () => {
+    try {
+      const [areas, estados] = await Promise.all([
+        getAreas(),
+        getEstadosConvocatoria()
+      ]);
+      setAreasDisponibles(areas);
+      setEstadosDisponibles(estados);
+    } catch (error) {
+      console.error('Error cargando áreas o estados:', error);
+    }
+  };
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
     setFormulario({ ...formulario, [name]: value });
+<<<<<<< HEAD
     setErrores({ ...errores, [name]: "" });
   };
 
@@ -62,6 +106,18 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
       areasSeleccionadas: nuevosIds,
     });
     setErrores({ ...errores, areas: "" });
+=======
+    setErrores({ ...errores, [name]: '' });
+  };
+
+  const manejarCheckbox = (idArea) => {
+    const seleccionadas = formulario.areasSeleccionadas.includes(idArea)
+      ? formulario.areasSeleccionadas.filter(a => a !== idArea)
+      : [...formulario.areasSeleccionadas, idArea];
+
+    setFormulario({ ...formulario, areasSeleccionadas: seleccionadas });
+    setErrores({ ...errores, areasSeleccionadas: '' });
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
   };
 
   const validarFormulario = () => {
@@ -69,6 +125,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
+<<<<<<< HEAD
     const fechaInicioInscripcion = formulario.inscripcionInicio
       ? new Date(formulario.inscripcionInicio)
       : null;
@@ -137,15 +194,26 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
     if (formulario.areasSeleccionadas.length === 0) {
       nuevosErrores.areas = "Debe seleccionar al menos un área.";
     }
+=======
+    if (!formulario.nombre.trim()) nuevosErrores.nombre = 'Nombre obligatorio';
+    if (!formulario.descripcion.trim()) nuevosErrores.descripcion = 'Descripción obligatoria';
+    if (!formulario.inscripcionInicio) nuevosErrores.inscripcionInicio = 'Fecha inicio inscripción obligatoria';
+    if (!formulario.inscripcionFin) nuevosErrores.inscripcionFin = 'Fecha fin inscripción obligatoria';
+    if (!formulario.competenciaInicio) nuevosErrores.competenciaInicio = 'Fecha inicio competencia obligatoria';
+    if (!formulario.competenciaFin) nuevosErrores.competenciaFin = 'Fecha fin competencia obligatoria';
+    if (!formulario.id_estado_convocatoria) nuevosErrores.id_estado_convocatoria = 'Seleccione un estado';
+    if (formulario.areasSeleccionadas.length === 0) nuevosErrores.areasSeleccionadas = 'Selecciona al menos un área';
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
 
     setErrores(nuevosErrores);
     return Object.keys(nuevosErrores).length === 0;
   };
 
-  const manejarSubmit = (e) => {
+  const manejarSubmit = async (e) => {
     e.preventDefault();
     if (!validarFormulario()) return;
 
+<<<<<<< HEAD
     guardar({
       id: formulario.id,
       nombre: formulario.nombre,
@@ -158,6 +226,28 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
       areasSeleccionadas: formulario.areasSeleccionadas,
       areas: formulario.areasSeleccionadas.length,
     });
+=======
+    try {
+      const convocatoriaAEnviar = {
+        nombre_convocatoria: formulario.nombre,
+        id_estado_convocatoria: parseInt(formulario.id_estado_convocatoria),
+        fecha_inicio: new Date(formulario.inscripcionInicio).toISOString(),
+        fecha_fin: new Date(formulario.inscripcionFin).toISOString(),
+        competicion_inicio: new Date(formulario.competenciaInicio).toISOString(),
+        competicion_fin: new Date(formulario.competenciaFin).toISOString(),
+        descripcion_convocatoria: formulario.descripcion,
+        areaIds: formulario.areasSeleccionadas
+      };
+       // Imprimir los datos que se enviarán al servidor
+       console.log('Datos enviados al servidor:', convocatoriaAEnviar);
+      await crearConvocatoria(convocatoriaAEnviar);
+      Swal.fire('Éxito', 'Convocatoria creada correctamente', 'success');
+      cerrar();
+    } catch (error) {
+      console.error('Error creando convocatoria:', error);
+      Swal.fire('Error', 'No se pudo crear la convocatoria', 'error');
+    }
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
   };
 
   if (!visible) return null;
@@ -174,6 +264,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
     <div className="modal-overlay">
       <div className="modal-convocatoria">
         <h3>Nueva Convocatoria</h3>
+<<<<<<< HEAD
         <p>Complete la información para crear una nueva convocatoria</p>
 
         <form className="modal-form" onSubmit={manejarSubmit}>
@@ -205,25 +296,65 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
                 <option value="Finalizada">Finalizada</option>
               </select>
             </div>
+=======
+        <form className="modal-form" onSubmit={manejarSubmit}>
+          
+          {/* Nombre */}
+          <div className="form-group">
+            <label>Nombre *</label>
+            <input
+              type="text"
+              name="nombre"
+              value={formulario.nombre}
+              onChange={manejarCambio}
+              className={errores.nombre ? 'input-error' : ''}
+            />
+            {errores.nombre && <span className="error-text">{errores.nombre}</span>}
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
           </div>
 
-          <div className="form-group full-width">
+          {/* Estado */}
+          <div className="form-group">
+            <label>Estado *</label>
+            <select
+              name="id_estado_convocatoria"
+              value={formulario.id_estado_convocatoria}
+              onChange={manejarCambio}
+              className={errores.id_estado_convocatoria ? 'input-error' : ''}
+            >
+              <option value="">Seleccione un estado</option>
+              {estadosDisponibles.map((estado) => (
+                <option key={estado.id} value={estado.id}>
+                  {estado.nombre}
+                </option>
+              ))}
+            </select>
+            {errores.id_estado_convocatoria && <span className="error-text">{errores.id_estado_convocatoria}</span>}
+          </div>
+
+          {/* Descripción */}
+          <div className="form-group">
             <label>Descripción *</label>
             <textarea
               name="descripcion"
               value={formulario.descripcion}
               onChange={manejarCambio}
+<<<<<<< HEAD
               maxLength={1000}
               className={errores.descripcion ? "input-error" : ""}
+=======
+              className={errores.descripcion ? 'input-error' : ''}
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
             />
             {errores.descripcion && (
               <span className="error-text">{errores.descripcion}</span>
             )}
           </div>
 
+          {/* Fechas */}
           <div className="input-row">
             <div className="form-group">
-              <label>Fecha Inicio Inscripción *</label>
+              <label>Inicio Inscripción *</label>
               <input
                 type="date"
                 name="inscripcionInicio"
@@ -236,7 +367,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
               )}
             </div>
             <div className="form-group">
-              <label>Fecha Fin Inscripción *</label>
+              <label>Fin Inscripción *</label>
               <input
                 type="date"
                 name="inscripcionFin"
@@ -252,7 +383,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
 
           <div className="input-row">
             <div className="form-group">
-              <label>Fecha Inicio Competencia *</label>
+              <label>Inicio Competencia *</label>
               <input
                 type="date"
                 name="competenciaInicio"
@@ -265,7 +396,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
               )}
             </div>
             <div className="form-group">
-              <label>Fecha Fin Competencia *</label>
+              <label>Fin Competencia *</label>
               <input
                 type="date"
                 name="competenciaFin"
@@ -279,8 +410,10 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
             </div>
           </div>
 
+          {/* Áreas */}
           <div className="form-group full-width">
             <label>Áreas de Competencia *</label>
+<<<<<<< HEAD
             <div
               className={`modal-areas ${errores.areas ? "input-error" : ""}`}
             >
@@ -290,16 +423,30 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
                     type="checkbox"
                     checked={formulario.areasSeleccionadas.includes(area.id)}
                     onChange={() => manejarCheckbox(area.id, area.nombre_area)}
+=======
+            <div className={`modal-areas ${errores.areasSeleccionadas ? 'input-error' : ''}`}>
+              {areasDisponibles.map((area) => (
+                <label key={area.id} className="checkbox-area">
+                  <input
+                    type="checkbox"
+                    checked={formulario.areasSeleccionadas.includes(area.id)}
+                    onChange={() => manejarCheckbox(area.id)}
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
                   />
                   {area.nombre_area}
                 </label>
               ))}
             </div>
+<<<<<<< HEAD
             {errores.areas && (
               <span className="error-text">{errores.areas}</span>
             )}
+=======
+            {errores.areasSeleccionadas && <span className="error-text">{errores.areasSeleccionadas}</span>}
+>>>>>>> f6c725eaa42f28e8a1789abf571006ecec999d7c
           </div>
 
+          {/* Botones */}
           <div className="modal-botones">
             <button type="button" onClick={cerrar}>
               Cancelar
@@ -308,6 +455,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
               Crear
             </button>
           </div>
+
         </form>
       </div>
     </div>
@@ -315,3 +463,4 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, guardar }) => {
 };
 
 export default ModalNuevaConvocatoria;
+

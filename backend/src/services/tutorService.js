@@ -14,7 +14,7 @@ const tutorSchema = Joi.object({
     numero_celular: Joi.string().pattern(/^\d{8,12}$/).required(),
 });
 
-// Crear nuevo tutor
+// Crear nuevo tutor y usamos el esquema de joi 
 export const crearTutor = async (data) => {
     const { error, value } = tutorSchema.validate(data);
     if (error) {
@@ -34,9 +34,9 @@ export const crearTutor = async (data) => {
     });
 
     if (existente) {
-        throw new Error('Ya existe un usuario o tutor con ese correo o carnet de identidad');
+        throw new Error('Ya existe un usuario o tutor con es corre o carnet de identidad');
     }
-
+    //hasheams la password
     const contraseñaGenerada = generarPassword();
     const hashedPassword = await bcrypt.hash(contraseñaGenerada, 10);
 

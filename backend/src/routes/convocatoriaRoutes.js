@@ -1,5 +1,6 @@
 import express from 'express';
 import * as convocatoriaController from '../controllers/convocatoriaController.js';
+//Aun no se implentara
 import { verificarToken } from '../middlewares/authMiddleware.js';
 import { requirePermiso } from '../middlewares/permisoMiddleware.js';
 
@@ -22,5 +23,9 @@ router.get('/convocatoria/estado/:estado', convocatoriaController.obtenerConvoca
 router.patch('/actualizar-convocatoria/:id', convocatoriaController.actualizarConvocatoriaController);
 
 router.get('/convocatoria/areas/:id', convocatoriaController.obtenerConvocatoriaConAreas);
+
+router.delete('/eliminar-convocatoria/:id', convocatoriaController.eliminarConvocatoria);
+
+router.get('/convocatoria-estados', convocatoriaController.obtenerEstadosConvocatoria);
 
 export default router;

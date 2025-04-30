@@ -5,7 +5,7 @@ const convocatoriaService = {
   // Obtener todas las convocatorias
   obtenerConvocatorias: async () => {
     try {
-      const response = await axios.get('/convocatorias');
+      const response = await axios.get('/obtener-convocatorias');
       return response.data;
     } catch (error) {
       console.error('Error al obtener convocatorias:', error);
@@ -16,7 +16,7 @@ const convocatoriaService = {
   // Obtener una convocatoria por su ID
   obtenerConvocatoriaPorId: async (id) => {
     try {
-      const response = await axios.get(`/convocatoria/${id}`);
+      const response = await axios.get(`/obtener-convocatoria/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error al obtener convocatoria con ID ${id}:`, error);
@@ -57,6 +57,17 @@ const convocatoriaService = {
     }
   },
 
+  // Eliminar una convocatoria
+  eliminarConvocatoria: async (id) => {
+    try {
+      const response = await axios.delete(`/eliminar-convocatoria/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al eliminar convocatoria con ID ${id}:`, error);
+      throw error;
+    }
+  },
+
   // Obtener convocatoria con sus áreas
   obtenerConvocatoriaConAreas: async (id) => {
     try {
@@ -83,4 +94,4 @@ const convocatoriaService = {
   }
 };
 
-export default convocatoriaService; 
+export default convocatoriaService;
