@@ -1,7 +1,8 @@
 import React from 'react';
-import '../../styles/ModalConfirmacionEliminar.css';
+import '../../styles/Areas/ModalConfirmacionEliminar.css';
 
-const ModalConfirmacionEliminar = ({ mostrar, cerrar, confirmar, nombreArea }) => {
+
+const ModalConfirmacionEliminar = ({ mostrar, cerrar, confirmar, nombreArea}) => {
   if (!mostrar) return null;
 
   return (

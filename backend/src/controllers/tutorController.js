@@ -1,3 +1,4 @@
+
 import * as tutorService from '../services/tutorService.js';
 
 // Registrar tutor
@@ -9,6 +10,7 @@ export const registrarTutor = async (req, res, next) => {
             carnet_identidad: req.body.carnet_identidad,
             correo_electronico: req.body.correo_electronico,
             numero_celular: req.body.numero_celular,
+            area_id: req.body.area_id,
         };
 
         const { tutor, credenciales } = await tutorService.crearTutor(tutorData);
