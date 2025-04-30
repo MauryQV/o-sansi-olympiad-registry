@@ -1,306 +1,245 @@
 import React, { useState, useEffect } from "react";
-import CardConvocatoria from "./CardConvocatoria";
-import ModalNuevaConvocatoria from "./ModalNuevaConvocatoria";
-import ModalVisualizarConvocatoria from "./ModalVisualizarConvocatoria";
-import ModalEditarConvocatoria from "./ModalEditarConvocatoria";
-import ModalEliminarConvocatoria from "./ModalEliminarConvocatoria";
+import { Link } from "react-router-dom";
+import { FaPencilAlt, FaRegTrashAlt, FaEye } from "react-icons/fa";
+import { AiOutlinePlus } from "react-icons/ai";
 import "../../styles/Convocatorias/Convocatorias.css";
+import ModalNuevaConvocatoria from "./ModalNuevaConvocatoria";
+import ModalEditarConvocatoria from "./ModalEditarConvocatoria";
+import TablaConvocatorias from "./TablaConvocatorias";
+import useToast from "../../hooks/useToast";
 import convocatoriaService from "../../services/convocatoriaService";
+import MenuPrincipal from "../../components/MenuPrincipal";
+import Loader from "../Loader";
+import ModalConfirmacion from "../ModalConfirmacion";
 
 const Convocatorias = () => {
+  const { mostrarToast } = useToast();
   const [convocatorias, setConvocatorias] = useState([]);
-  const [filtroEstado, setFiltroEstado] = useState("Todos");
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [mostrarVisual, setMostrarVisual] = useState(false);
+  const [modalNueva, setModalNueva] = useState(false);
+  const [modalEditar, setModalEditar] = useState(false);
   const [convocatoriaSeleccionada, setConvocatoriaSeleccionada] =
     useState(null);
-  const [mostrarEditar, setMostrarEditar] = useState(false);
-  const [convocatoriaEditando, setConvocatoriaEditando] = useState(null);
-  const [mostrarEliminar, setMostrarEliminar] = useState(false);
-  const [convocatoriaAEliminar, setConvocatoriaAEliminar] = useState(null);
   const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+  const [modalConfirmacion, setModalConfirmacion] = useState(false);
+  const [convocatoriaEliminar, setConvocatoriaEliminar] = useState(null);
+  const [filtroEstado, setFiltroEstado] = useState("Todos");
 
-  // Cargar convocatorias desde el backend
+  // Obtener convocatorias al cargar el componente
   useEffect(() => {
-    const cargarConvocatorias = async () => {
-      try {
-        setCargando(true);
-        const data = await convocatoriaService.obtenerConvocatorias();
-
-        // Transformar los datos si es necesario para que coincidan con la estructura esperada
-        const convocatoriasFormateadas = data.map((conv) => ({
-          id: conv.id,
-          nombre: conv.nombre_convocatoria,
-          descripcion: conv.descripcion_convocatoria,
-          inscripcionInicio: new Date(conv.fecha_inicio).toLocaleDateString(
-            "es-ES"
-          ),
-          inscripcionFin: new Date(conv.fecha_fin).toLocaleDateString("es-ES"),
-          competenciaInicio: new Date(
-            conv.competicion_inicio
-          ).toLocaleDateString("es-ES"),
-          competenciaFin: new Date(conv.competicion_fin).toLocaleDateString(
-            "es-ES"
-          ),
-          estado:
-            conv.id_estado_convocatoria === 1
-              ? "En inscripción"
-              : conv.id_estado_convocatoria === 2
-              ? "En competencia"
-              : "Finalizada",
-          // Nota: Para obtener las áreas relacionadas, necesitaríamos hacer una llamada adicional
-          // o modificar el endpoint para incluir esta información
-        }));
-
-        setConvocatorias(convocatoriasFormateadas);
-        setError(null);
-      } catch (error) {
-        console.error("Error al cargar convocatorias:", error);
-        setError(
-          "Error al cargar convocatorias. Por favor, intenta de nuevo más tarde."
-        );
-      } finally {
-        setCargando(false);
-      }
-    };
-
     cargarConvocatorias();
   }, []);
 
-  const agregarConvocatoria = async (nueva) => {
+  // Función para cargar todas las convocatorias desde el servidor
+  const cargarConvocatorias = async () => {
     try {
-      // Transformar datos para que coincidan con la estructura esperada por el backend
-      const datosConvocatoria = {
-        nombre_convocatoria: nueva.nombre,
-        descripcion_convocatoria: nueva.descripcion,
-        fecha_inicio: nueva.inscripcionInicio,
-        fecha_fin: nueva.inscripcionFin,
-        competicion_inicio: nueva.competenciaInicio,
-        competicion_fin: nueva.competenciaFin,
-        id_estado_convocatoria:
-          nueva.estado === "En inscripción"
-            ? 1
-            : nueva.estado === "En competencia"
-            ? 2
-            : 3,
-        areaIds: nueva.areasSeleccionadas, // Suponiendo que son IDs
-      };
-
-      const response = await convocatoriaService.crearConvocatoria(
-        datosConvocatoria
-      );
-
-      // Recargar convocatorias después de crear una nueva
+      setCargando(true);
       const data = await convocatoriaService.obtenerConvocatorias();
-      const convocatoriasFormateadas = data.map((conv) => ({
-        id: conv.id,
-        nombre: conv.nombre_convocatoria,
-        descripcion: conv.descripcion_convocatoria,
-        inscripcionInicio: new Date(conv.fecha_inicio).toLocaleDateString(
-          "es-ES"
-        ),
-        inscripcionFin: new Date(conv.fecha_fin).toLocaleDateString("es-ES"),
-        competenciaInicio: new Date(conv.competicion_inicio).toLocaleDateString(
-          "es-ES"
-        ),
-        competenciaFin: new Date(conv.competicion_fin).toLocaleDateString(
-          "es-ES"
-        ),
-        estado:
-          conv.id_estado_convocatoria === 1
-            ? "En inscripción"
-            : conv.id_estado_convocatoria === 2
-            ? "En competencia"
-            : "Finalizada",
-      }));
+      if (data) {
+        setConvocatorias(data);
+      }
+    } catch (error) {
+      console.error("Error al obtener convocatorias:", error);
+      mostrarToast("Error al cargar las convocatorias", "error");
+    } finally {
+      setCargando(false);
+    }
+  };
 
-      setConvocatorias(convocatoriasFormateadas);
-      setMostrarModal(false);
+  // Función para crear una nueva convocatoria
+  const crearConvocatoria = async (nuevaConvocatoria) => {
+    try {
+      const convocatoriaCreada = await convocatoriaService.crearConvocatoria(
+        nuevaConvocatoria
+      );
+      setConvocatorias([...convocatorias, convocatoriaCreada]);
+      mostrarToast("Convocatoria creada correctamente", "success");
+      setModalNueva(false);
     } catch (error) {
       console.error("Error al crear convocatoria:", error);
-      // Aquí podrías mostrar un mensaje de error al usuario
+      mostrarToast(
+        error.response?.data?.message || "Error al crear la convocatoria",
+        "error"
+      );
     }
   };
 
-  const filtrarConvocatorias = () => {
-    if (filtroEstado === "Todos") return convocatorias;
-    return convocatorias.filter((c) => c.estado === filtroEstado);
-  };
-
-  const handleVer = async (convocatoria) => {
+  // Función para actualizar una convocatoria existente
+  const actualizarConvocatoria = async (convocatoriaActualizada) => {
     try {
-      // Obtener detalles adicionales de la convocatoria si es necesario
-      const detallesConvocatoria =
-        await convocatoriaService.obtenerConvocatoriaConAreas(convocatoria.id);
-      setConvocatoriaSeleccionada({
-        ...convocatoria,
-        areasDetalladas:
-          detallesConvocatoria.Area_convocatoria?.map((ac) => ac.area) || [],
-      });
-      setMostrarVisual(true);
-    } catch (error) {
-      console.error("Error al obtener detalles de la convocatoria:", error);
-    }
-  };
-
-  const handleEditar = async (convocatoria) => {
-    try {
-      // Obtener detalles adicionales de la convocatoria para edición
-      const detallesConvocatoria =
-        await convocatoriaService.obtenerConvocatoriaConAreas(convocatoria.id);
-      setConvocatoriaEditando({
-        ...convocatoria,
-        areasSeleccionadas:
-          detallesConvocatoria.Area_convocatoria?.map((ac) => ac.area_id) || [],
-      });
-      setMostrarEditar(true);
-    } catch (error) {
-      console.error("Error al obtener detalles para edición:", error);
-    }
-  };
-
-  const actualizarConvocatoria = async (actualizada) => {
-    try {
-      // Transformar datos para actualización
-      const datosActualizacion = {
-        nombre_convocatoria: actualizada.nombre,
-        descripcion_convocatoria: actualizada.descripcion,
-        fecha_inicio: actualizada.inscripcionInicio,
-        fecha_fin: actualizada.inscripcionFin,
-        competicion_inicio: actualizada.competenciaInicio,
-        competicion_fin: actualizada.competenciaFin,
-        id_estado_convocatoria:
-          actualizada.estado === "En inscripción"
-            ? 1
-            : actualizada.estado === "En competencia"
-            ? 2
-            : 3,
-        areaIds: actualizada.areasSeleccionadas,
-      };
-
       await convocatoriaService.actualizarConvocatoria(
-        actualizada.id,
-        datosActualizacion
+        convocatoriaActualizada.id,
+        convocatoriaActualizada
       );
 
-      // Recargar convocatorias
-      const data = await convocatoriaService.obtenerConvocatorias();
-      const convocatoriasFormateadas = data.map((conv) => ({
-        id: conv.id,
-        nombre: conv.nombre_convocatoria,
-        descripcion: conv.descripcion_convocatoria,
-        inscripcionInicio: new Date(conv.fecha_inicio).toLocaleDateString(
-          "es-ES"
-        ),
-        inscripcionFin: new Date(conv.fecha_fin).toLocaleDateString("es-ES"),
-        competenciaInicio: new Date(conv.competicion_inicio).toLocaleDateString(
-          "es-ES"
-        ),
-        competenciaFin: new Date(conv.competicion_fin).toLocaleDateString(
-          "es-ES"
-        ),
-        estado:
-          conv.id_estado_convocatoria === 1
-            ? "En inscripción"
-            : conv.id_estado_convocatoria === 2
-            ? "En competencia"
-            : "Finalizada",
-      }));
+      const nuevasConvocatorias = convocatorias.map((item) =>
+        item.id === convocatoriaActualizada.id ? convocatoriaActualizada : item
+      );
 
-      setConvocatorias(convocatoriasFormateadas);
-      setMostrarEditar(false);
+      setConvocatorias(nuevasConvocatorias);
+      mostrarToast("Convocatoria actualizada correctamente", "success");
+      setModalEditar(false);
     } catch (error) {
       console.error("Error al actualizar convocatoria:", error);
+      mostrarToast(
+        error.response?.data?.message || "Error al actualizar la convocatoria",
+        "error"
+      );
     }
   };
 
-  const handleEliminar = (convocatoria) => {
-    setConvocatoriaAEliminar(convocatoria);
-    setMostrarEliminar(true);
-  };
+  // Función para eliminar una convocatoria
+  const eliminarConvocatoria = async () => {
+    if (!convocatoriaEliminar) return;
 
-  const confirmarEliminacion = async () => {
     try {
-      // Nota: Se necesitaría un endpoint para eliminar convocatorias
-      // Por ahora, solo actualizamos el estado local
-      setConvocatorias((prev) =>
-        prev.filter((c) => c.id !== convocatoriaAEliminar.id)
+      await convocatoriaService.eliminarConvocatoria(convocatoriaEliminar.id);
+      setConvocatorias(
+        convocatorias.filter((item) => item.id !== convocatoriaEliminar.id)
       );
-      setMostrarEliminar(false);
+      mostrarToast("Convocatoria eliminada correctamente", "success");
     } catch (error) {
       console.error("Error al eliminar convocatoria:", error);
+      mostrarToast(
+        error.response?.data?.message || "Error al eliminar la convocatoria",
+        "error"
+      );
+    } finally {
+      setModalConfirmacion(false);
+      setConvocatoriaEliminar(null);
     }
   };
 
-  if (cargando)
-    return <div className="cargando">Cargando convocatorias...</div>;
-  if (error) return <div className="error">{error}</div>;
+  // Manejo de acciones en cada convocatoria
+  const handleAccion = (accion, convocatoria) => {
+    switch (accion) {
+      case "editar":
+        setConvocatoriaSeleccionada(convocatoria);
+        setModalEditar(true);
+        break;
+      case "eliminar":
+        setConvocatoriaEliminar(convocatoria);
+        setModalConfirmacion(true);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Filtrar convocatorias por estado
+  const convocatoriasFiltradas =
+    filtroEstado === "Todos"
+      ? convocatorias
+      : convocatorias.filter((conv) => conv.estado === filtroEstado);
+
+  // Botones de acciones para cada convocatoria
+  const acciones = [
+    {
+      icono: <FaEye />,
+      color: "icono-ver",
+      accion: (id) => {
+        window.location.href = `/convocatoria/${id}`;
+      },
+    },
+    {
+      icono: <FaPencilAlt />,
+      color: "icono-editar",
+      accion: (id) => {
+        const convocatoria = convocatorias.find((c) => c.id === id);
+        if (convocatoria) {
+          handleAccion("editar", convocatoria);
+        }
+      },
+    },
+    {
+      icono: <FaRegTrashAlt />,
+      color: "icono-eliminar",
+      accion: (id) => {
+        const convocatoria = convocatorias.find((c) => c.id === id);
+        if (convocatoria) {
+          handleAccion("eliminar", convocatoria);
+        }
+      },
+    },
+  ];
 
   return (
-    <div className="convocatorias-wrapper">
-      <div className="convocatorias-header">
-        <h2>Gestión de Convocatorias</h2>
-        <button className="btn-nueva" onClick={() => setMostrarModal(true)}>
-          + Nueva Convocatoria
-        </button>
-      </div>
+    <div className="container-fluid convocatorias-page">
+      <MenuPrincipal />
+      <div className="convocatorias-container">
+        <h1>Convocatorias</h1>
 
-      <div className="filtro-convocatorias">
-        <select
-          value={filtroEstado}
-          onChange={(e) => setFiltroEstado(e.target.value)}
-        >
-          <option value="Todos">Todos los estados</option>
-          <option value="En inscripción">En inscripción</option>
-          <option value="En competencia">En competencia</option>
-          <option value="Finalizada">Finalizada</option>
-        </select>
-      </div>
+        <div className="convocatorias-header">
+          <div className="convocatorias-filtros">
+            <label>Filtrar por estado:</label>
+            <select
+              value={filtroEstado}
+              onChange={(e) => setFiltroEstado(e.target.value)}
+            >
+              <option value="Todos">Todos</option>
+              <option value="Borrador">Borrador</option>
+              <option value="En inscripción">En inscripción</option>
+              <option value="En competencia">En competencia</option>
+              <option value="Finalizada">Finalizada</option>
+            </select>
+          </div>
 
-      <div className="lista-convocatorias">
-        {filtrarConvocatorias().map((convocatoria) => (
-          <CardConvocatoria
-            key={convocatoria.id}
-            data={convocatoria}
-            onVer={handleVer}
-            onEditar={handleEditar}
-            onEliminar={handleEliminar}
+          <button
+            className="btn-nueva-convocatoria"
+            onClick={() => setModalNueva(true)}
+          >
+            <AiOutlinePlus /> Nueva Convocatoria
+          </button>
+        </div>
+
+        {cargando ? (
+          <div className="loader-container">
+            <Loader />
+          </div>
+        ) : convocatoriasFiltradas.length > 0 ? (
+          <TablaConvocatorias
+            convocatorias={convocatoriasFiltradas}
+            acciones={acciones}
           />
-        ))}
+        ) : (
+          <div className="no-convocatorias">
+            <p>No hay convocatorias disponibles para mostrar.</p>
+            <button onClick={() => setModalNueva(true)}>
+              Crear convocatoria
+            </button>
+          </div>
+        )}
       </div>
 
-      {mostrarModal && (
+      {modalNueva && (
         <ModalNuevaConvocatoria
-          visible={mostrarModal}
-          cerrar={() => setMostrarModal(false)}
-          agregar={agregarConvocatoria}
+          visible={modalNueva}
+          cerrar={() => setModalNueva(false)}
+          guardar={crearConvocatoria}
         />
       )}
 
-      {mostrarVisual && (
-        <ModalVisualizarConvocatoria
-          visible={mostrarVisual}
-          convocatoria={convocatoriaSeleccionada}
-          cerrar={() => setMostrarVisual(false)}
-        />
-      )}
-
-      {mostrarEditar && (
+      {modalEditar && convocatoriaSeleccionada && (
         <ModalEditarConvocatoria
-          visible={mostrarEditar}
-          convocatoria={convocatoriaEditando}
-          cerrar={() => setMostrarEditar(false)}
+          visible={modalEditar}
+          cerrar={() => {
+            setModalEditar(false);
+            setConvocatoriaSeleccionada(null);
+          }}
           guardar={actualizarConvocatoria}
+          convocatoria={convocatoriaSeleccionada}
         />
       )}
 
-      {mostrarEliminar && (
-        <ModalEliminarConvocatoria
-          visible={mostrarEliminar}
-          cerrar={() => setMostrarEliminar(false)}
-          confirmar={confirmarEliminacion}
-          convocatoria={convocatoriaAEliminar}
+      {modalConfirmacion && (
+        <ModalConfirmacion
+          visible={modalConfirmacion}
+          titulo="Eliminar Convocatoria"
+          mensaje={`¿Está seguro de eliminar la convocatoria "${convocatoriaEliminar?.nombre}"?`}
+          onConfirmar={eliminarConvocatoria}
+          onCancelar={() => {
+            setModalConfirmacion(false);
+            setConvocatoriaEliminar(null);
+          }}
         />
       )}
     </div>

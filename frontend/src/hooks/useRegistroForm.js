@@ -91,7 +91,7 @@ export const useRegistroForm = () => {
 
     const handleIdChange = (e) => {
         const { value } = e.target;
-        const cleanValue = value.replace(/\D/g, '').slice(0, 8);
+        const cleanValue = value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10);
         const setter = userType === 'competidor' ? setFormData : setTutorData;
         setter(prev => ({ ...prev, idNumber: cleanValue }));
     };

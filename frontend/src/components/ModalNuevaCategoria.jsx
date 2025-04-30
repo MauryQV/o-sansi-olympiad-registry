@@ -5,7 +5,7 @@ import "../styles/ModalNuevaCategoria.css";
 const ModalNuevaCategoria = ({
   mostrar,
   cerrar,
-  areas,
+  areasDisponibles,
   areaSeleccionada,
   onCrearCategoria,
   categoriaAEditar,
@@ -18,7 +18,7 @@ const ModalNuevaCategoria = ({
   const [areaSeleccionadaInterna, setAreaSeleccionada] = useState(
     areaSeleccionada || ""
   );
-  const [nombreError, setNombreError] = useState("");
+  const [errores, setErrores] = useState({});
 
   useEffect(() => {
     if (categoriaAEditar) {
@@ -27,8 +27,11 @@ const ModalNuevaCategoria = ({
       setGradosPrimaria(categoriaAEditar.gradosPrimaria || []);
       setGradosSecundaria(categoriaAEditar.gradosSecundaria || []);
       setAreaSeleccionada(categoriaAEditar.area);
+    } else if (areaSeleccionada) {
+      setAreaSeleccionada(areaSeleccionada);
     }
-  }, [categoriaAEditar]);
+    setErrores({});
+  }, [categoriaAEditar, areaSeleccionada]);
 
   const gradosDisponibles = [
     { tipo: "Primaria", niveles: ["3°", "4°", "5°", "6°"] },
@@ -37,53 +40,76 @@ const ModalNuevaCategoria = ({
 
   const toggleGrado = (grado, tipo) => {
     if (tipo === "Primaria") {
-      setGradosPrimaria(
-        gradosPrimaria.includes(grado)
-          ? gradosPrimaria.filter((g) => g !== grado)
-          : [...gradosPrimaria, grado]
-      );
+      if (gradosPrimaria.includes(grado)) {
+        setGradosPrimaria(gradosPrimaria.filter((g) => g !== grado));
+      } else {
+        setGradosPrimaria([...gradosPrimaria, grado]);
+      }
     } else {
-      setGradosSecundaria(
-        gradosSecundaria.includes(grado)
-          ? gradosSecundaria.filter((g) => g !== grado)
-          : [...gradosSecundaria, grado]
-      );
+      if (gradosSecundaria.includes(grado)) {
+        setGradosSecundaria(gradosSecundaria.filter((g) => g !== grado));
+      } else {
+        setGradosSecundaria([...gradosSecundaria, grado]);
+      }
     }
+  };
+
+  const validarCampos = () => {
+    const nuevosErrores = {};
+
+    if (!nombre.trim()) {
+      nuevosErrores.nombre = "El nombre es obligatorio.";
+    } else if (nombre.length > 30) {
+      nuevosErrores.nombre = "Máximo 30 caracteres.";
+    }
+
+    if (!descripcion.trim()) {
+      nuevosErrores.descripcion = "La descripción es obligatoria.";
+    } else if (descripcion.length > 100) {
+      nuevosErrores.descripcion = "Máximo 100 caracteres.";
+    }
+
+    if (!areaSeleccionadaInterna) {
+      nuevosErrores.area = "Debe seleccionar un área.";
+    }
+
+    if (gradosPrimaria.length === 0 && gradosSecundaria.length === 0) {
+      nuevosErrores.grados = "Debe seleccionar al menos un grado.";
+    }
+
+    setErrores(nuevosErrores);
+    return Object.keys(nuevosErrores).length === 0;
   };
 
   const enviarFormulario = (e) => {
     e.preventDefault();
-    if (!nombre.trim()) {
-      setNombreError("El nombre es obligatorio.");
-      return;
-    }
-    if (
-      descripcion.trim() &&
-      (gradosPrimaria.length > 0 || gradosSecundaria.length > 0) &&
-      areaSeleccionadaInterna
-    ) {
-      const nuevaCategoria = {
-        nombre,
-        descripcion,
-        area: areaSeleccionadaInterna,
-        gradosPrimaria,
-        gradosSecundaria,
-      };
+    if (!validarCampos()) return;
 
-      if (categoriaAEditar) {
-        onActualizarCategoria(nuevaCategoria);
-      } else {
-        onCrearCategoria(nuevaCategoria);
-      }
+    const nuevaCategoria = {
+      nombre,
+      descripcion,
+      area: areaSeleccionadaInterna,
+      gradosPrimaria,
+      gradosSecundaria,
+    };
 
-      cerrar();
-      setNombre("");
-      setDescripcion("");
-      setGradosPrimaria([]);
-      setGradosSecundaria([]);
-      setAreaSeleccionada("");
-      setNombreError("");
+    if (categoriaAEditar) {
+      onActualizarCategoria(nuevaCategoria);
+    } else {
+      onCrearCategoria(nuevaCategoria);
     }
+
+    cerrar();
+    limpiarFormulario();
+  };
+
+  const limpiarFormulario = () => {
+    setNombre("");
+    setDescripcion("");
+    setGradosPrimaria([]);
+    setGradosSecundaria([]);
+    setErrores({});
+    setAreaSeleccionada(areaSeleccionada || "");
   };
 
   if (!mostrar) return null;
@@ -96,29 +122,21 @@ const ModalNuevaCategoria = ({
           Complete la información para{" "}
           {categoriaAEditar ? "editar la categoría" : "crear una categoría"}
         </p>
-        <form onSubmit={enviarFormulario}>
+        <form onSubmit={enviarFormulario} noValidate>
           <label>
             Nombre de la Categoría <span className="obligatorio">*</span>
             <input
               type="text"
               value={nombre}
-              onChange={(e) => {
-                const value = e.target.value;
-                const regex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s3-6]*$/;
-                if (value.length <= 15 && regex.test(value)) {
-                  setNombre(value);
-                  setNombreError("");
-                } else if (value.length > 15) {
-                  setNombreError("Máximo 30 caracteres.");
-                } else {
-                  setNombreError("Solo letras, espacios y números del 3 al 6.");
-                }
-              }}
+              onChange={(e) => setNombre(e.target.value)}
+              maxLength={30}
+              className={errores.nombre ? "input-error" : ""}
               placeholder="Ejemplo: Nivel 3 Básico"
               required
-              maxLength={15}
             />
-            {nombreError && <span className="error">{nombreError}</span>}
+            {errores.nombre && (
+              <span className="error-text">{errores.nombre}</span>
+            )}
           </label>
 
           <label>
@@ -126,9 +144,14 @@ const ModalNuevaCategoria = ({
             <textarea
               value={descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
+              maxLength={100}
+              className={errores.descripcion ? "input-error" : ""}
               placeholder="Breve descripción de la categoría"
               required
             />
+            {errores.descripcion && (
+              <span className="error-text">{errores.descripcion}</span>
+            )}
           </label>
 
           <label>
@@ -136,21 +159,22 @@ const ModalNuevaCategoria = ({
             <select
               value={areaSeleccionadaInterna}
               onChange={(e) => setAreaSeleccionada(e.target.value)}
+              className={errores.area ? "input-error" : ""}
               required
             >
               <option value="">Seleccione un área</option>
-              {areas.map((area, index) => (
-                <option key={index} value={area.nombre_area}>
-                  {area.nombre_area}
+              {areasDisponibles.map((area) => (
+                <option key={area.id} value={area.id}>
+                  {area.nombre_area || area.nombre}
                 </option>
               ))}
             </select>
+            {errores.area && <span className="error-text">{errores.area}</span>}
           </label>
 
           <label>
             Grados Permitidos <span className="obligatorio">*</span>
           </label>
-
           {gradosDisponibles.map((grupo, i) => (
             <div key={i}>
               <p>
@@ -170,15 +194,25 @@ const ModalNuevaCategoria = ({
                     }`}
                     onClick={() => toggleGrado(nivel, grupo.tipo)}
                   >
-                    {nivel} grado
+                    {nivel}
                   </div>
                 ))}
               </div>
             </div>
           ))}
+          {errores.grados && (
+            <span className="error-text">{errores.grados}</span>
+          )}
 
           <div className="modal-botones">
-            <button type="button" className="btn-cancelar" onClick={cerrar}>
+            <button
+              type="button"
+              className="btn-cancelar"
+              onClick={() => {
+                cerrar();
+                limpiarFormulario();
+              }}
+            >
               Cancelar
             </button>
             <button type="submit" className="btn-crear">

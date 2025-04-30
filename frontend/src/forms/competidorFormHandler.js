@@ -23,12 +23,25 @@ export const validateCompetidorForm = (formData, setErrors) => {
     if (!/^[a-zA-Z\s]{2,25}$/.test(formData.lastName)) {
         errors.lastName = 'Debe ingresar su apellido.';
     }
-    if (!/^\d{5,8}$/.test(formData.idNumber)) {
+    if (!/^[a-zA-Z0-9]{5,10}$/.test(formData.idNumber)) {
         errors.idNumber = 'Número de carnet inválido.';
     }
     if (!formData.birthDate) {
         errors.birthDate = 'Debe seleccionar su fecha de nacimiento.';
-    }
+      } else {
+        const today = new Date();
+        const birthDate = new Date(formData.birthDate);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--; // Todavía no ha cumplido años este año
+        }
+        
+        if (age < 8 || age > 18) {
+          errors.birthDate = 'Usted no se encuentra dentro del rango de edades permitido en el sistema.';
+        }
+      }
+      
     if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(formData.email)) {
         errors.email = 'Correo inválido.';
     }

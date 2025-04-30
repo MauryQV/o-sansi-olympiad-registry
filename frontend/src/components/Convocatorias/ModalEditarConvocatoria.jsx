@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { format, parse } from "date-fns";
 import "../../styles/Convocatorias/ModalNuevaConvocatoria.css";
 import areaService from "../../services/areaService";
 
@@ -8,296 +9,230 @@ const ModalEditarConvocatoria = ({
   convocatoria,
   guardar,
 }) => {
-  const [formulario, setFormulario] = useState({
+  const [formData, setFormData] = useState({
+    id: "",
     nombre: "",
-    estado: "Borrador",
     descripcion: "",
     inscripcionInicio: "",
     inscripcionFin: "",
     competenciaInicio: "",
     competenciaFin: "",
-    areas: [],
+    estado: "",
     areasSeleccionadas: [],
   });
 
-  const [errores, setErrores] = useState({});
-  const [areasDisponibles, setAreasDisponibles] = useState([]);
-  const [cargando, setCargando] = useState(false);
+  const [areas, setAreas] = useState([]);
+  const [error, setError] = useState("");
 
-  // Cargar áreas desde el backend
   useEffect(() => {
+    if (convocatoria) {
+      // Convertir fechas a formato yyyy-MM-dd para inputs de tipo date
+      const convertirFecha = (fechaStr) => {
+        try {
+          // Intentar parsear como dd/MM/yyyy primero (formato mostrado en la interfaz)
+          const fecha = parse(fechaStr, "dd/MM/yyyy", new Date());
+          return format(fecha, "yyyy-MM-dd");
+        } catch (e) {
+          // Si falla, intentar con el formato original
+          return fechaStr;
+        }
+      };
+
+      setFormData({
+        id: convocatoria.id,
+        nombre: convocatoria.nombre,
+        descripcion: convocatoria.descripcion,
+        inscripcionInicio: convertirFecha(convocatoria.inscripcionInicio),
+        inscripcionFin: convertirFecha(convocatoria.inscripcionFin),
+        competenciaInicio: convertirFecha(convocatoria.competenciaInicio),
+        competenciaFin: convertirFecha(convocatoria.competenciaFin),
+        estado: convocatoria.estado,
+        areasSeleccionadas: convocatoria.areasSeleccionadas || [],
+      });
+    }
+
     const cargarAreas = async () => {
       try {
-        setCargando(true);
-        const data = await areaService.obtenerAreas();
-        setAreasDisponibles(data);
+        const areasData = await areaService.obtenerAreas();
+        setAreas(areasData);
       } catch (error) {
         console.error("Error al cargar áreas:", error);
-      } finally {
-        setCargando(false);
+        setError("No se pudieron cargar las áreas. Intente de nuevo.");
       }
     };
 
     cargarAreas();
-  }, []);
+  }, [convocatoria]);
 
-  // Cargar datos de convocatoria al editar
-  useEffect(() => {
-    if (convocatoria && areasDisponibles.length > 0) {
-      // Transformar las fechas del formato dd/mm/aaaa a aaaa-mm-dd para inputs de tipo date
-      const transformarFecha = (fechaStr) => {
-        if (!fechaStr) return "";
-        const partes = fechaStr.split("/");
-        if (partes.length !== 3) return "";
-        return `${partes[2]}-${partes[1].padStart(2, "0")}-${partes[0].padStart(
-          2,
-          "0"
-        )}`;
-      };
-
-      // Obtener los IDs de las áreas a partir de los nombres, si los hay
-      const areaIds = convocatoria.areasSeleccionadas || [];
-
-      setFormulario({
-        id: convocatoria.id,
-        nombre: convocatoria.nombre || "",
-        estado: convocatoria.estado || "En inscripción",
-        descripcion: convocatoria.descripcion || "",
-        inscripcionInicio: transformarFecha(convocatoria.inscripcionInicio),
-        inscripcionFin: transformarFecha(convocatoria.inscripcionFin),
-        competenciaInicio: transformarFecha(convocatoria.competenciaInicio),
-        competenciaFin: transformarFecha(convocatoria.competenciaFin),
-        areas: areasDisponibles
-          .filter((area) => areaIds.includes(area.id))
-          .map((area) => area.nombre_area),
-        areasSeleccionadas: areaIds,
-      });
-    }
-  }, [convocatoria, areasDisponibles]);
-
-  const manejarCambio = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormulario({ ...formulario, [name]: value });
-    setErrores({ ...errores, [name]: "" });
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
-  const manejarCheckbox = (areaId, areaNombre) => {
+  const handleCheckbox = (areaId) => {
+    const isSelected = formData.areasSeleccionadas.includes(areaId);
     let nuevasAreas;
-    let nuevosIds;
 
-    if (formulario.areasSeleccionadas.includes(areaId)) {
-      // Si ya está seleccionada, la quitamos
-      nuevasAreas = formulario.areas.filter((a) => a !== areaNombre);
-      nuevosIds = formulario.areasSeleccionadas.filter((id) => id !== areaId);
+    if (isSelected) {
+      nuevasAreas = formData.areasSeleccionadas.filter((id) => id !== areaId);
     } else {
-      // Si no está seleccionada, la añadimos
-      nuevasAreas = [...formulario.areas, areaNombre];
-      nuevosIds = [...formulario.areasSeleccionadas, areaId];
+      nuevasAreas = [...formData.areasSeleccionadas, areaId];
     }
 
-    setFormulario({
-      ...formulario,
-      areas: nuevasAreas,
-      areasSeleccionadas: nuevosIds,
+    setFormData({
+      ...formData,
+      areasSeleccionadas: nuevasAreas,
     });
-    setErrores({ ...errores, areas: "" });
   };
 
-  const validarFormulario = () => {
-    const nuevosErrores = {};
-
-    if (!formulario.nombre.trim()) {
-      nuevosErrores.nombre = "El nombre la convocatoria es obligatorio.";
-    } else if (formulario.nombre.length > 100) {
-      nuevosErrores.nombre = "Máximo 100 caracteres.";
-    }
-
-    if (!formulario.descripcion.trim()) {
-      nuevosErrores.descripcion = "La descripción es obligatoria.";
-    } else if (formulario.descripcion.length > 1000) {
-      nuevosErrores.descripcion = "Máximo 1000 caracteres.";
-    }
-
-    if (!formulario.inscripcionInicio)
-      nuevosErrores.inscripcionInicio = "Ingrese el inicio de inscripcion.";
-    if (!formulario.inscripcionFin)
-      nuevosErrores.inscripcionFin = "Ingrese el fin de inscripcion.";
-    if (!formulario.competenciaInicio)
-      nuevosErrores.competenciaInicio = "Ingrese el inicio de la competencia.";
-    if (!formulario.competenciaFin)
-      nuevosErrores.competenciaFin = "Ingrese el fin de la competencia.";
-
-    if (formulario.areasSeleccionadas.length === 0) {
-      nuevosErrores.areas = "Debe seleccionar al menos un área.";
-    }
-
-    setErrores(nuevosErrores);
-    return Object.keys(nuevosErrores).length === 0;
-  };
-
-  const manejarSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validarFormulario()) return;
+    // Validar que las fechas tengan sentido
+    if (
+      new Date(formData.inscripcionInicio) >= new Date(formData.inscripcionFin)
+    ) {
+      setError(
+        "La fecha de inicio de inscripción debe ser anterior a la fecha de fin."
+      );
+      return;
+    }
 
-    guardar({
-      id: formulario.id,
-      nombre: formulario.nombre,
-      descripcion: formulario.descripcion,
-      estado: formulario.estado,
-      inscripcionInicio: formulario.inscripcionInicio,
-      inscripcionFin: formulario.inscripcionFin,
-      competenciaInicio: formulario.competenciaInicio,
-      competenciaFin: formulario.competenciaFin,
-      areasSeleccionadas: formulario.areasSeleccionadas,
-      areas: formulario.areasSeleccionadas.length,
-    });
+    if (
+      new Date(formData.inscripcionFin) >= new Date(formData.competenciaInicio)
+    ) {
+      setError(
+        "La fecha de fin de inscripción debe ser anterior a la fecha de inicio de competencia."
+      );
+      return;
+    }
+
+    if (
+      new Date(formData.competenciaInicio) >= new Date(formData.competenciaFin)
+    ) {
+      setError(
+        "La fecha de inicio de competencia debe ser anterior a la fecha de fin."
+      );
+      return;
+    }
+
+    if (formData.areasSeleccionadas.length === 0) {
+      setError("Debe seleccionar al menos un área para la convocatoria.");
+      return;
+    }
+
+    guardar(formData);
   };
 
   if (!visible) return null;
-  if (cargando)
-    return (
-      <div className="modal-overlay">
-        <div className="modal-convocatoria">
-          <p>Cargando...</p>
-        </div>
-      </div>
-    );
 
   return (
     <div className="modal-overlay">
-      <div className="modal-convocatoria">
-        <h3>Editar Convocatoria</h3>
-        <p>Complete la información para actualizar una convocatoria</p>
+      <div className="modal-content">
+        <h2>Editar Convocatoria</h2>
+        {error && <div className="error-message">{error}</div>}
 
-        <form className="modal-form" onSubmit={manejarSubmit}>
-          <div className="input-row">
-            <div className="form-group">
-              <label>Nombre de la Convocatoria *</label>
-              <input
-                type="text"
-                name="nombre"
-                value={formulario.nombre}
-                onChange={manejarCambio}
-                maxLength={100}
-                className={errores.nombre ? "input-error" : ""}
-              />
-              {errores.nombre && (
-                <span className="error-text">{errores.nombre}</span>
-              )}
-            </div>
-            <div className="form-group">
-              <label>Estado *</label>
-              <select
-                name="estado"
-                value={formulario.estado}
-                onChange={manejarCambio}
-              >
-                <option value="En inscripción">En inscripción</option>
-                <option value="En competencia">En competencia</option>
-                <option value="Finalizada">Finalizada</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="form-group full-width">
-            <label>Descripción *</label>
-            <textarea
-              name="descripcion"
-              value={formulario.descripcion}
-              onChange={manejarCambio}
-              maxLength={1000}
-              className={errores.descripcion ? "input-error" : ""}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="nombre">Nombre:</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleChange}
+              required
             />
-            {errores.descripcion && (
-              <span className="error-text">{errores.descripcion}</span>
-            )}
           </div>
 
-          <div className="input-row">
+          <div className="form-group">
+            <label htmlFor="descripcion">Descripción:</label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              value={formData.descripcion}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-row">
             <div className="form-group">
-              <label>Fecha Inicio Inscripción *</label>
+              <label htmlFor="inscripcionInicio">Inicio inscripción:</label>
               <input
                 type="date"
+                id="inscripcionInicio"
                 name="inscripcionInicio"
-                value={formulario.inscripcionInicio}
-                onChange={manejarCambio}
-                className={errores.inscripcionInicio ? "input-error" : ""}
+                value={formData.inscripcionInicio}
+                onChange={handleChange}
+                required
               />
-              {errores.inscripcionInicio && (
-                <span className="error-text">{errores.inscripcionInicio}</span>
-              )}
             </div>
+
             <div className="form-group">
-              <label>Fecha Fin Inscripción *</label>
+              <label htmlFor="inscripcionFin">Fin inscripción:</label>
               <input
                 type="date"
+                id="inscripcionFin"
                 name="inscripcionFin"
-                value={formulario.inscripcionFin}
-                onChange={manejarCambio}
-                className={errores.inscripcionFin ? "input-error" : ""}
+                value={formData.inscripcionFin}
+                onChange={handleChange}
+                required
               />
-              {errores.inscripcionFin && (
-                <span className="error-text">{errores.inscripcionFin}</span>
-              )}
             </div>
           </div>
 
-          <div className="input-row">
+          <div className="form-row">
             <div className="form-group">
-              <label>Fecha Inicio Competencia *</label>
+              <label htmlFor="competenciaInicio">Inicio competencia:</label>
               <input
                 type="date"
+                id="competenciaInicio"
                 name="competenciaInicio"
-                value={formulario.competenciaInicio}
-                onChange={manejarCambio}
-                className={errores.competenciaInicio ? "input-error" : ""}
+                value={formData.competenciaInicio}
+                onChange={handleChange}
+                required
               />
-              {errores.competenciaInicio && (
-                <span className="error-text">{errores.competenciaInicio}</span>
-              )}
             </div>
+
             <div className="form-group">
-              <label>Fecha Fin Competencia *</label>
+              <label htmlFor="competenciaFin">Fin competencia:</label>
               <input
                 type="date"
+                id="competenciaFin"
                 name="competenciaFin"
-                value={formulario.competenciaFin}
-                onChange={manejarCambio}
-                className={errores.competenciaFin ? "input-error" : ""}
+                value={formData.competenciaFin}
+                onChange={handleChange}
+                required
               />
-              {errores.competenciaFin && (
-                <span className="error-text">{errores.competenciaFin}</span>
-              )}
             </div>
           </div>
 
-          <div className="form-group full-width">
-            <label>Áreas de Competencia *</label>
-            <div
-              className={`modal-areas ${errores.areas ? "input-error" : ""}`}
-            >
-              {areasDisponibles.map((area) => (
-                <label className="checkbox-area" key={area.id}>
+          <div className="form-group">
+            <label>Áreas:</label>
+            <div className="areas-container">
+              {areas.map((area) => (
+                <div key={area.id} className="area-checkbox">
                   <input
                     type="checkbox"
-                    checked={formulario.areasSeleccionadas.includes(area.id)}
-                    onChange={() => manejarCheckbox(area.id, area.nombre_area)}
+                    id={`area-${area.id}`}
+                    checked={formData.areasSeleccionadas.includes(area.id)}
+                    onChange={() => handleCheckbox(area.id)}
                   />
-                  {area.nombre_area}
-                </label>
+                  <label htmlFor={`area-${area.id}`}>{area.nombre_area}</label>
+                </div>
               ))}
             </div>
-            {errores.areas && (
-              <span className="error-text">{errores.areas}</span>
-            )}
           </div>
 
-          <div className="modal-botones">
-            <button type="button" onClick={cerrar}>
+          <div className="form-actions">
+            <button type="button" className="btn-cancelar" onClick={cerrar}>
               Cancelar
             </button>
-            <button type="submit" className="btn-crear">
-              Guardar
+            <button type="submit" className="btn-guardar">
+              Guardar cambios
             </button>
           </div>
         </form>

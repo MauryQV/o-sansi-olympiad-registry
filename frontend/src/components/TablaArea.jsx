@@ -157,7 +157,7 @@ const TablaArea = () => {
   const cerrarModalCategoria = () => {
     setMostrarModalCategoria(false);
     setCategoriaEditando(null);
-    setModalKey(Date.now()); // Reinicia el modal para limpiar campos
+    setModalKey(Date.now());
   };
 
   if (cargando) return <div className="cargando">Cargando áreas...</div>;
@@ -194,6 +194,11 @@ const TablaArea = () => {
               </div>
             </div>
             <p>{area.descripcion_area}</p>
+
+            {/* Mostrar Costo */}
+            <p className="area-costo">
+              Costo: <strong>{area.costo} Bs</strong>
+            </p>
 
             {area.categorias && area.categorias.length > 0 && (
               <div className="categorias-box">
@@ -251,39 +256,56 @@ const TablaArea = () => {
         ))}
       </div>
 
-      <ModalNuevaArea
-        mostrar={mostrarModalArea}
-        cerrar={() => setMostrarModalArea(false)}
-        agregarArea={agregarArea}
-        areaAEditar={areaActual}
-      />
+      {/* Toast de notificación */}
+      {toastMensaje && <div className="toast-notificacion">{toastMensaje}</div>}
 
-      <ModalConfirmacionEliminar
-        mostrar={mostrarConfirmacion}
-        cerrar={() => setMostrarConfirmacion(false)}
-        confirmar={confirmarEliminacion}
-        nombreArea={areaAEliminar}
-      />
+      {/* Modal para crear/editar áreas */}
+      {mostrarModalArea && (
+        <ModalNuevaArea
+          mostrar={mostrarModalArea}
+          cerrar={() => {
+            setMostrarModalArea(false);
+            setAreaEditandoIndex(null);
+          }}
+          agregarArea={agregarArea}
+          areaAEditar={areaActual}
+        />
+      )}
 
-      <ModalConfirmacionEliminarCategoria
-        mostrar={mostrarConfirmacionCategoria}
-        cerrar={() => setMostrarConfirmacionCategoria(false)}
-        confirmar={eliminarCategoria}
-        nombreCategoria={categoriaAEliminar}
-      />
+      {/* Modal para eliminar áreas */}
+      {mostrarConfirmacion && (
+        <ModalConfirmacionEliminar
+          mostrar={mostrarConfirmacion}
+          cerrar={() => setMostrarConfirmacion(false)}
+          confirmar={confirmarEliminacion}
+          elemento={areaAEliminar}
+          tipo="área"
+        />
+      )}
 
-      <ModalNuevaCategoria
-        key={modalKey}
-        mostrar={mostrarModalCategoria}
-        cerrar={cerrarModalCategoria}
-        areaSeleccionada={areaActual?.nombre_area || ""}
-        areas={areas}
-        onCrearCategoria={agregarCategoria}
-        onActualizarCategoria={actualizarCategoria}
-        categoriaAEditar={categoriaEditando}
-      />
+      {/* Modal para crear/editar categorías */}
+      {mostrarModalCategoria && (
+        <ModalNuevaCategoria
+          key={modalKey}
+          mostrar={mostrarModalCategoria}
+          cerrar={cerrarModalCategoria}
+          areasDisponibles={areas}
+          areaSeleccionada={areaActual}
+          onCrearCategoria={agregarCategoria}
+          categoriaAEditar={categoriaEditando}
+          onActualizarCategoria={actualizarCategoria}
+        />
+      )}
 
-      {toastMensaje && <div className="toast-mensaje">{toastMensaje}</div>}
+      {/* Modal para eliminar categorías */}
+      {mostrarConfirmacionCategoria && (
+        <ModalConfirmacionEliminarCategoria
+          mostrar={mostrarConfirmacionCategoria}
+          cerrar={() => setMostrarConfirmacionCategoria(false)}
+          confirmar={eliminarCategoria}
+          elemento={categoriaAEliminar}
+        />
+      )}
     </div>
   );
 };
