@@ -14,14 +14,14 @@ import prisma from '../config/prismaClient.js';
     return await prisma.area.create({ data: { nombre_area: nombre } });
 };
 */
+export const crearArea = async (nombre_area, descripcion_area, costo) => {
 
-export const crearArea = async (nombre_area, descripcion_area) => {
     return await prisma.area.create({
         data: {
             nombre_area,
             descripcion_area,
+            costo,
         },
-
     });
 };
 
@@ -52,5 +52,11 @@ export const updateArea = async (id, nombre_area, descripcion_area) => {
             nombre_area,
             descripcion_area
         }
+    });
+}
+
+export const deleteArea = async (id) => {
+    return await prisma.area.delete({
+        where: { id: parseInt(id, 10) },
     });
 }

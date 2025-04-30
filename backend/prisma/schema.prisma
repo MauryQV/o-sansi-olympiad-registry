@@ -61,8 +61,10 @@ model Tutor {
   usuario_id          String              @unique
   carnet_identidad    String              @unique
   numero_celular      String              @unique
+  area_id             Int
   Inscripciones_tutor Inscripcion_tutor[]
   usuario             Usuario             @relation(fields: [usuario_id], references: [id])
+  area                Area                @relation(fields: [area_id], references: [id])
 }
 
 model Departamento {
@@ -106,9 +108,11 @@ model Area {
   id                Int                 @id @default(autoincrement())
   nombre_area       String
   descripcion_area  String
+  costo             Decimal             @db.Decimal(10, 2)
   Area_convocatoria Area_convocatoria[]
   area_categoria    Categoria_area[]
   Inscripcion_area  Inscripcion_area[]
+  Tutor             Tutor[]
 }
 
 model Categoria {
@@ -125,6 +129,8 @@ model Categoria {
 model Grado {
   id             Int         @id @default(autoincrement())
   nombre_grado   String
+  id_nivel       Int
+  nivel          Nivel       @relation(fields: [id_nivel], references: [id])
   categorias_max Categoria[] @relation("GradoMax")
   categorias_min Categoria[] @relation("GradoMin")
 }
@@ -198,4 +204,10 @@ model Inscripcion_area {
   competidor        Competidor   @relation(fields: [competidor_id], references: [id])
   area              Area         @relation(fields: [area_id], references: [id])
   convocatoria      Convocatoria @relation(fields: [convocatoria_id], references: [id])
+}
+
+model Nivel {
+  id           Int     @id @default(autoincrement())
+  nombre_nivel String
+  Grado        Grado[]
 }
