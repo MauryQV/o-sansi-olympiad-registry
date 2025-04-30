@@ -4,7 +4,7 @@ import ModalNuevaArea from './ModalNuevaArea';
 import ModalConfirmacionEliminar from './ModalConfirmacionEliminar';
 import ModalConfirmacionEliminarCategoria from './ModalConfirmacionEliminarCategoria';
 import ModalNuevaCategoria from './ModalNuevaCategoria';
-import '../../styles/TablaArea.css';
+import '../../styles/Areas/TablaArea.css';
 import { eliminarArea } from '../../services/areaService';
 
 const TablaArea = () => {

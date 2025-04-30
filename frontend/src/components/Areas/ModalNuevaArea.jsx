@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/ModalNuevaArea.css';
+import '../../styles/Areas/ModalNuevaArea.css';
 import { useAreaForm } from '../../hooks/useAreaForm';
 //no tocar
 import { crearArea, actualizarArea } from '../../services/areaService'; 

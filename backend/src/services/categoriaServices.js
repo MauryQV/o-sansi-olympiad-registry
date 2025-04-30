@@ -115,16 +115,15 @@ export const actualizarCategoriaConArea = async (id, data) => {
         area_id: relacionActualizada.area_id
     };
 };
-/*export const obtenerGradosPrimaria = async () => {
+export const obtenerGrados = async () => {
     return await prisma.grado.findMany({
-        where: {
-            nombre_grado: {
-                in: ['1ro', '2do', '3ro', '4to', '5to', '6to']
-            }
-        }
-    });
-}
+        include: {
+            nivel: true,
+        },
 
+    });
+};
+/*
 export const obtenerGradosSecundaria = async () => {
     return await prisma.grado.findMany({
         where: {

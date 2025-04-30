@@ -27,3 +27,12 @@ export const actualizarCategoria = async (req, res, next) => {
         next(error);
     }
 };
+
+export const verGrados = async (req, res, next) => {
+    try {
+        const grados = await categoriaService.obtenerGrados();
+        res.status(200).json(grados);
+    } catch (error) {
+        next(error);
+    }
+}
