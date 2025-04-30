@@ -8,4 +8,7 @@ router.post('/crear-categorias', categoriaController.crearCategoria);
 
 router.get('/ver-categorias', categoriaController.obtenerCategorias);
 
+
+router.patch('/actualizar-categorias/:id', categoriaController.actualizarCategoria);
+
 export default router;

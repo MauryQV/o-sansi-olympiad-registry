@@ -5,6 +5,7 @@ import ModalConfirmacionEliminar from './ModalConfirmacionEliminar';
 import ModalConfirmacionEliminarCategoria from './ModalConfirmacionEliminarCategoria';
 import ModalNuevaCategoria from './ModalNuevaCategoria';
 import '../../styles/TablaArea.css';
+import { eliminarArea } from '../../services/areaService';
 
 const TablaArea = () => {
   const [areas, setAreas] = useState([]);
@@ -31,7 +32,15 @@ const TablaArea = () => {
           throw new Error('Error al obtener las áreas');
         }
         const datos = await respuesta.json();
-        setAreas(datos);
+        setAreas(
+          datos.map(area => ({
+            ...area,
+            nombre: area.nombre_area, // ✅ mapeo frontend-friendly
+            descripcion: area.descripcion_area,
+            categorias: area.categorias || [] // si no vienen desde el back
+          }))
+        );
+        
       } catch (error) {
         console.error('Error al obtener las áreas:', error);
         setToastMensaje('Error al cargar las áreas');
@@ -109,15 +118,23 @@ const TablaArea = () => {
   };
 
   const preguntarEliminar = (index) => {
+    const area = areas[index];
     setIndexAEliminar(index);
-    setAreaAEliminar(areas[index].nombre);
+    setAreaAEliminar(area); 
     setMostrarConfirmacion(true);
   };
-
-  const confirmarEliminacion = () => {
-    setAreas(areas.filter((_, i) => i !== indexAEliminar));
-    setMostrarConfirmacion(false);
-    mostrarToast(`Área "${areaAEliminar}" eliminada correctamente`);
+  
+  
+  const confirmarEliminacion = async () => {
+    try {
+      await eliminarArea(areaAEliminar.id); 
+      setAreas(prev => prev.filter((_, i) => i !== indexAEliminar)); 
+      setMostrarConfirmacion(false);
+      mostrarToast(`Área "${areaAEliminar.nombre}" eliminada correctamente`);
+    } catch (error) {
+      console.error('Error eliminando área:', error.response?.data || error.message);
+      mostrarToast('❌ Error al eliminar el área. Intenta nuevamente.');
+    }
   };
 
   const cerrarModalCategoria = () => {
@@ -143,7 +160,7 @@ const TablaArea = () => {
         {areas.map((area, index) => (
           <div className="card-area" key={index}>
             <div className="card-header">
-              <h3>{area.nombre_area}</h3>
+              <h3>{area.nombre}</h3>
               <div className="card-actions">
                 <button onClick={() => editarArea(index)}><FaEdit /></button>
                 <button onClick={() => preguntarEliminar(index)}><FaTrashAlt style={{ color: 'red' }}  /></button>
@@ -207,18 +224,32 @@ const TablaArea = () => {
 
       {/* Modales */}
       <ModalNuevaArea
-        mostrar={mostrarModalArea}
-        cerrar={() => setMostrarModalArea(false)}
-        agregarArea={agregarArea}
-        areaAEditar={areaActual}
-      />
+  mostrar={mostrarModalArea}
+  cerrar={() => setMostrarModalArea(false)}
+  onCreacionExitosa={(areaActualizada) => {
+    if (areaEditandoIndex !== null) {
+      const nuevasAreas = [...areas];
+      nuevasAreas[areaEditandoIndex] = {
+        ...nuevasAreas[areaEditandoIndex],
+        ...areaActualizada
+      };
+      setAreas(nuevasAreas);
+    } else {
+      setAreas([...areas, { ...areaActualizada, categorias: [] }]);
+    }
+    setAreaEditandoIndex(null);
+    setAreaActual(null);
+  }}
+  areaAEditar={areaActual}
+/>
 
-      <ModalConfirmacionEliminar
-        mostrar={mostrarConfirmacion}
-        cerrar={() => setMostrarConfirmacion(false)}
-        confirmar={confirmarEliminacion}
-        nombreArea={areaAEliminar}
-      />
+<ModalConfirmacionEliminar
+  mostrar={mostrarConfirmacion}
+  cerrar={() => setMostrarConfirmacion(false)}
+  confirmar={confirmarEliminacion}
+  nombreArea={areaAEliminar?.nombre}
+/>
+
 
       <ModalConfirmacionEliminarCategoria
         mostrar={mostrarConfirmacionCategoria}

@@ -41,8 +41,8 @@ export const obtenerAreaPorId = async (req, res, next) => {
 export const actualizarArea = async (req, res, next) => {
     try {
         const id = parseInt(req.params.id, 10);
-        const { nombre_area, descripcion_area } = req.body;
-        const area = await areaService.updateArea(id, nombre_area, descripcion_area);
+        const { nombre_area, descripcion_area, costo } = req.body;
+        const area = await areaService.updateArea(id, nombre_area, descripcion_area, costo);
         if (!area) {
             return res.status(404).json({ message: 'Area no encontrada' });
         }

@@ -18,3 +18,12 @@ export const obtenerCategorias = async (req, res, next) => {
     }
 };
 
+export const actualizarCategoria = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const categoriaActualizada = await categoriaService.actualizarCategoriaConArea(id, req.body);
+        res.status(200).json(categoriaActualizada);
+    } catch (error) {
+        next(error);
+    }
+};

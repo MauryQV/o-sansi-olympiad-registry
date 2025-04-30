@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../../styles/ModalNuevaArea.css';
 import { useAreaForm } from '../../hooks/useAreaForm';
 //no tocar
-import { crearArea } from '../../services/areaService'; 
+import { crearArea, actualizarArea } from '../../services/areaService'; 
 
 const ModalNuevaArea = ({ mostrar, cerrar, onCreacionExitosa, areaAEditar }) => {
   const {
@@ -19,24 +19,30 @@ const ModalNuevaArea = ({ mostrar, cerrar, onCreacionExitosa, areaAEditar }) => 
   const manejarEnvio = async (e) => {
     e.preventDefault();
     if (!validar()) return;
-
+  
     try {
       setCargando(true);
       const nuevaArea = getData();
-      const respuesta = await crearArea(nuevaArea);
-
-      console.log('creadso', respuesta);
-
-      if (onCreacionExitosa) onCreacionExitosa(respuesta); // opción para refrescar lista
+  
+      let respuesta;
+      if (areaAEditar) {
+        // Actualizar área existente
+        respuesta = await actualizarArea(areaAEditar.id, nuevaArea);
+      } else {
+        // Crear nueva área
+        respuesta = await crearArea(nuevaArea);
+      }
+  
+      if (onCreacionExitosa) onCreacionExitosa(respuesta);
       cerrar();
     } catch (error) {
-
-
-      alert('error en la bd.');
+      console.error('Error guardando el área:', error);
+      alert('Error al guardar el área. Verifica los datos o intenta más tarde.');
     } finally {
       setCargando(false);
     }
   };
+  
 
   return (
     <div className="modal-fondo">

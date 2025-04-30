@@ -1,30 +1,13 @@
 import prisma from '../config/prismaClient.js';
 
 
-export const crearCategoria = async (data) => {
-    // Verificar si ya existe una categoría con el mismo nombre
-    const categoriaExistente = await prisma.categoria.findFirst({
-        where: { nombre_categoria: data.nombre_categoria }
-    });
-
-    if (categoriaExistente) {
-        throw new Error('Ya existe una categoría con este nombre');
-    }
-
-    // Obtener los grados para verificar coherencia
+/*export const crearCategoria = async (data) => {
     const gradoMin = await prisma.grado.findUnique({
         where: { id: data.grado_min_id }
     });
-
     const gradoMax = await prisma.grado.findUnique({
         where: { id: data.grado_max_id }
     });
-
-    if (!gradoMin || !gradoMax) {
-        throw new Error('Los grados especificados no existen');
-    }
-
-    // Convertir nombres de grado a valores numéricos para comparar (asumiendo formato como "1ro", "2do", etc.)
     const valorGradoMin = parseInt(gradoMin.nombre_grado);
     const valorGradoMax = parseInt(gradoMax.nombre_grado);
 
@@ -37,7 +20,7 @@ export const crearCategoria = async (data) => {
     }
 
     return await prisma.categoria.create({ data });
-};
+};*/
 
 
 
@@ -67,8 +50,8 @@ export const crearCategoriaConArea = async (data) => {
 
     await prisma.categoria_area.create({
         data: {
-            categoria_id: nuevaCategoria.id,
-            area_id
+            categoria_id: parseInt(nuevaCategoria.id),
+            area_id: parseInt(area_id)
         }
     });
 
@@ -87,3 +70,67 @@ export const obtenerCategorias = async () => {
         },
     });
 };
+
+export const actualizarCategoriaConArea = async (id, data) => {
+    const { nombre_categoria, descripcion_cat, grado_min_id, grado_max_id, area_id } = data;
+
+    if (!area_id) {
+        throw new Error('Debes seleccionar un área para la categoría');
+    }
+    const categoriaActualizada = await prisma.categoria.update({
+        where: { id: parseInt(id, 10) },
+        data: {
+            nombre_categoria,
+            descripcion_cat,
+            grado_min_id,
+            grado_max_id,
+        },
+    });
+
+    await prisma.categoria_area.deleteMany({
+        where: {
+            categoria_id: parseInt(id, 10)
+        }
+    });
+
+    await prisma.categoria_area.create({
+        data: {
+            categoria_id: parseInt(id, 10),
+            area_id: parseInt(area_id, 10)
+        }
+    });
+
+    const relacionActualizada = await prisma.categoria_area.findFirst({
+        where: {
+            categoria_id: parseInt(id, 10)
+        }
+    });
+
+    if (!relacionActualizada) {
+        throw new Error('Error al actualizar la relación categoria-área');
+    }
+
+    return {
+        ...categoriaActualizada,
+        area_id: relacionActualizada.area_id
+    };
+};
+/*export const obtenerGradosPrimaria = async () => {
+    return await prisma.grado.findMany({
+        where: {
+            nombre_grado: {
+                in: ['1ro', '2do', '3ro', '4to', '5to', '6to']
+            }
+        }
+    });
+}
+
+export const obtenerGradosSecundaria = async () => {
+    return await prisma.grado.findMany({
+        where: {
+            nombre_grado: {
+                in: ['1ro', '2do', '3ro', '4to', '5to', '6to']
+            }
+        }
+    });
+}**/
