@@ -2,13 +2,13 @@ import * as areaService from '../services/areaServices.js';
 
 export const crearArea = async (req, res, next) => {
     try {
-        const { nombre_area, descripcion_area } = req.body;
+        const { nombre_area, descripcion_area, costo } = req.body;
 
         if (!nombre_area) {
             return res.status(400).json({ message: "El campo 'nombre_area' es obligatorio" });
         }
 
-        const area = await areaService.crearArea(nombre_area, descripcion_area);
+        const area = await areaService.crearArea(nombre_area, descripcion_area, costo);
         res.status(201).json(area);
     } catch (error) {
         next(error);
@@ -43,6 +43,19 @@ export const actualizarArea = async (req, res, next) => {
         const id = parseInt(req.params.id, 10);
         const { nombre_area, descripcion_area } = req.body;
         const area = await areaService.updateArea(id, nombre_area, descripcion_area);
+        if (!area) {
+            return res.status(404).json({ message: 'Area no encontrada' });
+        }
+        res.status(200).json(area);
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const eliminarArea = async (req, res, next) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        const area = await areaService.deleteArea(id);
         if (!area) {
             return res.status(404).json({ message: 'Area no encontrada' });
         }
