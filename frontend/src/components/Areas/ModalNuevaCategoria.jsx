@@ -1,6 +1,6 @@
 // ModalNuevaCategoria.jsx
 import React, { useState, useEffect } from 'react';
-import '../styles/ModalNuevaCategoria.css';
+import '../../styles/ModalNuevaCategoria.css';
 
 const ModalNuevaCategoria = ({
   mostrar,

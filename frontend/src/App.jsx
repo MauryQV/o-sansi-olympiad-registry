@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar"; // Importamos la barra de navegación
 import Login from "./components/Login";
 import InicioAdmin from "./components/InicioAdmin";
-import TablaArea from "./components/TablaArea";
+import TablaArea from "./components/Areas/TablaArea.jsx";
 import Disciplinas from "./components/Disciplinas.jsx";
 import RegistrarTutores from "./components/RegistrarTutores.jsx";
 import RegistroUsuario from "./components/RegistroUsuario.jsx";
