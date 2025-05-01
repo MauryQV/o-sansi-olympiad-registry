@@ -12,16 +12,20 @@ const tutorSchema = Joi.object({
     correo_electronico: Joi.string().email().required(),
     carnet_identidad: Joi.string().min(5).max(20).required(),
     numero_celular: Joi.string().pattern(/^\d{8,12}$/).required(),
+    area_id: Joi.alternatives().try(
+        Joi.string().required(),
+        Joi.number().integer().required()
+    ).required(),
 });
 
-// Crear nuevo tutor
+// crear nuevo tutor y usamos el esquema de joi 
 export const crearTutor = async (data) => {
     const { error, value } = tutorSchema.validate(data);
     if (error) {
         throw new Error(`Datos inválidos: ${error.details[0].message}`);
     }
 
-    const { nombre, apellido, correo_electronico, carnet_identidad, numero_celular } = value;
+    const { nombre, apellido, correo_electronico, carnet_identidad, numero_celular, area_id } = value;
 
     const existente = await prisma.usuario.findFirst({
         where: {
@@ -37,16 +41,13 @@ export const crearTutor = async (data) => {
         throw new Error('Ya existe un usuario o tutor con ese correo o carnet de identidad');
     }
 
-    const contraseñaGenerada = generarPassword();
-    const hashedPassword = await bcrypt.hash(contraseñaGenerada, 10);
-
     const usuario = await prisma.usuario.create({
         data: {
             nombre,
             apellido,
             correo_electronico,
             rol_id: ROL_TUTOR_ID,
-            password: hashedPassword,
+            password: carnet_identidad, // carnet = contraseña
         },
     });
 
@@ -55,12 +56,14 @@ export const crearTutor = async (data) => {
             usuario_id: usuario.id,
             carnet_identidad,
             numero_celular,
+            area_id,
         },
     });
 
     return {
         tutor: {
             id: tutor.id,
+            area_id,
             carnet_identidad,
             numero_celular,
             usuario_id: usuario.id,
@@ -70,7 +73,7 @@ export const crearTutor = async (data) => {
         },
         credenciales: {
             correo_electronico,
-            contraseña: contraseñaGenerada,
+            password: carnet_identidad, //devolvemos la contraseña 
         },
     };
 };

@@ -83,3 +83,24 @@ export const obtenerConvocatoriaConAreas = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+export const eliminarConvocatoria = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await convocatoriaService.eliminarConvocatoria(id);
+        res.status(200).json({ message: 'Convocatoria eliminada', result });
+    } catch (error) {
+        console.error('[ERROR ELIMINAR]', error.message);
+        res.status(400).json({ error: error.message });
+    }
+};
+
+export const obtenerEstadosConvocatoria = async (req, res) => {
+    try {
+        const estados = await convocatoriaService.obtenerEstadosConvocatoria();
+        res.json(estados);
+    } catch (error) {
+        console.error('[ERROR OBTENER ESTADOS]', error.message);
+        res.status(400).json({ error: error.message });
+    }
+};
