@@ -5,8 +5,8 @@ export const crearConvocatoriaController = async (req, res) => {
         const convocatoria = await convocatoriaService.crearConvocatoriaConRelaciones(req.body);
         res.status(201).json({ message: 'Convocatoria creada con éxito', convocatoria });
     } catch (error) {
-        console.error('[ERROR AL CREAR]', error.message);
-        res.status(400).json({ error: error.message || 'Error al crear la convocatoria' });
+        console.error('error al crear convocatoria', error.message);
+        res.status(400).json({ error: error.message || 'error al crear la convocatoria' });
     }
 };
 
