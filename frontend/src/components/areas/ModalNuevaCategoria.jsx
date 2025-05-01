@@ -1,7 +1,11 @@
-// ModalNuevaCategoria.jsx
-import React, { useState, useEffect } from 'react';
-import '../../styles/areas/ModalNuevaCategoria.css';
+import React from 'react';
+import '../../styles/Areas/ModalNuevaCategoria.css';
+import useCategoriaForm from '../../hooks/useCategoriaForm';
+import GradosSelector from './gradosComponent';
 
+/**
+ * Modal para crear o editar una categoría
+ */
 const ModalNuevaCategoria = ({
   mostrar,
   cerrar,
@@ -11,100 +15,26 @@ const ModalNuevaCategoria = ({
   categoriaAEditar,
   onActualizarCategoria,
 }) => {
-  const [nombre, setNombre] = useState('');
-  const [descripcion, setDescripcion] = useState('');
-  const [gradosPrimaria, setGradosPrimaria] = useState([]);
-  const [gradosSecundaria, setGradosSecundaria] = useState([]);
-  const [areaSeleccionadaInterna, setAreaSeleccionada] = useState(areaSeleccionada || '');
-  const [errores, setErrores] = useState({});
-
-  useEffect(() => {
-    if (categoriaAEditar) {
-      setNombre(categoriaAEditar.nombre);
-      setDescripcion(categoriaAEditar.descripcion);
-      setGradosPrimaria(categoriaAEditar.gradosPrimaria || []);
-      setGradosSecundaria(categoriaAEditar.gradosSecundaria || []);
-      setAreaSeleccionada(categoriaAEditar.area);
-    } else if (areaSeleccionada) {
-      setAreaSeleccionada(areaSeleccionada);
-    }
-    setErrores({});
-  }, [categoriaAEditar, areaSeleccionada]);
-
-  const gradosDisponibles = [
-    { tipo: 'Primaria', niveles: ['3°', '4°', '5°', '6°'] },
-    { tipo: 'Secundaria', niveles: ['1°', '2°', '3°', '4°', '5°', '6°'] },
-  ];
-
-  const toggleGrado = (grado, tipo) => {
-    if (tipo === 'Primaria') {
-      setGradosPrimaria(gradosPrimaria.includes(grado)
-        ? gradosPrimaria.filter(g => g !== grado)
-        : [...gradosPrimaria, grado]);
-    } else {
-      setGradosSecundaria(gradosSecundaria.includes(grado)
-        ? gradosSecundaria.filter(g => g !== grado)
-        : [...gradosSecundaria, grado]);
-    }
-  };
-
-  const validarCampos = () => {
-    const nuevosErrores = {};
-
-    if (!nombre.trim()) {
-      nuevosErrores.nombre = 'El nombre es obligatorio.';
-    } else if (nombre.length > 30) {
-      nuevosErrores.nombre = 'Máximo 30 caracteres.';
-    }
-
-    if (!descripcion.trim()) {
-      nuevosErrores.descripcion = 'La descripción es obligatoria.';
-    } else if (descripcion.length > 100) {
-      nuevosErrores.descripcion = 'Máximo 100 caracteres.';
-    }
-
-    if (!areaSeleccionadaInterna) {
-      nuevosErrores.area = 'Debe seleccionar un área.';
-    }
-
-    if (gradosPrimaria.length === 0 && gradosSecundaria.length === 0) {
-      nuevosErrores.grados = 'Debe seleccionar al menos un grado.';
-    }
-
-    setErrores(nuevosErrores);
-    return Object.keys(nuevosErrores).length === 0;
-  };
-
-  const enviarFormulario = (e) => {
-    e.preventDefault();
-    if (!validarCampos()) return;
-
-    const nuevaCategoria = {
-      nombre,
-      descripcion,
-      area: areaSeleccionadaInterna,
-      gradosPrimaria,
-      gradosSecundaria,
-    };
-
-    if (categoriaAEditar) {
-      onActualizarCategoria(nuevaCategoria);
-    } else {
-      onCrearCategoria(nuevaCategoria);
-    }
-
-    cerrar();
-    limpiarFormulario();
-  };
-
-  const limpiarFormulario = () => {
-    setNombre('');
-    setDescripcion('');
-    setGradosPrimaria([]);
-    setGradosSecundaria([]);
-    setErrores({});
-    setAreaSeleccionada(areaSeleccionada || '');
-  };
+  const {
+    nombre,
+    setNombre,
+    descripcion,
+    setDescripcion,
+    areaSeleccionadaInterna,
+    setAreaSeleccionada,
+    grados,
+    gradosSeleccionados,
+    errores,
+    toggleGrado,
+    enviarFormulario,
+    limpiarFormulario
+  } = useCategoriaForm(
+    categoriaAEditar,
+    areaSeleccionada,
+    onCrearCategoria,
+    onActualizarCategoria,
+    cerrar
+  );
 
   if (!mostrar) return null;
 
@@ -160,29 +90,22 @@ const ModalNuevaCategoria = ({
             {errores.area && <span className="error-text">{errores.area}</span>}
           </label>
 
-          <label>
-            Grados Permitidos <span className="obligatorio">*</span>
-          </label>
-          {gradosDisponibles.map((grupo, i) => (
-            <div key={i}>
-              <p><strong>{grupo.tipo}</strong></p>
-              <div className="grid-grados">
-                {grupo.niveles.map((nivel) => (
-                  <div
-                    key={nivel}
-                    className={`grado ${(grupo.tipo === 'Primaria' ? gradosPrimaria : gradosSecundaria).includes(nivel) ? 'seleccionado' : ''}`}
-                    onClick={() => toggleGrado(nivel, grupo.tipo)}
-                  >
-                    {nivel} grado
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-          {errores.grados && <span className="error-text">{errores.grados}</span>}
+          <GradosSelector
+            grados={grados}
+            gradosSeleccionados={gradosSeleccionados}
+            toggleGrado={toggleGrado}
+            error={errores.grados}
+          />
 
           <div className="modal-botones">
-            <button type="button" className="btn-cancelar" onClick={() => { cerrar(); limpiarFormulario(); }}>
+            <button 
+              type="button" 
+              className="btn-cancelar" 
+              onClick={() => { 
+                cerrar(); 
+                limpiarFormulario(); 
+              }}
+            >
               Cancelar
             </button>
             <button type="submit" className="btn-crear">
