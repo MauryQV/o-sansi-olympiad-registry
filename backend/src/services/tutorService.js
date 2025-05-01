@@ -92,19 +92,21 @@ export const getTutorById = async (id) => {
     });
 };
 
-
-export const buscarTutoresPorNombre = async (nombre) => {
+export const buscarTutoresPorNombreYArea = async (id_area, nombre) => {
     return await prisma.tutor.findMany({
         where: {
+            area_id: id_area,
             usuario: {
                 nombre: {
                     contains: nombre,
-                    mode: 'insensitive'
-                }
-            }
+                    mode: 'insensitive',
+                },
+            },
         },
         include: {
-            usuario: true
-        }
+            usuario: true,
+        },
     });
 };
+
+
