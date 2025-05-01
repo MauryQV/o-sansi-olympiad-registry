@@ -1,5 +1,6 @@
 import supabase from "../config/supabaseClient.js";
 import jwt from "jsonwebtoken";
+import { validarToken } from '../utils/jwtUtils.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -18,16 +19,25 @@ export const authMiddleware = async (req, res, next) => {
 };
 
 
+/**
+ * Middleware para verificar si el token JWT es válido
+ */
 export const verificarToken = (req, res, next) => {
-    const authHeader = req.headers.authorization;
+  // Obtener el token del encabezado
+  const token = req.headers.authorization;
 
-    if (!authHeader) return res.status(401).json({ error: 'Token requerido' });
+  if (!token) {
+    return res.status(401).json({ error: 'Acceso denegado. No se proporcionó token de autenticación' });
+  }
 
-    const token = authHeader.split(' ')[1];
+  // Validar el token
+  const usuario = validarToken(token);
 
-    jwt.verify(token, JWT_SECRET, (err, usuario) => {
-        if (err) return res.status(403).json({ error: 'Token inválido o expirado' });
-        req.usuario = usuario;
-        next();
-    });
+  if (!usuario) {
+    return res.status(401).json({ error: 'Token inválido o expirado' });
+  }
+
+  // Guardar el usuario en la solicitud para uso posterior
+  req.usuario = usuario;
+  next();
 };
