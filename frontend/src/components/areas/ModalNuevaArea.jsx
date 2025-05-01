@@ -1,80 +1,48 @@
-// ModalNuevaArea.jsx
-import React, { useEffect, useState } from 'react';
-import '../../styles/areas/ModalNuevaArea.css';
+import React, { useState } from 'react';
+import '../../styles/Areas/ModalNuevaArea.css';
+import { useAreaForm } from '../../hooks/useAreaForm';
+//no tocar
+import { crearArea, actualizarArea } from '../../services/areaService'; 
 
-const ModalNuevaArea = ({ mostrar, cerrar, agregarArea, areaAEditar }) => {
-  const [nombre, setNombre] = useState('');
-  const [descripcion, setDescripcion] = useState('');
-  const [costo, setCosto] = useState('');
-  const [errores, setErrores] = useState({});
+const ModalNuevaArea = ({ mostrar, cerrar, onCreacionExitosa, areaAEditar }) => {
+  const {
+    nombre, descripcion, costo,
+    errores, validar, getData,
+    onNombre, onDescripcion, onCosto,
+    soloLetras, bloquearTexto
+  } = useAreaForm(mostrar, areaAEditar);
 
-  useEffect(() => {
-    if (!mostrar) return;
-
-    if (areaAEditar) {
-      setNombre(areaAEditar.nombre || '');
-      setDescripcion(areaAEditar.descripcion || '');
-      setCosto(areaAEditar.costo !== undefined ? areaAEditar.costo.toString() : '');
-    } else {
-      setNombre('');
-      setDescripcion('');
-      setCosto('');
-    }
-    setErrores({});
-  }, [areaAEditar, mostrar]);
-
-  const validarCampos = () => {
-    const nuevosErrores = {};
-
-    if (!nombre.trim()) {
-      nuevosErrores.nombre = 'El nombre del área es obligatorio.';
-    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,50}$/.test(nombre)) {
-      nuevosErrores.nombre = 'Solo se permiten letras y espacios (3-50 caracteres).';
-    }
-
-    if (!descripcion.trim()) {
-      nuevosErrores.descripcion = 'La descripción es obligatoria.';
-    } else if (descripcion.length < 10 || descripcion.length > 100) {
-      nuevosErrores.descripcion = 'Debe tener entre 10 y 100 caracteres.';
-    }
-
-    if (!costo.trim()) {
-      nuevosErrores.costo = 'El costo es obligatorio.';
-    } else if (!/^\d+$/.test(costo)) {
-      nuevosErrores.costo = 'Solo se permiten números.';
-    } else if (parseInt(costo) < 10 || parseInt(costo) > 30) {
-      nuevosErrores.costo = 'El costo debe estar entre 10 y 30 Bs.';
-    }
-
-    setErrores(nuevosErrores);
-    return Object.keys(nuevosErrores).length === 0;
-  };
-
-  const manejarEnvio = (e) => {
-    e.preventDefault();
-    if (validarCampos()) {
-      agregarArea({
-        nombre: nombre.trim(),
-        descripcion: descripcion.trim(),
-        costo: parseInt(costo)
-      });
-      cerrar();
-    }
-  };
-
-  const manejarNombreKeyPress = (e) => {
-    if (!/[A-Za-zÁÉÍÓÚáéíóúÑñ\s]/.test(e.key)) {
-      e.preventDefault();
-    }
-  };
-
-  const manejarCostoKeyPress = (e) => {
-    if (!/[0-9]/.test(e.key)) {
-      e.preventDefault();
-    }
-  };
+  const [cargando, setCargando] = useState(false);
 
   if (!mostrar) return null;
+
+  const manejarEnvio = async (e) => {
+    e.preventDefault();
+    if (!validar()) return;
+  
+    try {
+      setCargando(true);
+      const nuevaArea = getData();
+  
+      let respuesta;
+      if (areaAEditar) {
+        // Actualizar área existente
+        respuesta = await actualizarArea(areaAEditar.id, nuevaArea);
+      } else {
+        // Crear nueva área
+        respuesta = await crearArea(nuevaArea);
+      }
+  
+      if (onCreacionExitosa) onCreacionExitosa(respuesta);
+      cerrar();
+    } catch (error) {
+      console.error('Error guardando el área:', error);
+      alert('Error al guardar el área. Verifica los datos o intenta más tarde.');
+    } finally {
+      setCargando(false);
+    }
+  };
+  
 
   return (
     <div className="modal-fondo">
@@ -91,13 +59,14 @@ const ModalNuevaArea = ({ mostrar, cerrar, agregarArea, areaAEditar }) => {
             <input
               type="text"
               value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              onKeyPress={manejarNombreKeyPress}
-              placeholder="Ejemplo: Matemática"
+              onChange={onNombre}
+              onKeyPress={soloLetras}
+              placeholder="Ejemplo: matematica"
               minLength={3}
               maxLength={50}
               required
               className={errores.nombre ? 'input-error' : ''}
+              disabled={cargando}
             />
             {errores.nombre && <span className="error-text">{errores.nombre}</span>}
           </label>
@@ -106,12 +75,13 @@ const ModalNuevaArea = ({ mostrar, cerrar, agregarArea, areaAEditar }) => {
             Descripción <span className="obligatorio">*</span>
             <textarea
               value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
+              onChange={onDescripcion}
               placeholder="Breve descripción del área científica"
               minLength={10}
               maxLength={100}
               required
               className={errores.descripcion ? 'input-error' : ''}
+              disabled={cargando}
             ></textarea>
             {errores.descripcion && <span className="error-text">{errores.descripcion}</span>}
           </label>
@@ -121,19 +91,20 @@ const ModalNuevaArea = ({ mostrar, cerrar, agregarArea, areaAEditar }) => {
             <input
               type="text"
               value={costo}
-              onChange={(e) => setCosto(e.target.value)}
-              onKeyPress={manejarCostoKeyPress}
+              onChange={onCosto}
+              onKeyPress={bloquearTexto}
               placeholder="Ejemplo: 25"
               required
               className={errores.costo ? 'input-error' : ''}
+              disabled={cargando}
             />
             {errores.costo && <span className="error-text">{errores.costo}</span>}
           </label>
 
           <div className="modal-botones">
-            <button type="button" className="btn-cancelar" onClick={cerrar}>Cancelar</button>
-            <button type="submit" className="btn-crear">
-              {areaAEditar ? 'Actualizar' : 'Crear'}
+            <button type="button" className="btn-cancelar" onClick={cerrar} disabled={cargando}>Cancelar</button>
+            <button type="submit" className="btn-crear" disabled={cargando}>
+              {cargando ? 'Guardando...' : areaAEditar ? 'Actualizar' : 'Crear'}
             </button>
           </div>
         </form>
