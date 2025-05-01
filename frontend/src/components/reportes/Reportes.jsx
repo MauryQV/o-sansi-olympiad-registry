@@ -20,7 +20,7 @@ const Reportes = () => {
     <div className="reportes-minimal">
       <div className="reportes-minimal__header">
         <h2>Reportes de Inscripciones</h2>
-        <button className="reportes-minimal__btn-exportar" onClick={() => exportarPDF(datosPagina, currentPage)}>
+        <button className="reportes-minimal__btn-exportar" onClick={() => exportarPDF(datosFiltrados, currentPage)}>
           <Download size={16} style={{ marginRight: '6px' }} /> Exportar
         </button>
       </div>
