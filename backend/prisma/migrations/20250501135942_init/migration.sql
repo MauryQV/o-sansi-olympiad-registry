@@ -55,6 +55,7 @@ CREATE TABLE "Tutor" (
     "usuario_id" TEXT NOT NULL,
     "carnet_identidad" TEXT NOT NULL,
     "numero_celular" TEXT NOT NULL,
+    "area_id" INTEGER NOT NULL,
 
     CONSTRAINT "Tutor_pkey" PRIMARY KEY ("id")
 );
@@ -92,6 +93,8 @@ CREATE TABLE "Convocatoria" (
     "id_estado_convocatoria" INTEGER NOT NULL,
     "fecha_inicio" TIMESTAMP(3) NOT NULL,
     "fecha_fin" TIMESTAMP(3) NOT NULL,
+    "pago_fin" TIMESTAMP(3) NOT NULL,
+    "pago_inicio" TIMESTAMP(3) NOT NULL,
     "competicion_inicio" TIMESTAMP(3) NOT NULL,
     "competicion_fin" TIMESTAMP(3) NOT NULL,
     "descripcion_convocatoria" TEXT NOT NULL,
@@ -104,6 +107,7 @@ CREATE TABLE "Area" (
     "id" SERIAL NOT NULL,
     "nombre_area" TEXT NOT NULL,
     "descripcion_area" TEXT NOT NULL,
+    "costo" DECIMAL(10,2) NOT NULL,
 
     CONSTRAINT "Area_pkey" PRIMARY KEY ("id")
 );
@@ -123,6 +127,7 @@ CREATE TABLE "Categoria" (
 CREATE TABLE "Grado" (
     "id" SERIAL NOT NULL,
     "nombre_grado" TEXT NOT NULL,
+    "id_nivel" INTEGER NOT NULL,
 
     CONSTRAINT "Grado_pkey" PRIMARY KEY ("id")
 );
@@ -205,6 +210,14 @@ CREATE TABLE "Inscripcion_area" (
     CONSTRAINT "Inscripcion_area_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Nivel" (
+    "id" SERIAL NOT NULL,
+    "nombre_nivel" TEXT NOT NULL,
+
+    CONSTRAINT "Nivel_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Usuario_correo_electronico_key" ON "Usuario"("correo_electronico");
 
@@ -257,6 +270,9 @@ ALTER TABLE "Competidor" ADD CONSTRAINT "Competidor_usuario_id_fkey" FOREIGN KEY
 ALTER TABLE "Tutor" ADD CONSTRAINT "Tutor_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "Usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Tutor" ADD CONSTRAINT "Tutor_area_id_fkey" FOREIGN KEY ("area_id") REFERENCES "Area"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Provincia" ADD CONSTRAINT "Provincia_departamento_id_fkey" FOREIGN KEY ("departamento_id") REFERENCES "Departamento"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -272,6 +288,9 @@ ALTER TABLE "Categoria" ADD CONSTRAINT "Categoria_grado_max_id_fkey" FOREIGN KEY
 ALTER TABLE "Categoria" ADD CONSTRAINT "Categoria_grado_min_id_fkey" FOREIGN KEY ("grado_min_id") REFERENCES "Grado"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Grado" ADD CONSTRAINT "Grado_id_nivel_fkey" FOREIGN KEY ("id_nivel") REFERENCES "Nivel"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Pago" ADD CONSTRAINT "Pago_inscripcion_id_fkey" FOREIGN KEY ("inscripcion_id") REFERENCES "Inscripcion"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -281,7 +300,7 @@ ALTER TABLE "Pago" ADD CONSTRAINT "Pago_metodo_pago_id_fkey" FOREIGN KEY ("metod
 ALTER TABLE "Area_convocatoria" ADD CONSTRAINT "Area_convocatoria_area_id_fkey" FOREIGN KEY ("area_id") REFERENCES "Area"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Area_convocatoria" ADD CONSTRAINT "Area_convocatoria_convocatoria_id_fkey" FOREIGN KEY ("convocatoria_id") REFERENCES "Convocatoria"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Area_convocatoria" ADD CONSTRAINT "Area_convocatoria_convocatoria_id_fkey" FOREIGN KEY ("convocatoria_id") REFERENCES "Convocatoria"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Categoria_area" ADD CONSTRAINT "Categoria_area_categoria_id_fkey" FOREIGN KEY ("categoria_id") REFERENCES "Categoria"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

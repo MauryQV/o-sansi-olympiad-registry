@@ -114,3 +114,4 @@ const ModalNuevaArea = ({ mostrar, cerrar, onCreacionExitosa, areaAEditar }) => 
 };
 
 export default ModalNuevaArea;
+//no tocar

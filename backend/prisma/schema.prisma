@@ -97,6 +97,8 @@ model Convocatoria {
   estado_convocatoria      estado_convocatoria @relation(fields: [id_estado_convocatoria], references: [id])
   fecha_inicio             DateTime
   fecha_fin                DateTime
+  pago_fin                 DateTime
+  pago_inicio              DateTime
   competicion_inicio       DateTime
   competicion_fin          DateTime
   descripcion_convocatoria String
