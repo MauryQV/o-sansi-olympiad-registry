@@ -11,4 +11,6 @@ router.get('/ver-area/:id', areaController.obtenerAreaPorId);
 
 router.patch('/actualizar-area/:id', areaController.actualizarArea);
 
+router.delete('/eliminar-area/:id', areaController.eliminarArea);
+
 export default router;

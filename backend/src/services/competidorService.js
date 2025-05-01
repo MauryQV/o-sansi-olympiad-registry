@@ -34,7 +34,6 @@ export const registrarCompetidor = async (data) => {
         provincia_id,
     } = value;
 
-
     const existente = await prisma.usuario.findFirst({
         where: {
             OR: [
@@ -49,9 +48,6 @@ export const registrarCompetidor = async (data) => {
         throw new Error('Ya existe un usuario o competidor con ese correo o carnet');
     }
 
-    const contraseñaGenerada = generarPassword();
-
-    const hashedPassword = await bcrypt.hash(contraseñaGenerada, 10);
 
     const usuario = await prisma.usuario.create({
         data: {
@@ -59,10 +55,9 @@ export const registrarCompetidor = async (data) => {
             apellido,
             correo_electronico,
             rol_id: ROL_COMPETIDOR_ID,
-            password: hashedPassword,
+            password: carnet_identidad,
         },
     });
-
 
     const competidor = await prisma.competidor.create({
         data: {
@@ -87,7 +82,7 @@ export const registrarCompetidor = async (data) => {
         competidor,
         credenciales: {
             correo_electronico,
-            contraseña: contraseñaGenerada,
+            contraseña: carnet_identidad,
         },
     };
 };
