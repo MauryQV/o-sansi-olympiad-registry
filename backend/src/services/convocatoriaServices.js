@@ -85,7 +85,7 @@ export const crearConvocatoriaConRelaciones = async (data) => {
         fecha_inicio: new Date(fecha_inicio),
         fecha_fin: new Date(fecha_fin),
         pago_inicio: new Date(pago_inicio),
-        pago_fin: new Date(pagon_fin),
+        pago_fin: new Date(pago_fin),
         competicion_inicio: new Date(competicion_inicio),
         competicion_fin: new Date(competicion_fin),
         descripcion_convocatoria,
