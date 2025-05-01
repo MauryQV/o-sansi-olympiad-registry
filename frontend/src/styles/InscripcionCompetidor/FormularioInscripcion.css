@@ -237,3 +237,10 @@ html, body {
 .forminsc-sugerencia-item:hover {
   background-color: #f1f1f1;
 }
+
+.forminsc-contenedor * {
+  font-family: 'Comfortaa', cursive;
+}
+select, option {
+  font-family: 'Comfortaa', cursive !important;
+}

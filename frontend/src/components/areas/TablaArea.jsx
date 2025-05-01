@@ -5,7 +5,8 @@ import ModalNuevaArea from './ModalNuevaArea';
 import ModalConfirmacionEliminar from './ModalConfirmacionEliminar';
 import ModalConfirmacionEliminarCategoria from './ModalConfirmacionEliminarCategoria';
 import ModalNuevaCategoria from './ModalNuevaCategoria';
-import '../styles/TablaArea.css';
+
+import '../../styles/areas/TablaArea.css';
 
 const TablaArea = () => {
   const [areas, setAreas] = useState([

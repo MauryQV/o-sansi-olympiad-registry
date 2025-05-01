@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/RegistroCompetidores.css';
+import '../../styles/InscripcionCompetidor/RegistroCompetidores.css';
 
 const RegistroCompetidores = () => {
   const navigate = useNavigate();

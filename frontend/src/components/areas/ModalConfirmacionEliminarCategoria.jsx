@@ -1,6 +1,6 @@
 // ModalConfirmacionEliminarCategoria.jsx
 import React from 'react';
-import '../styles/ModalConfirmacionEliminarCategoria.css';
+import '../../styles/areas/ModalConfirmacionEliminarCategoria.css';
 
 const ModalConfirmacionEliminarCategoria = ({ mostrar, cerrar, confirmar, nombreCategoria }) => {
   if (!mostrar) return null;

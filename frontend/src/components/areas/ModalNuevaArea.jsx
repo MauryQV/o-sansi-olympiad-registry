@@ -1,6 +1,6 @@
 // ModalNuevaArea.jsx
 import React, { useEffect, useState } from 'react';
-import '../styles/ModalNuevaArea.css';
+import '../../styles/areas/ModalNuevaArea.css';
 
 const ModalNuevaArea = ({ mostrar, cerrar, agregarArea, areaAEditar }) => {
   const [nombre, setNombre] = useState('');
