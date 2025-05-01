@@ -27,6 +27,10 @@ const CardConvocatoria = ({ data, onVer, onEditar, onEliminar}) => {
         <span>{data.inscripcionInicio} - {data.inscripcionFin}</span>
       </div>
       <div className="card-fecha">
+        <span>Pago:</span>
+        <span>{data.pagoInicio} - {data.pagoFin}</span>
+      </div>
+      <div className="card-fecha">
         <span>Competencia:</span>
         <span>{data.competenciaInicio} - {data.competenciaFin}</span>
       </div>

@@ -13,6 +13,8 @@ import Pagos from "./components/Pagos.jsx";
 import DetallePago from './components/DetallePago';
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
 import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
+import InicioTutor from "./components/InicioTutor.jsx";
+import InicioCajero from "./components/InicioCajero.jsx";
 
 function App() {
   const [rol, setRol] = useState(() => localStorage.getItem("rol"));
@@ -44,6 +46,8 @@ function App() {
           <Route path="/pagos-competidor" element={<Pagos />} />
           <Route path="/pagos/detalle/:boleta" element={<DetallePago />} />
           <Route path="/solicitudes" element={<SolicitudesTutoria setRol={setRol} />} />
+          <Route path="/inicio-tutor" element={<InicioTutor setRol={setRol} />} />
+          <Route path="/inicio-cajero" element={<InicioCajero setRol={setRol} />} />
 
 
         </Routes>
