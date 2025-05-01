@@ -7,7 +7,7 @@ import ModalEditarUsuario from './ModalEditarUsuario';
 import lapizEditar from '../image/editarLapiz.svg'; 
 import borrarUsuario from '../image/borrarUsuario.svg';
 import ModalEliminarUsuario from './ModalEliminarUsuario';
-
+import { actualizarUsuarioEnLista } from '../utils/actualizarUsuario';
 
 const usuariosEjemplo = [
   {
@@ -16,7 +16,8 @@ const usuariosEjemplo = [
     correo: 'juanito@gmail.com',
     rol: 'Administrador',
     telefono: '77712345',
-    estado: 'Activo'
+    estado: 'Activo',
+    contraseña: 'abc@1Aavav'
   },
   {
     id: 2,
@@ -24,7 +25,8 @@ const usuariosEjemplo = [
     correo: 'luchito@gmail.com',
     rol: 'Cajero',
     telefono: '77723456',
-    estado: 'Activo'
+    estado: 'Activo',
+    contraseña: 'Luis@Flores1'
   },
   {
     id: 3,
@@ -32,7 +34,8 @@ const usuariosEjemplo = [
     correo: 'alesandoval@gmail.com',
     rol: 'Tutor',
     telefono: '77734567',
-    estado: 'Activo'
+    estado: 'Activo',
+    contraseña: 'Alejandra@Sandoval1'
   },
   {
     id: 4,
@@ -40,7 +43,8 @@ const usuariosEjemplo = [
     correo: 'pedrito@gmail.com',
     rol: 'Tutor',
     telefono: '77745678',
-    estado: 'Activo'
+    estado: 'Activo',
+    contraseña: 'Pedro@Perez1'
   }
 ];
 
@@ -136,9 +140,13 @@ const Usuarios = () => {
 
             {modalEditarAbierto && usuarioSeleccionado && (
               <ModalEditarUsuario
-                usuario={usuarioSeleccionado}
-                onClose={() => setModalEditarAbierto(false)}
-              />
+              usuario={usuarioSeleccionado}
+              onClose={() => setModalEditarAbierto(false)}
+              onActualizarUsuario={(actualizado) => {
+                setUsuarios(actualizarUsuarioEnLista(usuarios, actualizado));
+                setModalEditarAbierto(false);
+              }}
+            />
             )}
 
             {modalEliminarAbierto && usuarioAEliminar && (

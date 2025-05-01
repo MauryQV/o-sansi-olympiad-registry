@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import '../styles/Navbar.css'
+import usuario from '../image/user.svg';
 
 const Navbar = ({ rol, setRol }) => {
   const navigate = useNavigate();
@@ -54,7 +55,9 @@ const Navbar = ({ rol, setRol }) => {
                   <li><Link to="/usuarios" className="menu-item">Usuarios</Link></li>
                   <li><Link to="/reportes" className="menu-item">Reportes</Link></li>
                   <li>
-                    <button className="menu-rol" onClick={() => setRol(null)}>Admin</button>
+                    <button className="menu-rol" onClick={() => setRol(null)}>
+                      <img className='imagen-user' src={usuario} alt="usuario"/>
+                      Admin</button>
                   </li>
                 </>
               )}
@@ -63,7 +66,10 @@ const Navbar = ({ rol, setRol }) => {
                 <>
                   <li><Link to="/inicio-tutor" className="menu-item">Inicio (Tutor)</Link></li>
                   <li><Link to="/solicitudes" className="menu-item">Solicitudes</Link></li>
-                  <li><button className="menu-rol" onClick={() => setRol(null)}>Tutor</button></li>
+                  <li><button className="menu-rol" onClick={() => setRol(null)}>
+                    <img className='imagen-user' src={usuario} alt="usuario"/>
+                    Tutor</button>
+                  </li>
                 </>
               )}
 
@@ -72,7 +78,10 @@ const Navbar = ({ rol, setRol }) => {
                   <li><Link to="/inicio-competidor" className="menu-item">Inicio </Link></li>
                   <li><Link to="/inscripcion" className="menu-item">Inscripción</Link></li>
                   <li><Link to="/pagos-competidor" className="menu-item">Pagos</Link></li>
-                  <li><button className="menu-rol" onClick={() => setRol(null)}>Competidor</button></li>
+                  <li><button className="menu-rol" onClick={() => setRol(null)}>
+                    <img className='imagen-user' src={usuario} alt="usuario"/>
+                    Competidor</button>
+                  </li>
                 </>
               )}
 
@@ -80,7 +89,10 @@ const Navbar = ({ rol, setRol }) => {
                 <>
                   <li><Link to="/inicio-cajero" className="menu-item">Inicio (Cajero)</Link></li>
                   <li><Link to="/pagos" className="menu-item">Pagos</Link></li>
-                  <li><button className="menu-rol" onClick={() => setRol(null)}>Cajero</button></li>
+                  <li><button className="menu-rol" onClick={() => setRol(null)}>
+                    <img className='imagen-user' src={usuario} alt="usuario"/>
+                    Cajero</button>
+                  </li>
                 </>
               )}
 

@@ -49,7 +49,7 @@
 .pagoscomp-tabla-pagos td {
   padding: 14px 18px;
   border-bottom: 1px solid #ddd;
-  text-align: center; /* CENTRAR TEXTO en th y td */
+  text-align: center; 
 }
 
 .pagoscomp-tabla-pagos th {
@@ -63,9 +63,17 @@
   color: #111;
 }
 
-.pagoscomp-estado-pendiente {
+.estado-pago.pendiente {
   background-color: #fdf6b2;
   color: #b78b00;
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.estado-pago.pagado {
+  background-color: #d1fae5; 
+  color: #065f46;
   padding: 5px 12px;
   border-radius: 14px;
   font-size: 13px;
@@ -104,8 +112,11 @@
 
 .pagoscomp-boton-descargar:hover {
   background-color: #eaffea;
-  border-color: #28a745;
-  color: #28a745;
+  border-color:  #3399ff;
+  color: #3399ff;
+}
+.imagen-ver-descargar{
+  width: 1rem;
 }
 
 .pagoscomp-tabla-pagos th:first-child,

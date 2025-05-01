@@ -2,85 +2,39 @@
 import React, { useState } from 'react';
 import '../styles/ModalNuevoUsuario.css'; // Usaremos el mismo estilo
 import { X } from 'lucide-react';
+import {validateUsuarioForm, handleUsuarioInputChange} from '../forms/usuarioFormHandler';
 
-const ModalEditarUsuario = ({ usuario, onClose }) => {
+const ModalEditarUsuario = ({ usuario, onClose, onActualizarUsuario }) => {
   const [formData, setFormData] = useState({
     nombre: usuario.nombre || '',
     correo: usuario.correo || '',
     telefono: usuario.telefono || '',
     rol: usuario.rol || '',
-    contraseña: '',
+    contraseña: usuario.contraseña || '',
     activo: usuario.estado === 'Activo'
   });
 
   const [errores, setErrores] = useState({});
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-
-    if (name === 'nombre') {
-      const soloLetras = value.replace(/[0-9]/g, '');
-      if (soloLetras.length <= 70) {
-        setFormData(prev => ({ ...prev, [name]: soloLetras }));
-      }
-    } else if (name === 'telefono') {
-      const soloNumeros = value.replace(/[^0-9]/g, '');
-      if (soloNumeros.length <= 8) {
-        setFormData(prev => ({ ...prev, [name]: soloNumeros }));
-      }
-    } else if (name === 'contraseña') {
-      if (value.length <= 50) {
-        setFormData(prev => ({ ...prev, [name]: value }));
-      }
-    } else if (type === 'checkbox') {
-      setFormData(prev => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
-    }
-  };
+  const handleChange = handleUsuarioInputChange(formData, setFormData);
 
   const validarFormulario = () => {
-    const nuevosErrores = {};
-
-    if (!formData.nombre.trim()) {
-      nuevosErrores.nombre = 'El nombre es obligatorio.';
-    } else if (formData.nombre.length > 70) {
-      nuevosErrores.nombre = 'El nombre no puede superar los 70 caracteres.';
-    }
-
-    if (!formData.correo.trim()) {
-      nuevosErrores.correo = 'El correo es obligatorio.';
-    } else if (!formData.correo.endsWith('@gmail.com')) {
-      nuevosErrores.correo = 'El correo debe terminar en @gmail.com.';
-    }
-
-    if (!formData.telefono.trim()) {
-      nuevosErrores.telefono = 'El número de teléfono es obligatorio.';
-    } else if (formData.telefono.length !== 8) {
-      nuevosErrores.telefono = 'El número debe tener exactamente 8 dígitos.';
-    }
-
-    if (!formData.rol) {
-      nuevosErrores.rol = 'Debe seleccionar un rol.';
-    }
-
-    const regexContraseña = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,50}$/;
-    if (!formData.contraseña.trim()) {
-      nuevosErrores.contraseña = 'La contraseña es obligatoria.';
-    } else if (!regexContraseña.test(formData.contraseña)) {
-      nuevosErrores.contraseña = 'Debe tener 8-50 caracteres, una mayúscula y un carácter especial.';
-    }
-
-    setErrores(nuevosErrores);
-    return Object.keys(nuevosErrores).length === 0;
+    const erroresValidados = validateUsuarioForm(formData);
+    setErrores(erroresValidados);
+    return Object.keys(erroresValidados).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     if (validarFormulario()) {
-      console.log('Datos actualizados:', formData);
-      onClose();
+      onActualizarUsuario({
+        ...usuario,
+        ...formData,
+        estado: formData.activo ? 'Activo' : 'Inactivo'
+      });
+  
+      onClose(); 
     }
   };
 
