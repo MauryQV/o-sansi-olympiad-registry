@@ -10,7 +10,6 @@ import RegistroUsuario from "./components/RegistroUsuario.jsx";
 import Pagos from "./components/PagosCompetidor/Pagos.jsx";
 import DetallePago from './components/PagosCompetidor/DetallePago.jsx';
 import AdminGestionUsuario from './components/AdminGestionUsuario.jsx';
-
 import RegistroCompetidores from "./components/InscripcionCompetidor/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/InscripcionCompetidor/FormularioInscripcion.jsx";
 import Reportes from "./components/reportes/Reportes.jsx";
