@@ -8,7 +8,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import descarga from '../../image/descarga.svg';
 import casaInicio from '../../image/casaInicio.svg';
 import tarjetaQr from '../../image/tarjetaQr.svg';
-import BoletaPagoPDF from '../PagosCompetidor/BoletaPagoPDF.jsx'; // Asegúrate que la ruta sea esta
+import BoletaPagoPDF from '../PagosCompetidor/BoletaPagoPDF.jsx'; 
 
 const DetallePago = () => {
   const { boleta } = useParams();
@@ -20,7 +20,7 @@ const DetallePago = () => {
   const volver = () => navigate('/pagos-competidor');
 
   useEffect(() => {
-    // Simulación de datos del backend
+    // Simulación de datos del backendd
     const datosSimulados = {
       nombreCompetidor: "Luis Flores",
       ci: "9389739",
