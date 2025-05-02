@@ -167,12 +167,3 @@ body {
   border: 1px solid red;
 }
 
-.registro-btn.cancelar {
-  background-color: #ccc;
-  color: #333;
-  margin-top: 10px;
-}
-
-.registro-btn.cancelar:hover {
-  background-color: #bbb;
-}

@@ -1,0 +1,46 @@
+.convocatorias-wrapper {
+  padding: 1rem 2rem;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+.convocatorias-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.btn-nueva {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+.filtro-convocatorias {
+  margin-bottom: 1rem;
+}
+
+.filtro-convocatorias select {
+  padding: 0.4rem;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+.lista-convocatorias {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));  
+  gap: 1.5rem;
+  margin-top: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 1600px; 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+

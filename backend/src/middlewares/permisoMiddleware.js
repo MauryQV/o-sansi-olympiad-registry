@@ -1,0 +1,32 @@
+import prisma from "../config/prismaClient.js";
+
+export const requirePermiso = (nombrePermiso) => {
+    return async (req, res, next) => {
+        if (!req.usuario || !req.usuario.rol_id) {
+            return res.status(401).json({ error: 'Token no válido o rol ausente' });
+        }
+
+        try {
+            const permisos = await prisma.rol_permiso.findMany({
+                where: {
+                    rol_id: req.usuario.rol_id,
+                    permiso: {
+                        nombre: nombrePermiso
+                    }
+                },
+                include: {
+                    permiso: true
+                }
+            });
+
+            if (permisos.length === 0) {
+                return res.status(403).json({ error: 'Permiso denegado' });
+            }
+
+            next();
+        } catch (err) {
+            console.error('Error al verificar permiso:', err);
+            res.status(500).json({ error: 'Error interno al verificar permisos' });
+        }
+    };
+};

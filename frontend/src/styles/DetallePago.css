@@ -113,4 +113,29 @@
     font-size: 14px;
     line-height: 1.6;
   }
+  /*qr css*/
+.detallepago-qr-img {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.detallepago-qr-texto {
+  text-align: center;
+  font-size: 15px;
+  margin-top: 10px;
+  color: #555;
+}
+
+.detallepago-btn-qr-confirmar {
+  background-color: #7a5cff;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  margin: 15px auto 0;
+  display: block;
+  cursor: pointer;
+}
   
