@@ -151,7 +151,7 @@ export const obtenerTutorPorId = async (req, res, next) => {
     }
 };
 
-export const buscarTutores = async (req, res) => {
+/*export const buscarTutores = async (req, res) => {
     try {
         const { nombre, area } = req.query;
 
@@ -164,21 +164,21 @@ export const buscarTutores = async (req, res) => {
         // Construir filtro para la búsqueda usando OR con contains
         let filtro = {
             OR: [
-                { 
+                {
                     usuario: {
                         nombre: {
                             contains: nombre,
                             mode: 'insensitive'
                         }
-                    } 
+                    }
                 },
-                { 
+                {
                     usuario: {
                         apellido: {
                             contains: nombre,
                             mode: 'insensitive'
                         }
-                    } 
+                    }
                 }
             ]
         };
@@ -226,5 +226,15 @@ export const buscarTutores = async (req, res) => {
     } catch (error) {
         console.error('Error al buscar tutores:', error);
         res.status(500).json({ error: 'Error en el servidor al buscar tutores' });
+    }
+};
+*/
+export const obtenerSolicitudesPendientes = async (req, res, next) => {
+    try {
+        const solicitudes = await tutorService.obtenerSolicitudesPendientes(req.user.id);
+        res.status(200).json(solicitudes);
+    } catch (error) {
+        console.error('Error al obtener solicitudes pendientes:', error);
+        next(error);
     }
 };

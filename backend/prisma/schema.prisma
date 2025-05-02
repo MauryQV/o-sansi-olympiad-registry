@@ -8,16 +8,17 @@ datasource db {
 }
 
 model Usuario {
-  id                 String      @id @default(uuid())
-  correo_electronico String      @unique
+  id                 String         @id @default(uuid())
+  correo_electronico String         @unique
   nombre             String
   apellido           String
   password           String
   rol_id             Int
-  createdAt          DateTime    @default(now())
+  createdAt          DateTime       @default(now())
   competidor         Competidor?
   tutor              Tutor?
-  role               Rol         @relation(fields: [rol_id], references: [id])
+  role               Rol            @relation(fields: [rol_id], references: [id])
+  Notificacion       Notificacion[]
 }
 
 model Rol {
@@ -211,4 +212,14 @@ model Nivel {
   id           Int     @id @default(autoincrement())
   nombre_nivel String
   Grado        Grado[]
+}
+
+model Notificacion {
+  id        Int      @id @default(autoincrement())
+  usuarioId String
+  tipo      String // ejemplo: "solicitud", "respuesta"
+  mensaje   String
+  leido     Boolean  @default(false)
+  createdAt DateTime @default(now())
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
 }
