@@ -12,6 +12,8 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
     descripcion: '',
     inscripcionInicio: '',
     inscripcionFin: '',
+    pagoInicio: '',
+    pagoFin: '',
     competenciaInicio: '',
     competenciaFin: '',
     areasSeleccionadas: []
@@ -58,25 +60,27 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
   const validarFormulario = () => {
     const nuevosErrores = {};
     const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
+    hoy.setHours(0, 0, 0, 0); 
 
-    if (!formulario.nombre.trim()) nuevosErrores.nombre = 'Nombre obligatorio';
+      if (!formulario.nombre.trim()) nuevosErrores.nombre = 'Nombre obligatorio';
     if (!formulario.descripcion.trim()) nuevosErrores.descripcion = 'Descripción obligatoria';
     if (!formulario.inscripcionInicio) nuevosErrores.inscripcionInicio = 'Fecha inicio inscripción obligatoria';
     if (!formulario.inscripcionFin) nuevosErrores.inscripcionFin = 'Fecha fin inscripción obligatoria';
+    if (!formulario.pagoInicio) nuevosErrores.pagoInicio = 'Ingrese el inicio del periodo de pago.';
+    if (!formulario.pagoFin) nuevosErrores.pagoFin = 'Ingrese el fin del periodo de pago.';
     if (!formulario.competenciaInicio) nuevosErrores.competenciaInicio = 'Fecha inicio competencia obligatoria';
     if (!formulario.competenciaFin) nuevosErrores.competenciaFin = 'Fecha fin competencia obligatoria';
     if (!formulario.id_estado_convocatoria) nuevosErrores.id_estado_convocatoria = 'Seleccione un estado';
     if (formulario.areasSeleccionadas.length === 0) nuevosErrores.areasSeleccionadas = 'Selecciona al menos un área';
-
+  
     setErrores(nuevosErrores);
     return Object.keys(nuevosErrores).length === 0;
   };
-
+  
   const manejarSubmit = async (e) => {
     e.preventDefault();
     if (!validarFormulario()) return;
-
+  
     try {
       const convocatoriaAEnviar = {
         nombre_convocatoria: formulario.nombre,
@@ -88,8 +92,9 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
         descripcion_convocatoria: formulario.descripcion,
         areaIds: formulario.areasSeleccionadas
       };
-       // Imprimir los datos que se enviarán al servidor
-       console.log('Datos enviados al servidor:', convocatoriaAEnviar);
+  
+      // Imprimir los datos que se enviarán al servidor
+      console.log('Datos enviados al servidor:', convocatoriaAEnviar);
       await crearConvocatoria(convocatoriaAEnviar);
       Swal.fire('Éxito', 'Convocatoria creada correctamente', 'success');
       cerrar();
@@ -98,7 +103,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
       Swal.fire('Error', 'No se pudo crear la convocatoria', 'error');
     }
   };
-
+  
   if (!visible) return null;
 
   return (
@@ -154,7 +159,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
           {/* Fechas */}
           <div className="input-row">
             <div className="form-group">
-              <label>Inicio Inscripción *</label>
+              <label>Fecha Inicio Inscripción *</label>
               <input
                 type="date"
                 name="inscripcionInicio"
@@ -165,7 +170,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
               {errores.inscripcionInicio && <span className="error-text">{errores.inscripcionInicio}</span>}
             </div>
             <div className="form-group">
-              <label>Fin Inscripción *</label>
+              <label>Fecha Fin Inscripción *</label>
               <input
                 type="date"
                 name="inscripcionFin"
@@ -179,7 +184,33 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
 
           <div className="input-row">
             <div className="form-group">
-              <label>Inicio Competencia *</label>
+              <label>Fecha Inicio Pago *</label>
+              <input
+                type="date"
+                name="pagoInicio"
+                value={formulario.pagoInicio}
+                onChange={manejarCambio}
+                className={errores?.pagoInicio ? 'input-error' : ''}
+              />
+              {errores?.pagoInicio && <span className="error-text">{errores.pagoInicio}</span>}
+            </div>
+
+            <div className="form-group">
+              <label>Fecha Fin Pago *</label>
+              <input
+                type="date"
+                name="pagoFin"
+                value={formulario.pagoFin}
+                onChange={manejarCambio}
+                className={errores?.pagoFin ? 'input-error' : ''}
+              />
+              {errores?.pagoFin && <span className="error-text">{errores.pagoFin}</span>}
+            </div>
+          </div>
+
+          <div className="input-row">
+            <div className="form-group">
+              <label>Fecha Inicio Competencia *</label>
               <input
                 type="date"
                 name="competenciaInicio"
@@ -189,8 +220,9 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
               />
               {errores.competenciaInicio && <span className="error-text">{errores.competenciaInicio}</span>}
             </div>
+
             <div className="form-group">
-              <label>Fin Competencia *</label>
+              <label>Fecha Fin Competencia *</label>
               <input
                 type="date"
                 name="competenciaFin"

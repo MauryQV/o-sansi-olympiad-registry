@@ -1,0 +1,135 @@
+.gestion-usuario {
+  padding: 2rem;
+  background-color: #f5f7f9;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+.gestion-boton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.boton-nuevo-usuario {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.4rem 1.2rem;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton-nuevo-usuario:hover {
+  background-color: #005fc1;
+}
+
+.gestion-usuarios-header select {
+  padding: 0.4rem 0.6rem;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+}
+
+.gestion-usuario-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: flex-start;
+
+
+}
+
+.gestion-usuario-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  width: 28rem;
+  flex: 0 0 auto; /* no se expande, no se contrae */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.gestion-usuario-inicio-dato {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+}
+.gestion-usuario-dato {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.3rem 0;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.gestion-usuario-dato span:last-child {
+  max-width: 60%;
+  text-align: right;
+}
+
+.gestion-usuario-dato span:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tag-rol,
+.tag-estado {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+}
+
+.tag-rol {
+  background-color: #0ea5e9;
+}
+
+.tag-estado {
+  background-color: #8b5cf6;
+}
+
+.acciones {
+  display: flex;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+/*icocnos*/
+.icono-editar {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.icono-editar:hover {
+  transform: scale(1.1);
+}
+.icono-borrar {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.icono-borrar:hover {
+  transform: scale(1.1);
+}
+
+  

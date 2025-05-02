@@ -1,7 +1,10 @@
 import React from 'react';
-import '../styles/Pagos.css';
+import '../../styles/PagosCompetidor/Pagos.css';
 import { useNavigate } from 'react-router-dom';
-
+import imagenDeiR from '../../image/imagenDeiR.svg';
+import descarga from '../../image/descarga.svg';
+import BoletaPagoPDF from '../PagosCompetidor/BoletaPagoPDF.jsx';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 const PagosVistaCompetidor = () => {
   const pagos = [
@@ -49,21 +52,39 @@ const PagosVistaCompetidor = () => {
                 <td>{pago.monto}</td>
                 <td>{pago.fecha}</td>
                 <td>
-                  <span className="pagoscomp-estado-pendiente">{pago.estado}</span>
+                  <span className={`estado-pago ${pago.estado.toLowerCase()}`}>{pago.estado}</span>
                 </td>
                 <td className="pagoscomp-columna-acciones">
                   <button
                     className="pagoscomp-boton-ver"
                     onClick={() => verDetallePago(pago.boleta)}
                   >
-                    🔗 Ver
+                    <img className='imagen-ver-descargar' src={imagenDeiR} alt="ver"/>
+                    Ver
                   </button>
-                  <button
-                    className="pagoscomp-boton-descargar"
-                    onClick={() => descargarBoletaPago(pago.boleta)}
+                  <PDFDownloadLink
+                    document={
+                      <BoletaPagoPDF
+                        boleta={pago.boleta}
+                        nombre="Luis Flores" // Puedes reemplazar con props reales
+                        ci="9389739"
+                        area={pago.area}
+                        fechaEmision="2025-04-01"
+                        estado={pago.estado}
+                        monto={15.00}
+                      />
+                    }
+                    fileName={`boleta_${pago.boleta}.pdf`}
+                    style={{ textDecoration: 'none' }}
                   >
-                    ⬇️ Descargar
-                  </button>
+                    {({ loading }) => (
+                      <button className="pagoscomp-boton-descargar">
+                        <img className='imagen-ver-descargar' src={descarga} alt="descargar"/>
+                        {loading ? 'Generando...' : 'Descargar'}
+                      </button>
+                    )}
+                  </PDFDownloadLink>
+
                 </td>
               </tr>
             ))}

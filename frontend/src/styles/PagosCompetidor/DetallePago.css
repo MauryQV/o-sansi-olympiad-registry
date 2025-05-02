@@ -22,6 +22,12 @@
     cursor: pointer;
     font-weight: bold;
   }
+
+  .detallepago-volver:hover {
+    background-color: #e0f2ff;
+    border-color: #007bff;
+    color: #007bff;
+  }
   
   .detallepago-tarjeta {
     margin-top: 20px;
@@ -34,9 +40,12 @@
   
   .detallepago-info {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 30rem; 
     margin-bottom: 16px;
+    flex-wrap: wrap;
   }
+  
   
   .detallepago-estado {
     background-color: #fcefc7;
@@ -52,9 +61,12 @@
     margin-bottom: 10px;
   }
   
-  .detallepago-monto span {
-    color: #28a745;
+  .detallepago-monto  {
+    color: #166534;
     font-weight: bold;
+  }
+  .imagen-descargar{
+    width: 1rem;
   }
   
   .detallepago-acciones {
@@ -69,6 +81,19 @@
     border-radius: 10px;
     cursor: pointer;
     font-weight: bold;
+    display: flex;
+    align-items: center; 
+    gap: 8px;
+    font-family: 'Comfortaa', sans-serif;
+  }
+  .detallepago-descargar:hover{
+    background-color: #e0f2ff;
+    border-color: #007bff;
+    color: #007bff;
+  }
+
+  .imagen-casa{
+    width: 1rem;
   }
   
   .detallepago-pago {
@@ -92,12 +117,17 @@
   
   .detallepago-metodos button {
     flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1.5px solid #ccc;
     background-color: #f1f1f1;
     font-weight: bold;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* centra horizontalmente contenido */
+    gap: 8px; /* separación entre ícono y texto */
+    font-family: 'Comfortaa', sans-serif;
   }
   
   .detallepago-metodos .activo {
@@ -105,9 +135,16 @@
     border-color: #007bff;
     color: #007bff;
   }
+
+  .detallepago-metodos button:hover {
+    background-color: #e0f2ff;
+    border-color: #007bff;
+    color: #007bff;
+  }
   
   .detallepago-instrucciones {
     background-color: #eaf5ff;
+    color: #1E40AF;
     padding: 16px;
     border-radius: 10px;
     font-size: 14px;
@@ -137,5 +174,10 @@
   margin: 15px auto 0;
   display: block;
   cursor: pointer;
+}
+
+.detallepago-btn-qr-confirmar:hover{
+  padding: 9px 21px;
+
 }
   
