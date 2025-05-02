@@ -43,6 +43,10 @@ const CardConvocatoria = ({ data, onVer, onEditar, onEliminar }) => {
       </div>
       
       <div className="card-fecha">
+        <span>Pago:</span>
+        <span>{data.pagoInicio} - {data.pagoFin}</span>
+      </div>
+      <div className="card-fecha">
         <span>Competencia:</span>
         <span>{new Date(data.competicion_inicio).toLocaleDateString()} - {new Date(data.competicion_fin).toLocaleDateString()}</span>
       </div>

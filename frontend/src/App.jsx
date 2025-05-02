@@ -15,7 +15,11 @@ import Reportes from "./components/reportes/Reportes.jsx";
 import HistorialConvocatorias from "./components/HistorialConvocatorias.jsx";
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
 import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
+import InicioTutor from "./components/InicioTutor.jsx";
+import InicioCajero from "./components/InicioCajero.jsx";
 import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
+
+
 function App() {
   const [rol, setRol] = useState(() => localStorage.getItem("rol"));
 
@@ -48,6 +52,8 @@ function App() {
           <Route path="/reportes" element={<Reportes />} />
           <Route path="/pagos" element={<ValidadorPagos />} />
           <Route path="/solicitudes" element={<SolicitudesTutoria setRol={setRol} />} />
+          <Route path="/inicio-tutor" element={<InicioTutor setRol={setRol} />} />
+          <Route path="/inicio-cajero" element={<InicioCajero setRol={setRol} />} />
 
 
         </Routes>
