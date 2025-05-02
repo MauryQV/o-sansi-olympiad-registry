@@ -9,6 +9,7 @@ import convocatoriaRoutes from './routes/convocatoriaRoutes.js';
 import areaRoutes from './routes/areaRoutes.js';
 import categoriaRoutes from './routes/categoriaRoutes.js';
 import tutorRoutes from './routes/tutorRoutes.js';
+import inscripcionRoutes from './routes/inscripcionRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import competidorRoutes from './routes/competidorRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
@@ -27,7 +28,8 @@ app.use('/api', authRoutes);
 app.use('/api', convocatoriaRoutes);
 app.use('/api', areaRoutes);
 app.use('/api', categoriaRoutes);
-app.use('/api', tutorRoutes);
+app.use('/api/tutores', tutorRoutes);
+app.use('/api/inscripciones', inscripcionRoutes);
 app.use('/api', locationRoutes);
 app.use('/api', competidorRoutes);
 
