@@ -7,10 +7,11 @@ import TablaArea from "./components/areas/TablaArea.jsx";
 import Disciplinas from "./components/Disciplinas.jsx";
 import RegistrarTutores from "./components/RegistrarTutores.jsx";
 import RegistroUsuario from "./components/RegistroUsuario.jsx";
+import Pagos from "./components/PagosCompetidor/Pagos.jsx";
+import DetallePago from './components/PagosCompetidor/DetallePago.jsx';
+import AdminGestionUsuario from './components/AdminGestionUsuario.jsx';
 import RegistroCompetidores from "./components/InscripcionCompetidor/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/InscripcionCompetidor/FormularioInscripcion.jsx";
-import Pagos from "./components/Pagos.jsx";
-import DetallePago from './components/DetallePago';
 import Reportes from "./components/reportes/Reportes.jsx";
 import HistorialConvocatorias from "./components/HistorialConvocatorias.jsx";
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
@@ -49,6 +50,7 @@ function App() {
           <Route path="/inscripcion" element={<FormularioInscripcion />} />
           <Route path="/pagos-competidor" element={<Pagos />} />
           <Route path="/pagos/detalle/:boleta" element={<DetallePago />} />
+          <Route path="/usuarios" element={<AdminGestionUsuario setRol={setRol} />} />
           <Route path="/reportes" element={<Reportes />} />
           <Route path="/pagos" element={<ValidadorPagos />} />
           <Route path="/solicitudes" element={<SolicitudesTutoria setRol={setRol} />} />
