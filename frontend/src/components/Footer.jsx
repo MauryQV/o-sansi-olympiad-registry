@@ -6,7 +6,7 @@ function Footer() {
   return (
     <footer className='footer'>
         <div className='container-footer'>
-            <div>
+            <div className='container-text'>
                 <p>Contáctanos:</p>
                 <p>olimpiadacientifica@min.edu.bo</p>
                 <p>Whatsapp: (+591)71503071 - (+591)78864958</p>
