@@ -1,33 +1,39 @@
 .nav {
     background-color: #fff;
     width: 100%;
+    display: flex;
+    align-items: center;         /* Centra verticalmente */
+    justify-content: center;     /* Centra horizontalmente */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
     position: fixed;
     top: 0;
     left: 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 50;
   }
   .link-pagina {
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 40px;
-    padding-right: 64px;
-    padding-top: 10px;
-    padding-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+    padding-left: 30px;
+    padding-right: 64px;
+   
+    margin:0 ;
   }
   
   .imagen-completa {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
+    margin-right: 8rem;
+    margin-left: 1rem;
   }
   
   .links-derecha {
     display: flex;
-    gap: 64px;
+    align-items: center;
+    gap: 2rem;
   }
 
 .imagen-nav{
@@ -38,6 +44,7 @@
     font-size: 1rem; /* Ajusta el tamaño según necesites */
     align-items: center;
     text-decoration: underline;
+    margin: 0.3rem;
 }
 h3{
     margin: 0.1rem;
@@ -61,6 +68,8 @@ h3{
     list-style: none; 
     display: flex; /* Pone los elementos en línea (horizontal) */
     gap: 6rem;
+    margin-bottom: 0;
+    margin-right: 2rem;
   
 }
 #links li {
@@ -147,10 +156,10 @@ h3{
     margin-right: 8px; /* Espaciado entre la imagen y el texto */
   }
   .botones-sesion {
-    padding-left: 80px;
     display: flex;
     gap: 1rem;
-    align-items: center;
+    margin-left: 1rem;
+    position: relative;
   }
   
   
@@ -163,7 +172,7 @@ h3{
     padding-right: 25px;
     cursor: pointer;
     color: #000;
-    font-weight: bold;
+    font-weight: normal;
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.6); /* sombra fuerte */
     transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
