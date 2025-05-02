@@ -3,20 +3,21 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar"; // Importamos la barra de navegación
 import Login from "./components/Login";
 import InicioAdmin from "./components/InicioAdmin";
-import TablaArea from "./components/TablaArea";
+import TablaArea from "./components/areas/TablaArea.jsx";
 import Disciplinas from "./components/Disciplinas.jsx";
 import RegistrarTutores from "./components/RegistrarTutores.jsx";
 import RegistroUsuario from "./components/RegistroUsuario.jsx";
-import RegistroCompetidores from "./components/RegistroCompetidores.jsx";
-import FormularioInscripcion from "./components/FormularioInscripcion.jsx";
 import Pagos from "./components/PagosCompetidor/Pagos.jsx";
 import DetallePago from './components/PagosCompetidor/DetallePago.jsx';
 import AdminGestionUsuario from './components/AdminGestionUsuario.jsx';
-import Reportes from "./components/Reportes.jsx";
+
+import RegistroCompetidores from "./components/InscripcionCompetidor/RegistroCompetidores.jsx";
+import FormularioInscripcion from "./components/InscripcionCompetidor/FormularioInscripcion.jsx";
+import Reportes from "./components/reportes/Reportes.jsx";
 import HistorialConvocatorias from "./components/HistorialConvocatorias.jsx";
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
 import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
-
+import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
 function App() {
   const [rol, setRol] = useState(() => localStorage.getItem("rol"));
 
@@ -48,7 +49,7 @@ function App() {
           <Route path="/pagos/detalle/:boleta" element={<DetallePago />} />
           <Route path="/usuarios" element={<AdminGestionUsuario setRol={setRol} />} />
           <Route path="/reportes" element={<Reportes />} />
-          
+          <Route path="/pagos" element={<ValidadorPagos />} />
           <Route path="/solicitudes" element={<SolicitudesTutoria setRol={setRol} />} />
 
 

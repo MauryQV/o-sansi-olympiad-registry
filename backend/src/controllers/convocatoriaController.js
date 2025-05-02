@@ -5,8 +5,8 @@ export const crearConvocatoriaController = async (req, res) => {
         const convocatoria = await convocatoriaService.crearConvocatoriaConRelaciones(req.body);
         res.status(201).json({ message: 'Convocatoria creada con éxito', convocatoria });
     } catch (error) {
-        console.error('[ERROR AL CREAR]', error.message);
-        res.status(400).json({ error: error.message || 'Error al crear la convocatoria' });
+        console.error('error al crear convocatoria', error.message);
+        res.status(400).json({ error: error.message || 'error al crear la convocatoria' });
     }
 };
 
@@ -80,6 +80,27 @@ export const obtenerConvocatoriaConAreas = async (req, res) => {
         res.json(convocatoria);
     } catch (error) {
         console.error('[ERROR OBTENER CON AREAS]', error.message);
+        res.status(400).json({ error: error.message });
+    }
+};
+
+export const eliminarConvocatoria = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await convocatoriaService.eliminarConvocatoria(id);
+        res.status(200).json({ message: 'Convocatoria eliminada', result });
+    } catch (error) {
+        console.error('[ERROR ELIMINAR]', error.message);
+        res.status(400).json({ error: error.message });
+    }
+};
+
+export const obtenerEstadosConvocatoria = async (req, res) => {
+    try {
+        const estados = await convocatoriaService.obtenerEstadosConvocatoria();
+        res.json(estados);
+    } catch (error) {
+        console.error('[ERROR OBTENER ESTADOS]', error.message);
         res.status(400).json({ error: error.message });
     }
 };

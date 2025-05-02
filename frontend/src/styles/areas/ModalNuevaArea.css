@@ -1,0 +1,129 @@
+/* Fondo oscuro semi-transparente */
+.modal-fondo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Contenedor principal del modal */
+.modal-contenido {
+  background-color: #fff;
+  padding: 50px 60px;
+  border-radius: 16px;
+  width: 600px !important; /* Aumentado */
+  max-width: 100%;
+  font-family: 'Comfortaa', cursive;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Título del modal: más grande y controlado */
+.modal-contenido h3 {
+  margin-top: 0;
+  font-size: 30px !important;
+  font-weight: 700; /* Si lo quieres menos fuerte puedes usar 500 o 600 */
+  color: #1e1e1e;
+}
+
+/* Subtítulo/Descripción: más pequeño y sin negrita */
+.modal-contenido p {
+  font-size: 12px !important;         /* Más pequeño */
+  font-weight: 400;        /* Normal, sin negrita */
+  color: #666666;
+  margin-bottom: 30px;
+}
+
+/* Labels */
+.modal-contenido label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Inputs y Textareas */
+.modal-contenido input,
+.modal-contenido textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-top: 8px;
+  font-family: inherit;
+  font-size: 15px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+}
+
+.modal-contenido input:focus,
+.modal-contenido textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.modal-contenido textarea {
+  resize: vertical;
+  height: 120px;
+}
+
+/* Botonera */
+.modal-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+/* Botones */
+.btn-cancelar,
+.btn-crear {
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-cancelar {
+  background: transparent;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.btn-cancelar:hover {
+  background: #f0f0f0;
+}
+
+.btn-crear {
+  background: #007bff;
+  color: white;
+  border: none;
+}
+
+.btn-crear:hover {
+  background: #0056b3;
+}
+
+/* Asterisco */
+.obligatorio {
+  color: red;
+  font-weight: bold;
+}
+.input-error {
+  border-color: red;
+}
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}

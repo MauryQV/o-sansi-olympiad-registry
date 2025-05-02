@@ -1,3 +1,4 @@
+
 import * as tutorService from '../services/tutorService.js';
 
 // Registrar tutor
@@ -9,6 +10,7 @@ export const registrarTutor = async (req, res, next) => {
             carnet_identidad: req.body.carnet_identidad,
             correo_electronico: req.body.correo_electronico,
             numero_celular: req.body.numero_celular,
+            area_id: req.body.area_id,
         };
 
         const { tutor, credenciales } = await tutorService.crearTutor(tutorData);
@@ -71,13 +73,17 @@ export const obtenerTutorPorId = async (req, res, next) => {
 
 export const buscarTutores = async (req, res, next) => {
     try {
-        const { nombre } = req.query;
+        const { id_area, nombre } = req.query;
+
+        if (!id_area) {
+            return res.status(400).json({ error: 'El id_area es obligatorio para buscar tutores' });
+        }
 
         if (!nombre || nombre.length < 2) {
             return res.status(400).json({ error: 'Debe ingresar al menos 2 letras para buscar' });
         }
 
-        const resultados = await tutorService.buscarTutoresPorNombre(nombre);
+        const resultados = await tutorService.buscarTutoresPorNombreYArea(Number(id_area), nombre);
 
         const formateado = resultados.map(t => ({
             id: t.id,

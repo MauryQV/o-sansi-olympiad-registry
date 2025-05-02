@@ -15,18 +15,20 @@ import prisma from '../config/prismaClient.js';
 };
 */
 
-export const crearArea = async (nombre_area, descripcion_area) => {
+//funcion para crear un area, pero no verifica si ya existe un area con el mismo nombre
+export const crearArea = async (nombre_area, descripcion_area, costo) => {
+
     return await prisma.area.create({
         data: {
             nombre_area,
             descripcion_area,
+            costo,
         },
-
     });
 };
 
 
-
+//funcion para devolver todas las areas creadas
 export const getAreas = async () => {
     return await prisma.area.findMany();
 };
@@ -45,12 +47,21 @@ export const getAreaById = async (id) => {
     });
 };
 
-export const updateArea = async (id, nombre_area, descripcion_area) => {
+export const updateArea = async (id, nombre_area, descripcion_area, costo) => {
     return await prisma.area.update({
         where: { id: parseInt(id, 10) },
         data: {
             nombre_area,
-            descripcion_area
+            descripcion_area,
+            //agregado para respetar el mockup y especificaciones del ing
+            costo
         }
     });
 }
+
+export const deleteArea = async (id) => {
+    return await prisma.area.delete({
+        where: { id: parseInt(id, 10) },
+    });
+}
+

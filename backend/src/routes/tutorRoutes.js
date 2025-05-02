@@ -10,7 +10,7 @@ router.get('/tutores', tutorController.obtenerTutores);
 
 router.get('/tutores/:id', tutorController.obtenerTutorPorId);
 
-router.get('/buscar-tutor', tutorController.buscarTutores);
+router.get('/buscar-tutor/buscar', tutorController.buscarTutores);
 
 
 
