@@ -184,18 +184,24 @@ export const buscarTutores = async (req, res) => {
         };
 
         // Si se especifica un área, filtrar por ella también
-        if (area) {
+        if (area && area !== 'null' && area !== 'undefined' && area !== '') {
+            console.log(`Filtrando por área específica: ${area}`);
             filtro = {
                 AND: [
                     filtro,
                     {
                         area: {
-                            nombre_area: area
+                            nombre_area: {
+                                equals: area,
+                                mode: 'insensitive'
+                            }
                         }
                     }
                 ]
             };
         }
+
+        console.log("Filtro de búsqueda:", JSON.stringify(filtro));
 
         const tutores = await prisma.tutor.findMany({
             where: filtro,

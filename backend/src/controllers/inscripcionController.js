@@ -144,41 +144,47 @@ export const obtenerInfoAcademica = async (req, res) => {
     const areasConvocatoria = await prisma.area_convocatoria.findMany({
       where: { convocatoria_id: parseInt(convocatoriaId) },
       include: {
-        area: {
-          include: {
-            area_categoria: {
-              include: {
-                categoria: true
-              }
-            }
-          }
-        }
+        area: true
+      }
+    });
+    
+    // Obtener las categorías asociadas con las áreas
+    const areasIds = areasConvocatoria.map(ac => ac.area_id);
+    
+    const categoriasPorArea = await prisma.categoria_area.findMany({
+      where: { area_id: { in: areasIds } },
+      include: {
+        categoria: true,
+        area: true
       }
     });
     
     // Obtener grados y niveles
-    const grados = await prisma.grado.findMany({
-      include: { nivel: true }
-    });
-    
+    const grados = await prisma.grado.findMany();
     const niveles = await prisma.nivel.findMany();
     
     // Formatear áreas y categorías
     const areas = areasConvocatoria.map(ac => {
+      // Filtrar categorías por esta área específica
+      const categoriasDeArea = categoriasPorArea
+        .filter(ca => ca.area_id === ac.area_id)
+        .map(ca => ({
+          id: ca.categoria.id,
+          nombre_categoria: ca.categoria.nombre_categoria,
+          descripcion_cat: ca.categoria.descripcion_cat
+        }));
+      
       return {
         id: ac.area.id,
         nombre_area: ac.area.nombre_area,
         descripcion_area: ac.area.descripcion_area,
         costo: ac.area.costo,
-        categorias: ac.area.area_categoria.map(cat => ({
-          id: cat.categoria.id,
-          nombre_categoria: cat.categoria.nombre_categoria,
-          descripcion_cat: cat.categoria.descripcion_cat
-        }))
+        categorias: categoriasDeArea
       };
     });
     
     console.log(`Encontradas ${areas.length} áreas, ${grados.length} grados y ${niveles.length} niveles`);
+    console.log("Áreas:", JSON.stringify(areas));
     
     return res.status(200).json({
       areas,
