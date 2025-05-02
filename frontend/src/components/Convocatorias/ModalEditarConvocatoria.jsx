@@ -8,6 +8,8 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
     descripcion: '',
     inscripcionInicio: '',
     inscripcionFin: '',
+    pagoInicio: '',
+    pagoFin: '',
     competenciaInicio: '',
     competenciaFin: '',
     areas: [],
@@ -51,6 +53,8 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
     
     const fechaInicioInscripcion = formulario.inscripcionInicio ? new Date(formulario.inscripcionInicio) : null;
     const fechaFinInscripcion = formulario.inscripcionFin ? new Date(formulario.inscripcionFin) : null;
+    const fechaInicioPago = formulario.pagoInicio ? new Date(formulario.pagoInicio) : null;
+    const fechaFinPago = formulario.pagoFin ? new Date(formulario.pagoFin) : null;
     const fechaInicioCompetencia = formulario.competenciaInicio ? new Date(formulario.competenciaInicio) : null;
     const fechaFinCompetencia = formulario.competenciaFin ? new Date(formulario.competenciaFin) : null;
   
@@ -78,10 +82,22 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
       nuevosErrores.inscripcionFin = 'La fecha fin de inscripción debe ser mayor a la fecha de inicio.';
     }
   
+    if (!formulario.pagoInicio) {
+      nuevosErrores.pagoInicio = 'Ingrese el inicio del periodo de pago.';
+    } else if (fechaInicioPago && fechaFinInscripcion && fechaInicioPago <= fechaFinInscripcion) {
+      nuevosErrores.pagoInicio = 'La fecha de inicio de pago debe ser posterior al fin de inscripción.';
+    }
+  
+    if (!formulario.pagoFin) {
+      nuevosErrores.pagoFin = 'Ingrese el fin del periodo de pago.';
+    } else if (fechaFinPago && fechaInicioPago && fechaFinPago <= fechaInicioPago) {
+      nuevosErrores.pagoFin = 'La fecha fin de pago debe ser posterior al inicio de pago.';
+    }
+  
     if (!formulario.competenciaInicio) {
       nuevosErrores.competenciaInicio = 'Ingrese el inicio de competencia.';
-    } else if (fechaInicioCompetencia && fechaFinInscripcion && fechaInicioCompetencia <= fechaFinInscripcion) {
-      nuevosErrores.competenciaInicio = 'La fecha inicio de competencia debe ser después del fin de inscripción.';
+    } else if (fechaInicioCompetencia && fechaFinPago && fechaInicioCompetencia <= fechaFinPago) {
+      nuevosErrores.competenciaInicio = 'El inicio de competencia debe ser posterior al fin del periodo de pago.';
     }
   
     if (!formulario.competenciaFin) {
@@ -97,6 +113,7 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
     setErrores(nuevosErrores);
     return Object.keys(nuevosErrores).length === 0;
   };
+  
 
   const manejarSubmit = (e) => {
     e.preventDefault();
@@ -176,6 +193,31 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
                 className={errores.inscripcionFin ? 'input-error' : ''}
               />
               {errores.inscripcionFin && <span className="error-text">{errores.inscripcionFin}</span>}
+            </div>
+          </div>
+
+          <div className="input-row">
+            <div className="form-group">
+              <label>Fecha Inicio Pago *</label>
+              <input
+                type="date"
+                name="pagoInicio"
+                value={formulario.pagoInicio}
+                onChange={manejarCambio}
+                className={errores?.pagoInicio ? 'input-error' : ''}
+              />
+              {errores?.pagoInicio && <span className="error-text">{errores.pagoInicio}</span>}
+            </div>
+            <div className="form-group">
+              <label>Fecha Fin Pago *</label>
+              <input
+                type="date"
+                name="pagoFin"
+                value={formulario.pagoFin}
+                onChange={manejarCambio}
+                className={errores?.pagoFin ? 'input-error' : ''}
+              />
+              {errores?.pagoFin && <span className="error-text">{errores.pagoFin}</span>}
             </div>
           </div>
 
