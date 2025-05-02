@@ -6,16 +6,27 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 
 export const authMiddleware = async (req, res, next) => {
-    const token = req.header("Authorization");
+  try {
+    const authHeader = req.headers.authorization;
 
-    if (!token) return res.status(403).json({ error: "Acceso denegado" });
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Token no proporcionado' });
+    }
 
-    const { data, error } = await supabase.auth.getUser(token);
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
 
-    if (error) return res.status(401).json({ error: "Token inválido" });
+    // Agregamos el usuario decodificado al request
+    req.user = {
+      id: decoded.id,           // Asegúrate que el token tiene el ID del usuario
+      rol: decoded.rol || null  // Puedes agregar más campos si querés
+    };
 
-    req.user = data.user;
     next();
+  } catch (error) {
+    console.error('Error al verificar token:', error);
+    return res.status(401).json({ error: 'Token inválido' });
+  }
 };
 
 

@@ -49,7 +49,7 @@ export const registrarInscripcion = async (datosInscripcion) => {
     try {
         const token = localStorage.getItem('token');
         const response = await axios.post(
-            `${API_URL}/inscripciones/registrar`, 
+            `${API_URL}/inscripciones/registrar`,
             datosInscripcion,
             { headers: { Authorization: token } }
         );

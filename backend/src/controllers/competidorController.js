@@ -17,3 +17,13 @@ export const crearCompetidor = async (req, res, next) => {
         });
     }
 };
+
+export const obtenerSolicitudesDelCompetidor = async (req, res, next) => {
+    try {
+        const solicitudes = await inscripcionService.obtenerSolicitudesDelCompetidor(req.user.id);
+        res.status(200).json(solicitudes);
+    } catch (error) {
+        console.error('Error al obtener solicitudes del competidor:', error);
+        next(error);
+    }
+};

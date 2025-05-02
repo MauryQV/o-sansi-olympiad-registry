@@ -86,3 +86,49 @@ export const registrarCompetidor = async (data) => {
         },
     };
 };
+
+export const obtenerSolicitudesDelCompetidor = async (usuarioId) => {
+    const competidor = await prisma.competidor.findUnique({
+        where: { usuario_id: usuarioId }
+    });
+
+    if (!competidor) {
+        throw new Error('No se encontró el competidor.');
+    }
+
+    const inscripciones = await prisma.inscripcion_tutor.findMany({
+        where: { competidor_id: competidor.id },
+        include: {
+            inscripcion: true,
+            tutor: {
+                include: {
+                    usuario: true
+                }
+            }
+        }
+    });
+
+    const agrupadas = {};
+
+    for (const item of inscripciones) {
+        const idIns = item.inscripcion_id;
+
+        if (!agrupadas[idIns]) {
+            agrupadas[idIns] = {
+                inscripcionId: idIns,
+                fecha: item.inscripcion.fecha_inscripcion,
+                estado: item.inscripcion.estado_inscripcion,
+                tutores: []
+            };
+        }
+
+        agrupadas[idIns].tutores.push({
+            nombre: item.tutor.usuario.nombre,
+            apellido: item.tutor.usuario.apellido,
+            aprobado: item.aprobado,
+            fecha_aprobacion: item.fecha_aprobacion
+        });
+    }
+
+    return Object.values(agrupadas);
+};
