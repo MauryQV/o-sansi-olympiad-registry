@@ -57,12 +57,4 @@ export const validarInscripcion = async (req, res, next) => {
   }
 };
 
-export const obtenerSolicitudesPendientes = async (req, res, next) => {
-  try {
-    const solicitudes = await inscripcionService.obtenerSolicitudesPendientes(req.user.id);
-    res.status(200).json(solicitudes);
-  } catch (error) {
-    console.error('Error al obtener solicitudes pendientes:', error);
-    next(error);
-  }
-};
+

@@ -37,8 +37,8 @@ app.use('/api', authRoutes);
 app.use('/api', convocatoriaRoutes);
 app.use('/api', areaRoutes);
 app.use('/api', categoriaRoutes);
-app.use('/api/tutores', tutorRoutes);
-app.use('/api/inscripciones', inscripcionRoutes);
+app.use('/api', tutorRoutes);
+app.use('/api', inscripcionRoutes);
 app.use('/api', locationRoutes);
 app.use('/api', competidorRoutes);
 

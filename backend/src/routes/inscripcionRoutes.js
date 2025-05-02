@@ -8,7 +8,7 @@ router.post('/inscripcion-tutor', autentificacion.authMiddleware, inscripcionCon
 
 router.put('/validar', autentificacion.authMiddleware, inscripcionController.validarInscripcion);
 
-router.get('/solicitudes', autentificacion.authMiddleware, inscripcionController.obtenerSolicitudesPendientes);
+
 
 
 

@@ -6,11 +6,11 @@ export const crearCompetidor = async (req, res, next) => {
         const competidor = await competidorService.registrarCompetidor(req.body);
 
         res.status(201).json({
-            message: 'Competidor registrado correctamente',
+            message: 'competidor registrado corrctamente',
             competidor,
         });
     } catch (error) {
-        console.error('[ERROR REGISTRAR COMPETIDOR]', error.message);
+        console.error('no se pudo registrar', error.message);
         res.status(400).json({
             message: 'Error al registrar el competidor',
             error: error.message,
@@ -20,10 +20,10 @@ export const crearCompetidor = async (req, res, next) => {
 
 export const obtenerSolicitudesDelCompetidor = async (req, res, next) => {
     try {
-        const solicitudes = await inscripcionService.obtenerSolicitudesDelCompetidor(req.user.id);
+        const solicitudes = await competidorService.obtenerSolicitudesDelCompetidor(req.user.id);
         res.status(200).json(solicitudes);
     } catch (error) {
-        console.error('Error al obtener solicitudes del competidor:', error);
+        console.error('funciona pofavo:', error);
         next(error);
     }
 };
