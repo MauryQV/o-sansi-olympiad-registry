@@ -19,6 +19,7 @@ import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
 import InicioTutor from "./components/InicioTutor.jsx";
 import InicioCajero from "./components/InicioCajero.jsx";
 import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
+import Inicio from "./components/Inicio.jsx";
 
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
       <Navbar rol={rol} setRol={setRol} />
       <div className="container mx-auto p-4">
         <Routes>
-          <Route path="/" element={<h2>Bienvenido a la aplicación</h2>} />
+          <Route path="/" element={<Inicio />} />
           <Route path="/inscripciones" element={<RegistroUsuario />} />
           <Route path="/disciplinas" element={<HistorialConvocatorias />} />
           <Route path="/acerca" element={<h2>Acerca de nosotros.</h2>} />
