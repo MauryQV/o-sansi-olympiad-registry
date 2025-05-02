@@ -36,7 +36,7 @@ function App() {
   return (
     <Router>
       <Navbar rol={rol} setRol={setRol} />
-      <div className="container mx-auto p-4">
+      <div>
         <Routes>
           <Route path="/" element={<Inicio />} />
           <Route path="/inscripciones" element={<RegistroUsuario />} />
