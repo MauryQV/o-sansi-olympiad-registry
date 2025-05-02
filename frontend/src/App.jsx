@@ -12,8 +12,6 @@ import DetallePago from './components/PagosCompetidor/DetallePago.jsx';
 import AdminGestionUsuario from './components/AdminGestionUsuario.jsx';
 import RegistroCompetidores from "./components/InscripcionCompetidor/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/InscripcionCompetidor/FormularioInscripcion.jsx";
-import Pagos from "./components/Pagos.jsx";
-import DetallePago from "./components/DetallePago";
 import Reportes from "./components/reportes/Reportes.jsx";
 import HistorialConvocatorias from "./components/HistorialConvocatorias.jsx";
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
