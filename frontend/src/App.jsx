@@ -20,6 +20,8 @@ import InicioTutor from "./components/InicioTutor.jsx";
 import InicioCajero from "./components/InicioCajero.jsx";
 import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
 import Inicio from "./components/Inicio.jsx";
+import Areas from "./components/AreasInicio.jsx";
+import Acercade from "./components/AcercaDe.jsx";
 
 
 function App() {
@@ -39,9 +41,10 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<Inicio />} />
+          <Route path="/areas" element={<Areas />} />
           <Route path="/inscripciones" element={<RegistroUsuario />} />
           <Route path="/disciplinas" element={<HistorialConvocatorias />} />
-          <Route path="/acerca" element={<h2>Acerca de nosotros.</h2>} />
+          <Route path="/acerca" element={<Acercade />} />
           <Route path="/login" element={<Login setRol={setRol} />} />
           <Route
             path="/inicio-admin"
