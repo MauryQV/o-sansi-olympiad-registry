@@ -3,11 +3,23 @@ import EstadoBadge from './EstadoBadge';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 import '../../styles/Convocatorias/CardConvocatoria.css';
 
-const CardConvocatoria = ({ data, onVer, onEditar, onEliminar}) => {
+const CardConvocatoria = ({ data, onVer, onEditar, onEliminar }) => {
+  // Obtener el estado de la convocatoria
+  const getEstado = () => {
+    if (!data.estado) return 'SIN ESTADO';
+    return typeof data.estado === 'object' ? data.estado.nombre : data.estado;
+  };
+
+  // Obtener el texto de áreas seleccionadas basado en numero_areas
+  const getAreasText = () => {
+    const numAreas = data.numero_areas || 0;
+    return `${numAreas} áreas seleccionadas`;
+  };
+
   return (
     <div className="card-convocatoria">
       <div className="card-header">
-        <div className="card-title">{data.nombre}</div>
+        <div className="card-title">{data.nombre_convocatoria}</div>
         <div className="card-icons">
           <button title="Ver" onClick={() => onVer(data)}>
             <Eye size={18} />
@@ -20,21 +32,26 @@ const CardConvocatoria = ({ data, onVer, onEditar, onEliminar}) => {
           </button>
         </div>
       </div>
-      <EstadoBadge estado={data.estado} />
-      <p className="card-descripcion">{data.descripcion}</p>
+      
+      <EstadoBadge estado={getEstado()} />
+      
+      <p className="card-descripcion">{data.descripcion_convocatoria}</p>
+      
       <div className="card-fecha">
         <span>Inscripción:</span>
-        <span>{data.inscripcionInicio} - {data.inscripcionFin}</span>
+        <span>{new Date(data.fecha_inicio).toLocaleDateString()} - {new Date(data.fecha_fin).toLocaleDateString()}</span>
       </div>
+      
       <div className="card-fecha">
         <span>Pago:</span>
         <span>{data.pagoInicio} - {data.pagoFin}</span>
       </div>
       <div className="card-fecha">
         <span>Competencia:</span>
-        <span>{data.competenciaInicio} - {data.competenciaFin}</span>
+        <span>{new Date(data.competicion_inicio).toLocaleDateString()} - {new Date(data.competicion_fin).toLocaleDateString()}</span>
       </div>
-      <p className="card-areas">{data.areasSeleccionadas?.length || data.areas} áreas seleccionadas</p>
+      
+      <p className="card-areas">{getAreasText()}</p>
     </div>
   );
 };

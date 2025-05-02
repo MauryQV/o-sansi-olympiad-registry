@@ -12,12 +12,7 @@ export const login = async (req, res) => {
             where: { correo_electronico },
         });
 
-        if (!usuario || !usuario.password) {
-            return res.status(401).json({ error: 'Correo o contraseña inválidos' });
-        }
-
-        const validPassword = await bcrypt.compare(password, usuario.password);
-        if (!validPassword) {
+        if (!usuario || usuario.password !== password) {
             return res.status(401).json({ error: 'Correo o contraseña inválidos' });
         }
 

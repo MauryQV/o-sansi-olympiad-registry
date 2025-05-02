@@ -1,23 +1,14 @@
-// TablaArea.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrashAlt, FaPlus } from 'react-icons/fa';
 import ModalNuevaArea from './ModalNuevaArea';
 import ModalConfirmacionEliminar from './ModalConfirmacionEliminar';
 import ModalConfirmacionEliminarCategoria from './ModalConfirmacionEliminarCategoria';
 import ModalNuevaCategoria from './ModalNuevaCategoria';
-import '../styles/TablaArea.css';
+import '../../styles/Areas/TablaArea.css';
+import { eliminarArea } from '../../services/areaService';
 
 const TablaArea = () => {
-  const [areas, setAreas] = useState([
-    { nombre: 'Matemática', descripcion: 'Olimpiada de Matemática con énfasis en el razonamiento lógico y la resolución de problemas.', categorias: [] },
-    { nombre: 'Robótica', descripcion: 'Competencia de diseño, construcción y programación de robots para resolver desafíos específicos.', categorias: [] },
-    { nombre: 'Astronomía y Astrofísica', descripcion: 'Estudio de cuerpos celestes, fenómenos astronómicos y la física del universo.', categorias: [] },
-    { nombre: 'Biología', descripcion: 'Competencia sobre los principios fundamentales de la biología, desde células hasta ecosistemas.', categorias: [] },
-    { nombre: 'Química', descripcion: 'Olimpiada centrada en principios químicos, reacciones y aplicaciones prácticas.', categorias: [] },
-    { nombre: 'Física', descripcion: 'Competencia sobre principios físicos, leyes naturales y sus aplicaciones.', categorias: [] },
-    { nombre: 'Informática', descripcion: 'Desafíos de programación, algoritmos y resolución de problemas computacionales.', categorias: [] }
-  ]);
-
+  const [areas, setAreas] = useState([]);
   const [mostrarModalArea, setMostrarModalArea] = useState(false);
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [areaAEliminar, setAreaAEliminar] = useState(null);
@@ -31,6 +22,34 @@ const TablaArea = () => {
   const [areaDeCategoria, setAreaDeCategoria] = useState(null);
   const [toastMensaje, setToastMensaje] = useState(null);
   const [modalKey, setModalKey] = useState(Date.now());
+
+  // 🧠 Hook para obtener las áreas desde el backend
+  useEffect(() => {
+    const obtenerAreas = async () => {
+      try {
+        const respuesta = await fetch('http://localhost:7777/api/ver-areas');
+        if (!respuesta.ok) {
+          throw new Error('Error al obtener las áreas');
+        }
+        const datos = await respuesta.json();
+        setAreas(
+          datos.map(area => ({
+            ...area,
+            nombre: area.nombre_area, // ✅ mapeo frontend-friendly
+            descripcion: area.descripcion_area,
+            categorias: area.categorias || [] // si no vienen desde el back
+          }))
+        );
+        
+      } catch (error) {
+        console.error('Error al obtener las áreas:', error);
+        setToastMensaje('Error al cargar las áreas');
+        setTimeout(() => setToastMensaje(null), 2500);
+      }
+    };
+
+    obtenerAreas();
+  }, []);
 
   const mostrarToast = (mensaje) => {
     setToastMensaje(mensaje);
@@ -99,21 +118,29 @@ const TablaArea = () => {
   };
 
   const preguntarEliminar = (index) => {
+    const area = areas[index];
     setIndexAEliminar(index);
-    setAreaAEliminar(areas[index].nombre);
+    setAreaAEliminar(area); 
     setMostrarConfirmacion(true);
   };
-
-  const confirmarEliminacion = () => {
-    setAreas(areas.filter((_, i) => i !== indexAEliminar));
-    setMostrarConfirmacion(false);
-    mostrarToast(`Área "${areaAEliminar}" eliminada correctamente`);
+  
+  
+  const confirmarEliminacion = async () => {
+    try {
+      await eliminarArea(areaAEliminar.id); 
+      setAreas(prev => prev.filter((_, i) => i !== indexAEliminar)); 
+      setMostrarConfirmacion(false);
+      mostrarToast(`Área "${areaAEliminar.nombre}" eliminada correctamente`);
+    } catch (error) {
+      console.error('Error eliminando área:', error.response?.data || error.message);
+      mostrarToast('❌ Error al eliminar el área. Intenta nuevamente.');
+    }
   };
 
   const cerrarModalCategoria = () => {
     setMostrarModalCategoria(false);
     setCategoriaEditando(null);
-    setModalKey(Date.now()); // Reinicia el modal para limpiar campos
+    setModalKey(Date.now());
   };
 
   return (
@@ -136,12 +163,18 @@ const TablaArea = () => {
               <h3>{area.nombre}</h3>
               <div className="card-actions">
                 <button onClick={() => editarArea(index)}><FaEdit /></button>
-                <button onClick={() => preguntarEliminar(index)}><FaTrashAlt /></button>
+                <button onClick={() => preguntarEliminar(index)}><FaTrashAlt style={{ color: 'red' }}  /></button>
               </div>
             </div>
-            <p>{area.descripcion}</p>
 
-            {area.categorias.length > 0 && (
+            {/* Mostrar Costo */}
+            <p className="area-costo">Costo: <strong>{area.costo} Bs</strong></p>
+
+            {/* Descripción */}
+            <p>{area.descripcion_area}</p>
+
+            {/* Categorías */}
+            {area.categorias && area.categorias.length > 0 && (
               <div className="categorias-box">
                 <h4>Categorías / Niveles</h4>
                 {area.categorias.map((cat, i) => (
@@ -162,10 +195,10 @@ const TablaArea = () => {
                     </div>
                     <p style={{ fontSize: '13px', margin: 0 }}>{cat.descripcion}</p>
                     <div className="grados">
-                      {cat.gradosPrimaria.map((g, idx) => (
+                      {cat.gradosPrimaria && cat.gradosPrimaria.map((g, idx) => (
                         <span key={idx} className="grado-chip">Primaria {g}</span>
                       ))}
-                      {cat.gradosSecundaria.map((g, idx) => (
+                      {cat.gradosSecundaria && cat.gradosSecundaria.map((g, idx) => (
                         <span key={idx} className="grado-chip">Secundaria {g}</span>
                       ))}
                     </div>
@@ -189,19 +222,34 @@ const TablaArea = () => {
         ))}
       </div>
 
+      {/* Modales */}
       <ModalNuevaArea
-        mostrar={mostrarModalArea}
-        cerrar={() => setMostrarModalArea(false)}
-        agregarArea={agregarArea}
-        areaAEditar={areaActual}
-      />
+  mostrar={mostrarModalArea}
+  cerrar={() => setMostrarModalArea(false)}
+  onCreacionExitosa={(areaActualizada) => {
+    if (areaEditandoIndex !== null) {
+      const nuevasAreas = [...areas];
+      nuevasAreas[areaEditandoIndex] = {
+        ...nuevasAreas[areaEditandoIndex],
+        ...areaActualizada
+      };
+      setAreas(nuevasAreas);
+    } else {
+      setAreas([...areas, { ...areaActualizada, categorias: [] }]);
+    }
+    setAreaEditandoIndex(null);
+    setAreaActual(null);
+  }}
+  areaAEditar={areaActual}
+/>
 
-      <ModalConfirmacionEliminar
-        mostrar={mostrarConfirmacion}
-        cerrar={() => setMostrarConfirmacion(false)}
-        confirmar={confirmarEliminacion}
-        nombreArea={areaAEliminar}
-      />
+<ModalConfirmacionEliminar
+  mostrar={mostrarConfirmacion}
+  cerrar={() => setMostrarConfirmacion(false)}
+  confirmar={confirmarEliminacion}
+  nombreArea={areaAEliminar?.nombre}
+/>
+
 
       <ModalConfirmacionEliminarCategoria
         mostrar={mostrarConfirmacionCategoria}
@@ -231,3 +279,4 @@ const TablaArea = () => {
 };
 
 export default TablaArea;
+//123

@@ -67,6 +67,8 @@ export const crearConvocatoriaConRelaciones = async (data) => {
         id_estado_convocatoria,
         fecha_inicio,
         fecha_fin,
+        pago_inicio,
+        pago_fin,
         competicion_inicio,
         competicion_fin,
         descripcion_convocatoria,
@@ -82,6 +84,8 @@ export const crearConvocatoriaConRelaciones = async (data) => {
         id_estado_convocatoria,
         fecha_inicio: new Date(fecha_inicio),
         fecha_fin: new Date(fecha_fin),
+        pago_inicio: new Date(pago_inicio),
+        pago_fin: new Date(pago_fin),
         competicion_inicio: new Date(competicion_inicio),
         competicion_fin: new Date(competicion_fin),
         descripcion_convocatoria,
@@ -107,10 +111,24 @@ export const asignarCategoriaAConvocatoria = async (convocatoriaId, categoriaId)
 }
 
 export const obtenerConvocatorias = async () => {
-    return await prisma.convocatoria.findMany();
+    const convocatorias = await prisma.convocatoria.findMany({
+        include: {
+            estado_convocatoria: true, // Incluye la relación con estado_convocatoria
+            _count: {
+                select: {
+                    Area_convocatoria: true, // Cuenta las áreas asociadas
+                },
+            },
+        },
+    });
 
+    // Mapear los resultados para incluir "estado" y el número de áreas asociadas
+    return convocatorias.map(({ id_estado_convocatoria, estado_convocatoria, _count, ...convocatoria }) => ({
+        ...convocatoria,
+        estado: estado_convocatoria.nombre, // Agregar el nombre del estado como "estado"
+        numero_areas: _count.Area_convocatoria, // Agregar el número de áreas asociadas
+    }));
 };
-
 //pasar un id y devolver la convocatoria con ese id
 export const obtenerConvocatoriaPorId = async (id) => {
     return await prisma.convocatoria.findUnique({
@@ -189,4 +207,28 @@ export const actualizarConvocatoria = async (id, data) => {
     }
 
     return updated;
+};
+
+export const eliminarConvocatoria = async (id) => {
+    // Obtener la convocatoria por ID
+    const convocatoria = await prisma.convocatoria.findUnique({
+        where: { id: parseInt(id) },
+        include: {
+            estado_convocatoria: true, // Incluye el estado para verificar su nombre
+        },
+    });
+
+    if (
+        convocatoria.id_estado_convocatoria !== 1
+    ) {
+        throw new Error('Solo se pueden eliminar convocatorias en estado "Borrador" ');
+    }
+
+    return await prisma.convocatoria.delete({
+        where: { id: parseInt(id) },
+    });
+};
+
+export const obtenerEstadosConvocatoria = async () => {
+    return await prisma.estado_convocatoria.findMany();
 };
