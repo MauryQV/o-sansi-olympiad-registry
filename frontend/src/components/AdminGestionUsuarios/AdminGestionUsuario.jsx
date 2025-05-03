@@ -1,13 +1,13 @@
 // src/components/Usuarios.jsx
 import React, { useState } from 'react';
-import '../styles/AdminGestionUsuario.css';
+import '../../styles/AdminGestionUsuarios/AdminGestionUsuario.css';
 import { Edit2, Trash2, User } from 'lucide-react';
 import ModalNuevoUsuario from './ModalNuevoUsuario';
 import ModalEditarUsuario from './ModalEditarUsuario';
-import lapizEditar from '../image/editarLapiz.svg'; 
-import borrarUsuario from '../image/borrarUsuario.svg';
+import lapizEditar from '../../image/editarLapiz.svg'; 
+import borrarUsuario from '../../image/borrarUsuario.svg';
 import ModalEliminarUsuario from './ModalEliminarUsuario';
-import { actualizarUsuarioEnLista } from '../utils/actualizarUsuario';
+import { actualizarUsuarioEnLista } from '../../utils/actualizarUsuario';
 
 const usuariosEjemplo = [
   {

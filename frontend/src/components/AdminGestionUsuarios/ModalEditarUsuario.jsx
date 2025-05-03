@@ -1,8 +1,8 @@
 // src/components/ModalEditarUsuario.jsx
 import React, { useState } from 'react';
-import '../styles/ModalNuevoUsuario.css'; // Usare el mismo estilo
+import '../../styles/AdminGestionUsuarios/ModalNuevoUsuario.css'; // Usare el mismo estilo
 import { X } from 'lucide-react';
-import {validateUsuarioForm, handleUsuarioInputChange} from '../forms/usuarioFormHandler';
+import {validateUsuarioForm, handleUsuarioInputChange} from '../../forms/usuarioFormHandler';
 
 const ModalEditarUsuario = ({ usuario, onClose, onActualizarUsuario }) => {
   const [formData, setFormData] = useState({

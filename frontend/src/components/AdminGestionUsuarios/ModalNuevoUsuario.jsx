@@ -1,9 +1,9 @@
 // src/components/ModalNuevoUsuario.jsx
 import React, { useState } from 'react';
-import '../styles/ModalNuevoUsuario.css';
+import '../../styles/AdminGestionUsuarios/ModalNuevoUsuario.css';
 import { X } from 'lucide-react';
-import { initialUsuarioData, validateUsuarioForm } from '../forms/usuarioFormHandler';
-import { handleUsuarioInputChange } from '../forms/usuarioFormHandler';
+import { initialUsuarioData, validateUsuarioForm } from '../../forms/usuarioFormHandler';
+import { handleUsuarioInputChange } from '../../forms/usuarioFormHandler';
 
 const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
   const [formData, setFormData] = useState(initialUsuarioData);
