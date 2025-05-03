@@ -6,7 +6,7 @@ import { crearNotificacion } from './notificacionService.js';
 
 export const crearInscripcion = async ({ competidorId, convocatoriaId, areaId, tutorIds }) => {
     if (!Array.isArray(tutorIds) || tutorIds.length < 1 || tutorIds.length > 3) {
-        throw new Error('Debes seleccionar entre 1 y 3 tutores.');
+        throw new Error('error al seleccionar tutores');
     }
 
     const existe = await prisma.inscripcion_area.findFirst({
@@ -18,7 +18,7 @@ export const crearInscripcion = async ({ competidorId, convocatoriaId, areaId, t
     });
 
     if (existe) {
-        throw new Error('Ya estás inscrito en esta área y convocatoria.');
+        throw new Error('no se permite inscribirse en la misma area');
     }
 
     const convocatoria = await prisma.convocatoria.findUnique({
@@ -29,12 +29,12 @@ export const crearInscripcion = async ({ competidorId, convocatoriaId, areaId, t
     const ahora = new Date();
 
     if (
-        !convocatoria ||
-        convocatoria.estado_convocatoria.nombre.toLowerCase() !== 'activa' ||
+        !convocatoria || //subir el commit de inscripcion mas rato
+        convocatoria.estado_convocatoria.nombre.toLowerCase() !== 'en inscripcion' ||
         ahora < convocatoria.fecha_inicio ||
         ahora > convocatoria.fecha_fin
     ) {
-        throw new Error('La convocatoria no está activa o fuera de fechas válidas.');
+        throw new Error('La convocatoria no esta activa o fuera de fechas validas.');
     }
 
 
@@ -80,7 +80,7 @@ export const crearInscripcion = async ({ competidorId, convocatoriaId, areaId, t
             include: { usuario: true }
         });
 
-        const usuarioId = tutor.usuario_id; // este es el que Prisma necesita
+        const usuarioId = tutor.usuario_id; // id del usuario asociado al tutor
 
         const noti = await crearNotificacion({
             usuarioId,
@@ -141,18 +141,18 @@ export const validarInscripcion = async ({ tutorId, inscripcionId, acepta }) => 
             data: { estado_inscripcion: 'aprobada' }
         });
 
-        // Notificar al competidor
+        // notificacion al competidor
         const competidorId = inscripcionTutor.competidor_id;
 
         const competidor = await prisma.competidor.findUnique({
             where: { id: competidorId },
             include: { usuario: true }
         });
-
+        //socketId del competidor
         const noti = await crearNotificacion({
             usuarioId: competidor.usuario.id,
             tipo: 'estado',
-            mensaje: 'Tu inscripción fue aprobada por todos los tutores.'
+            mensaje: 'Inscripción aprobada.',
         });
 
         const socketId = connectedUsers.get(competidor.usuario.id);
