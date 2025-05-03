@@ -115,7 +115,7 @@
   
   /* Cuando está activado */
   .activo-toggle input[type="checkbox"]:checked {
-    background-color: #7c3aed; /* morado */
+    background-color: #6542FF; 
   }
   
   /* Mover el circulito a la derecha si está activo */

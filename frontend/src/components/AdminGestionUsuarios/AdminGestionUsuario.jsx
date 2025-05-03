@@ -80,7 +80,7 @@ const usuariosFiltrados = filtroRol === 'Todos'
   return (
     <div className="gestion-usuario">
       <div className="gestion-boton">
-        <h2>Gestión de Usuarios</h2>
+        <h2><b>Gestión de Usuarios</b></h2>
         <div className="acomodar-boton">
           <button
             className="boton-nuevo-usuario"
@@ -106,7 +106,10 @@ const usuariosFiltrados = filtroRol === 'Todos'
         {usuariosFiltrados.map(usuario => (
           <div key={usuario.id} className="gestion-usuario-card">
             <div className="gestion-usuario-inicio-dato">
-              <User size={16} /> {usuario.nombre}
+              <div className="nombres-con-icono">
+                <User className="usuario-de-cada-tar" size={30} />
+                <span  className="nombre-usuario-texto"><b>{usuario.nombre}</b></span>
+              </div>
               <div className="acciones">
                 <img
                   src={lapizEditar}
@@ -125,11 +128,11 @@ const usuariosFiltrados = filtroRol === 'Todos'
 
             <div className="gestion-usuario-dato">
               <span>Correo electrónico:</span>
-              <span>{usuario.correo}</span>
+              <span className="correo-usuario-entre-iconos"><b>{usuario.correo}</b></span>
             </div>
             <div className="gestion-usuario-dato">
               <span>Rol:</span>
-              <span className="tag-rol">{usuario.rol}</span>
+              <span className="tag-rol"><b>{usuario.rol}</b></span>
             </div>
             <div className="gestion-usuario-dato">
               <span>Teléfono:</span>
@@ -137,7 +140,7 @@ const usuariosFiltrados = filtroRol === 'Todos'
             </div>
             <div className="gestion-usuario-dato">
               <span>Estado:</span>
-              <span className="tag-estado">{usuario.estado}</span>
+              <span className="tag-estado"><b>{usuario.estado}</b></span>
             </div>
 
             {modalNuevoUsuarioAbierto && (
