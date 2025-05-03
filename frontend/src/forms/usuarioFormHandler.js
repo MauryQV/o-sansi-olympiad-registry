@@ -33,11 +33,11 @@ export const initialUsuarioData = {
       errores.rol = 'Debe seleccionar un rol.';
     }
   
-    const regexContraseña = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,50}$/;
+    const regexCarnet = /^[0-9]{5,9}(-[0-9A-Za-z]{1,3})?$/;
     if (!formData.contraseña.trim()) {
       errores.contraseña = 'La contraseña es obligatoria.';
-    } else if (!regexContraseña.test(formData.contraseña)) {
-      errores.contraseña = 'Debe tener 8-50 caracteres, una mayúscula y un carácter especial.';
+    } else if (!regexCarnet.test(formData.contraseña.trim())) {
+      errores.contraseña = 'Carnet inválido. Ej: 13752158 o 13752158-2T';
     }
   
     return errores;
@@ -62,13 +62,36 @@ export const handleUsuarioInputChange = (formData, setFormData) => (e) => {
     } else if (name === 'correo') {
       setFormData({ ...formData, [name]: value });
     } else if (name === 'contraseña') {
-      if (value.length <= 50) {
-        setFormData({ ...formData, [name]: value });
+      const limpio = value.replace(/\s/g, ''); 
+      if (limpio.length <= 13) { // 9 nums + "-" + 3 letras
+        setFormData({ ...formData, [name]: limpio });
       }
+    
     } else if (type === 'checkbox') {
       setFormData({ ...formData, [name]: checked });
     } else {
       setFormData({ ...formData, [name]: value });
     }
+  };
+
+  //login
+  
+  export const validateLogin = (formData) => {
+    const errores = {};
+    const regexCarnet = /^[0-9]{5,9}(-[0-9A-Za-z]{1,3})?$/;
+  
+    if (!formData.correo.trim()) {
+      errores.correo = 'El correo es obligatorio.';
+    } else if (!formData.correo.endsWith('@gmail.com')) {
+      errores.correo = 'El correo debe terminar en @gmail.com.';
+    }
+  
+    if (!formData.contraseña.trim()) {
+      errores.contraseña = 'La contraseña es obligatoria.';
+    } else if (!regexCarnet.test(formData.contraseña.trim())) {
+      errores.contraseña = 'Carnet inválido. Ej: 13752158 o 13752158-2T';
+    }
+  
+    return errores;
   };
   
