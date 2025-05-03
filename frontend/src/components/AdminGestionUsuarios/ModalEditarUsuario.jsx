@@ -1,15 +1,21 @@
-// src/components/ModalNuevoUsuario.jsx
+// src/components/ModalEditarUsuario.jsx
 import React, { useState } from 'react';
-import '../styles/ModalNuevoUsuario.css';
+import '../../styles/AdminGestionUsuarios/ModalNuevoUsuario.css'; // Usare el mismo estilo
 import { X } from 'lucide-react';
-import { initialUsuarioData, validateUsuarioForm } from '../forms/usuarioFormHandler';
-import { handleUsuarioInputChange } from '../forms/usuarioFormHandler';
+import {validateUsuarioForm, handleUsuarioInputChange} from '../../forms/usuarioFormHandler';
 
-const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
-  const [formData, setFormData] = useState(initialUsuarioData);
+const ModalEditarUsuario = ({ usuario, onClose, onActualizarUsuario }) => {
+  const [formData, setFormData] = useState({
+    nombre: usuario.nombre || '',
+    correo: usuario.correo || '',
+    telefono: usuario.telefono || '',
+    rol: usuario.rol || '',
+    contraseña: usuario.contraseña || '',
+    activo: usuario.estado === 'Activo'
+  });
 
   const [errores, setErrores] = useState({});
-  
+
   const handleChange = handleUsuarioInputChange(formData, setFormData);
 
   const validarFormulario = () => {
@@ -17,22 +23,18 @@ const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
     setErrores(erroresValidados);
     return Object.keys(erroresValidados).length === 0;
   };
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
   
     if (validarFormulario()) {
-      onAgregarUsuario(formData);
-      setFormData({
-        nombre: '',
-        correo: '',
-        telefono: '',
-        rol: '',
-        contraseña: '',
-        activo: true
+      onActualizarUsuario({
+        ...usuario,
+        ...formData,
+        estado: formData.activo ? 'Activo' : 'Inactivo'
       });
-      onClose();
+  
+      onClose(); 
     }
   };
 
@@ -40,44 +42,44 @@ const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
     <div className="modal-overlay">
       <div className="modal-contenido">
         <div className="modal-header">
-          <h2>Nuevo Usuario</h2>
+          <h2>Editar Usuario</h2>
           <button className="cerrar-modal" onClick={onClose}>
             <X size={20} />
           </button>
         </div>
-        <p className="modal-subtitulo">Complete la información para crear un usuario</p>
+        <p className="modal-subtitulo">Complete la información para actualizar un usuario</p>
 
         <form className="form-nuevo-usuario" onSubmit={handleSubmit}>
           <label>Nombre Completo *</label>
           <input
             type="text"
             name="nombre"
-            placeholder="Nombres y apellidos"
+            className={errores.nombre ? "input-error" : ""}
             value={formData.nombre}
             onChange={handleChange}
-            required
+            
           />
           {errores.nombre && <p className="error-campo">{errores.nombre}</p>}
 
           <label>Correo Electrónico *</label>
           <input
-            type="email"
+            type="text"
             name="correo"
-            placeholder="ejemplo@correo.com"
+            className={errores.correo ? "input-error" : ""}
             value={formData.correo}
             onChange={handleChange}
-            required
+            
           />
           {errores.correo && <p className="error-campo">{errores.correo}</p>}
 
-          <label>Número de Teléfono</label>
+          <label>Número de Teléfono *</label>
           <input
             type="text"
             name="telefono"
-            placeholder="77712345"
+            className={errores.telefono ? "input-error" : ""}
             value={formData.telefono}
             onChange={handleChange}
-            required
+            
           />
           {errores.telefono && <p className="error-campo">{errores.telefono}</p>}
 
@@ -86,13 +88,13 @@ const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
             name="rol"
             value={formData.rol}
             onChange={handleChange}
-            required
+            className={errores.rol ? "input-error" : ""}
           >
             <option value="">Seleccionar Rol</option>
-            <option value="admin">Administrador</option>
-            <option value="cajero">Cajero</option>
-            <option value="tutor">Tutor</option>
-            <option value="competidor">Competidor</option>
+            <option value="Administrador">Administrador</option>
+            <option value="Cajero">Cajero</option>
+            <option value="Tutor">Tutor</option>
+            <option value="Competidor">Competidor</option>
           </select>
           {errores.rol && <p className="error-campo">{errores.rol}</p>}
 
@@ -100,10 +102,11 @@ const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
           <input
             type="password"
             name="contraseña"
-            placeholder="Mínimo 8 caracteres"
+            className={errores.contraseña ? "input-error" : ""}
+            placeholder="Escriba nueva contraseña"
             value={formData.contraseña}
             onChange={handleChange}
-            required
+            
           />
           {errores.contraseña && <p className="error-campo">{errores.contraseña}</p>}
 
@@ -120,7 +123,7 @@ const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
 
           <div className="modal-botones">
             <button type="button" className="btn-cancelar" onClick={onClose}>Cancelar</button>
-            <button type="submit" className="btn-crear">Crear</button>
+            <button type="submit" className="btn-crear">Actualizar</button>
           </div>
         </form>
       </div>
@@ -128,4 +131,5 @@ const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
   );
 };
 
-export default ModalNuevoUsuario;
+export default ModalEditarUsuario;
+
