@@ -6,10 +6,10 @@ export const exportarPDF = (datos, currentPage = 1, nombreUsuario = 'Administrad
     const doc = new jsPDF();
     const fechaActual = new Date().toLocaleDateString('es-BO');
 
-    // Título dinámico
+    
     const titulo = datos.length > 20
       ? 'Reporte de Inscripciones (Todos los datos)'
-      : 'Reporte de Inscripciones (Página actual)';
+      : 'Reporte de Inscripciones';
 
     doc.setFontSize(18);
     doc.text(titulo, 105, 20, { align: 'center' });
@@ -42,7 +42,7 @@ export const exportarPDF = (datos, currentPage = 1, nombreUsuario = 'Administrad
 
     doc.save(nombreArchivo);
   } catch (err) {
-    console.error('❌ Error al exportar PDF:', err);
+    console.error('Error al exportar PDF:', err);
     alert('No se pudo generar el PDF.');
   }
 };

@@ -17,9 +17,11 @@ html, body, #root {
 .historial-contenedor {
   flex: 1;
   padding: 2rem;
-  max-width: 3000px;
+  width: 90%; /* 🔥 esto asegura que ocupe todo lo posible */
+  max-width: 2500px;
   margin: 0 auto;
 }
+
 
 /* Título y subtítulo */
 .historial-titulo {
@@ -73,8 +75,8 @@ html, body, #root {
 
 .historial-fechas {
   display: flex;
-  gap: 2rem;
-  margin-top: 0.5rem;
+  gap: 3rem;
+  margin-top: 4rem;
   font-size: 0.9rem;
   color: #444;
 }
@@ -86,7 +88,7 @@ html, body, #root {
 }
 
 .historial-icono {
-  color: red; /* color rojo para los íconos */
+  color: rgb(24, 143, 212); /* color rojo para los íconos */
 }
 
 /* Estados */
