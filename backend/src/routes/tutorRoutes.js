@@ -6,7 +6,7 @@ import * as  autentificacion from '../middlewares/authMiddleware.js';
 const router = express.Router();
 
 // Ruta para registrar un nuevo tutor
-router.post('/registro', tutorController.registrarTutor);
+router.post('/registro-tutor', tutorController.registrarTutor);
 
 // Ruta para buscar tutores por nombre (autocompletado)
 //router.get('/buscar', tutorController.buscarTutores);
@@ -15,6 +15,6 @@ router.post('/registro', tutorController.registrarTutor);
 router.get('/disponibles', tutorController.obtenerTutoresDisponibles);
 
 
-router.get('/solicitudes', autentificacion.authMiddleware, tutorController.obtenerSolicitudesPendientes);
+router.get('/solicitudes', autentificacion.authMiddleware, tutorController.getSolicitudesPendientes);
 
 export default router; 

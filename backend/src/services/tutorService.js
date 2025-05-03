@@ -1,6 +1,5 @@
 import prisma from '../config/prismaClient.js';
 import Joi from 'joi';
-import bcrypt from 'bcrypt';
 import { generarPassword } from '../utils/passwordSecurity.js';
 
 const ROL_TUTOR_ID = 4;
@@ -41,16 +40,18 @@ export const crearTutor = async (data) => {
         throw new Error('Ya existe un usuario o tutor con ese correo o carnet de identidad');
     }
 
+    // Crear el usuario con el carnet_identidad como contraseña
     const usuario = await prisma.usuario.create({
         data: {
             nombre,
             apellido,
             correo_electronico,
             rol_id: ROL_TUTOR_ID,
-            password: carnet_identidad, // carnet = contraseña
+            password: carnet_identidad, // Usamos el carnet como contraseña
         },
     });
 
+    // Crear el tutor asociado al usuario
     const tutor = await prisma.tutor.create({
         data: {
             usuario_id: usuario.id,
@@ -73,7 +74,7 @@ export const crearTutor = async (data) => {
         },
         credenciales: {
             correo_electronico,
-            password: carnet_identidad, //devolvemos la contraseña 
+            password: carnet_identidad, // Devolvemos el carnet como contraseña
         },
     };
 };
@@ -124,14 +125,17 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
             aprobado: false
         },
         include: {
-            inscripcion: true,
-            competidor: {
+            inscripcion: {
                 include: {
-                    usuario: true,
-                    colegio: true,
-                    provincia: {
+                    competidor: {
                         include: {
-                            departamento: true
+                            usuario: true,
+                            colegio: true,
+                            provincia: {
+                                include: {
+                                    departamento: true
+                                }
+                            }
                         }
                     }
                 }
@@ -142,15 +146,13 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
     return solicitudes.map((s) => ({
         id: s.id,
         competidor: {
-            nombre: s.competidor.usuario.nombre,
-            apellido: s.competidor.usuario.apellido,
-            colegio: s.competidor.colegio.nombre_colegio,
-            provincia: s.competidor.provincia.nombre_provincia,
-            departamento: s.competidor.provincia.departamento.nombre_departamento
+            nombre: s.inscripcion.competidor.usuario.nombre,
+            apellido: s.inscripcion.competidor.usuario.apellido,
+            colegio: s.inscripcion.competidor.colegio.nombre_colegio,
+            provincia: s.inscripcion.competidor.provincia.nombre_provincia,
+            departamento: s.inscripcion.competidor.provincia.departamento.nombre_departamento
         },
         fecha_inscripcion: s.inscripcion.fecha_inscripcion,
         estado: s.inscripcion.estado_inscripcion
     }));
 };
-
-
