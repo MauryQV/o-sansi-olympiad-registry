@@ -1,14 +1,28 @@
 // src/components/Login.jsx
-import React from "react";
+import React, { useState } from "react";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
 
 const Login = ({ setRol }) => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const loginAs = (rol) => {
     setRol(rol);
-    navigate("/");
+  
+    // Redireccionar según el rols
+    const rutasPorRol = {
+      admin: "/inicio-admin",
+      competidor: "/inicio-competidor",
+      tutor: "/inicio-tutor",
+      cajero: "/inicio-cajero",
+    };
+  
+    navigate(rutasPorRol[rol] || "/"); // Si no hay rol, va al general pa
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
   };
 
   return (
@@ -22,8 +36,18 @@ const Login = ({ setRol }) => {
         </div>
 
         <div className="input-group">
-          <input type="password" placeholder="Contraseña" required />
-          <img src="/src/image/ojo-cerrado.svg" alt="Mostrar" className="icon-input" />
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Contraseña"
+            required
+          />
+          <img
+            src={`/src/image/${showPassword ? "ojo-abierto" : "ojo-cerrado"}.svg`}
+            alt={showPassword ? "Ocultar" : "Mostrar"}
+            className="icon-input password-toggle"
+            onClick={togglePasswordVisibility}
+            style={{ cursor: "pointer" }}
+          />
         </div>
 
         <a href="#" className="forgot-password">Olvidé mi contraseña</a>

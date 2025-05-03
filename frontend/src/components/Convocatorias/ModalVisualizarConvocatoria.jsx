@@ -25,6 +25,10 @@ const ModalVisualizarConvocatoria = ({ visible, convocatoria, cerrar }) => {
             <p>{convocatoria.inscripcionInicio} - {convocatoria.inscripcionFin}</p>
           </div>
           <div>
+            <label className="visual-modal-label">Periodo de pago</label>
+            <p>{convocatoria.pagoInicio} - {convocatoria.pagoFin}</p>
+          </div>
+          <div>
             <label className="visual-modal-label">Periodo de competencia</label>
             <p>{convocatoria.competenciaInicio} - {convocatoria.competenciaFin}</p>
           </div>

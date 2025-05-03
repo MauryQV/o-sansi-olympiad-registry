@@ -62,7 +62,6 @@ const CardConvocatoria = ({ data, onVer, onEditar, onEliminar }) => {
           {formatearFecha(data.competicion_fin)}
         </p>
       </div>
-
       <div className="card-actions">
         <button
           className="btn-accion btn-ver"
@@ -99,6 +98,13 @@ const CardConvocatoria = ({ data, onVer, onEditar, onEliminar }) => {
             <UserPlus size={18} />
           </Link>
         )}
+      <div className="card-fecha">
+        <span>Pago:</span>
+        <span>{data.pagoInicio} - {data.pagoFin}</span>
+      </div>
+      <div className="card-fecha">
+        <span>Competencia:</span>
+        <span>{new Date(data.competicion_inicio).toLocaleDateString()} - {new Date(data.competicion_fin).toLocaleDateString()}</span>
       </div>
     </div>
   );
