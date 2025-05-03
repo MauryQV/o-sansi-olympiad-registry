@@ -17,7 +17,7 @@ const usuariosEjemplo = [
     rol: 'Administrador',
     telefono: '77712345',
     estado: 'Activo',
-    contraseña: 'abc@1Aavav'
+    contraseña: '9388259'
   },
   {
     id: 2,
@@ -26,7 +26,7 @@ const usuariosEjemplo = [
     rol: 'Cajero',
     telefono: '77723456',
     estado: 'Activo',
-    contraseña: 'Luis@Flores1'
+    contraseña: '9388258'
   },
   {
     id: 3,
@@ -35,7 +35,7 @@ const usuariosEjemplo = [
     rol: 'Tutor',
     telefono: '77734567',
     estado: 'Activo',
-    contraseña: 'Alejandra@Sandoval1'
+    contraseña: '9388245'
   },
   {
     id: 4,
@@ -44,7 +44,7 @@ const usuariosEjemplo = [
     rol: 'Tutor',
     telefono: '77745678',
     estado: 'Activo',
-    contraseña: 'Pedro@Perez1'
+    contraseña: '923332422-A'
   }
 ];
 
