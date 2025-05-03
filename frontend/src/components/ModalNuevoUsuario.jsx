@@ -52,10 +52,11 @@ const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
           <input
             type="text"
             name="nombre"
+            className={errores.nombre ? "input-error" : ""}
             placeholder="Nombres y apellidos"
             value={formData.nombre}
             onChange={handleChange}
-            required
+            
           />
           {errores.nombre && <p className="error-campo">{errores.nombre}</p>}
 
@@ -63,10 +64,11 @@ const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
           <input
             type="email"
             name="correo"
+            className={errores.correo ? "input-error" : ""}
             placeholder="ejemplo@correo.com"
             value={formData.correo}
             onChange={handleChange}
-            required
+            
           />
           {errores.correo && <p className="error-campo">{errores.correo}</p>}
 
@@ -74,10 +76,11 @@ const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
           <input
             type="text"
             name="telefono"
+            className={errores.telefono ? "input-error" : ""}
             placeholder="77712345"
             value={formData.telefono}
             onChange={handleChange}
-            required
+            
           />
           {errores.telefono && <p className="error-campo">{errores.telefono}</p>}
 
@@ -86,7 +89,8 @@ const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
             name="rol"
             value={formData.rol}
             onChange={handleChange}
-            required
+            className={errores.rol ? "input-error" : ""}
+            
           >
             <option value="">Seleccionar Rol</option>
             <option value="admin">Administrador</option>
@@ -100,10 +104,11 @@ const ModalNuevoUsuario = ({ onClose, onAgregarUsuario }) => {
           <input
             type="password"
             name="contraseña"
+            className={errores.contraseña ? "input-error" : ""}
             placeholder="Mínimo 8 caracteres"
             value={formData.contraseña}
             onChange={handleChange}
-            required
+            
           />
           {errores.contraseña && <p className="error-campo">{errores.contraseña}</p>}
 

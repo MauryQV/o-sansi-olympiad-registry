@@ -70,8 +70,12 @@ const Usuarios = () => {
   const agregarUsuario = (nuevoUsuario) => {
     setUsuarios([...usuarios, { id: Date.now(), ...nuevoUsuario, estado: 'Activo' }]);
   };
+//filtro porr rol
+const [filtroRol, setFiltroRol] = useState('Todos');
 
-
+const usuariosFiltrados = filtroRol === 'Todos'
+  ? usuarios
+  : usuarios.filter(usuario => usuario.rol === filtroRol);
 
   return (
     <div className="gestion-usuario">
@@ -88,13 +92,18 @@ const Usuarios = () => {
       </div>
       
       <div className="gestion-usuarios-header">
-        <select>
-          <option>Todos los roles</option>
+        <select value={filtroRol} onChange={(e) => setFiltroRol(e.target.value)}>
+          <option value="Todos">Todos los roles</option>
+          <option value="Administrador">Administrador</option>
+          <option value="Cajero">Cajero</option>
+          <option value="Tutor">Tutor</option>
+          <option value="Competidor">Competidor</option>
         </select>
       </div>
+      
 
       <div className="gestion-usuario-grid">
-        {usuarios.map(usuario => (
+        {usuariosFiltrados.map(usuario => (
           <div key={usuario.id} className="gestion-usuario-card">
             <div className="gestion-usuario-inicio-dato">
               <User size={16} /> {usuario.nombre}

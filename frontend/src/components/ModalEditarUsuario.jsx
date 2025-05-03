@@ -1,6 +1,6 @@
 // src/components/ModalEditarUsuario.jsx
 import React, { useState } from 'react';
-import '../styles/ModalNuevoUsuario.css'; // Usaremos el mismo estilo
+import '../styles/ModalNuevoUsuario.css'; // Usare el mismo estilo
 import { X } from 'lucide-react';
 import {validateUsuarioForm, handleUsuarioInputChange} from '../forms/usuarioFormHandler';
 
@@ -54,9 +54,10 @@ const ModalEditarUsuario = ({ usuario, onClose, onActualizarUsuario }) => {
           <input
             type="text"
             name="nombre"
+            className={errores.nombre ? "input-error" : ""}
             value={formData.nombre}
             onChange={handleChange}
-            required
+            
           />
           {errores.nombre && <p className="error-campo">{errores.nombre}</p>}
 
@@ -64,9 +65,10 @@ const ModalEditarUsuario = ({ usuario, onClose, onActualizarUsuario }) => {
           <input
             type="email"
             name="correo"
+            className={errores.correo ? "input-error" : ""}
             value={formData.correo}
             onChange={handleChange}
-            required
+            
           />
           {errores.correo && <p className="error-campo">{errores.correo}</p>}
 
@@ -74,9 +76,10 @@ const ModalEditarUsuario = ({ usuario, onClose, onActualizarUsuario }) => {
           <input
             type="text"
             name="telefono"
+            className={errores.telefono ? "input-error" : ""}
             value={formData.telefono}
             onChange={handleChange}
-            required
+            
           />
           {errores.telefono && <p className="error-campo">{errores.telefono}</p>}
 
@@ -85,7 +88,7 @@ const ModalEditarUsuario = ({ usuario, onClose, onActualizarUsuario }) => {
             name="rol"
             value={formData.rol}
             onChange={handleChange}
-            required
+            className={errores.rol ? "input-error" : ""}
           >
             <option value="">Seleccionar Rol</option>
             <option value="Administrador">Administrador</option>
@@ -99,10 +102,11 @@ const ModalEditarUsuario = ({ usuario, onClose, onActualizarUsuario }) => {
           <input
             type="password"
             name="contraseña"
+            className={errores.contraseña ? "input-error" : ""}
             placeholder="Escriba nueva contraseña"
             value={formData.contraseña}
             onChange={handleChange}
-            required
+            
           />
           {errores.contraseña && <p className="error-campo">{errores.contraseña}</p>}
 

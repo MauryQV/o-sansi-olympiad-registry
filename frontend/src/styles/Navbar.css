@@ -182,3 +182,115 @@ h3{
 
   }
   
+/*cmapanita notificacion*/
+.campana-notificacion {
+  position: relative;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.campana-notificacion img {
+  width: 24px;
+}
+
+.notificacion-circulo {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.panel-notificaciones {
+  width: 300px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  font-family: 'Comfortaa', cursive;
+  position: absolute;
+  right: 1rem;
+  top: 3.5rem;
+  z-index: 1000;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.panel-notificaciones h4 {
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.lista-notificaciones {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.notificacion-item {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.notificacion-item p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.notificacion-item .detalle {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0.4rem 0;
+}
+
+.acciones {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.4rem;
+}
+
+.acciones .rechazar {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.acciones .aceptar {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/*competidor campanita*/
+
+.notificacion-item .mensaje {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.cerrar-notif {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+  float: right;
+}
+
