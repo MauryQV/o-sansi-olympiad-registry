@@ -15,6 +15,7 @@ model Usuario {
   password           String
   rol_id             Int
   createdAt          DateTime    @default(now())
+  estado             Boolean     @default(true)
   competidor         Competidor?
   tutor              Tutor?
   role               Rol         @relation(fields: [rol_id], references: [id])

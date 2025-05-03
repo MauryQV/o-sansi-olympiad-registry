@@ -13,6 +13,7 @@ import inscripcionRoutes from './routes/inscripcionRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import competidorRoutes from './routes/competidorRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 
 
@@ -32,6 +33,7 @@ app.use('/api/tutores', tutorRoutes);
 app.use('/api/inscripciones', inscripcionRoutes);
 app.use('/api', locationRoutes);
 app.use('/api', competidorRoutes);
+app.use('/api/usuarios', userRoutes);
 
 
 // Ruta de prueba

@@ -16,6 +16,8 @@ import HistorialConvocatorias from "./components/HistorialConvocatorias.jsx";
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
 import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
 import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
+import GestionUsuarios from "./components/admin/GestionUsuarios.jsx";
+
 function App() {
   const [rol, setRol] = useState(() => localStorage.getItem("rol"));
 
@@ -61,6 +63,7 @@ function App() {
             path="/solicitudes"
             element={<SolicitudesTutoria setRol={setRol} />}
           />
+          <Route path="/admin/usuarios" element={<GestionUsuarios />} />
         </Routes>
       </div>
     </Router>

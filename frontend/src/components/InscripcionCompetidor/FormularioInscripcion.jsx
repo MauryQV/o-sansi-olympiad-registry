@@ -5,6 +5,7 @@ import "../../styles/InscripcionCompetidor/FormularioInscripcion.css";
 import { useFormularioInscripcion } from "../../hooks/useFormularioInscripcion";
 import TutoresTable from "./TutoresTable";
 import { esTextoValido } from "../../forms/formularioInscripcionValidator";
+import DebugComponent from "./DebugComponent";
 
 const FormularioInscripcion = () => {
   const { convocatoriaId } = useParams();
@@ -79,14 +80,25 @@ const FormularioInscripcion = () => {
               className={errores.area ? "forminsc-input-error" : ""}
             >
               <option value="">Seleccione un área</option>
-              {areasDisponibles.map((a, i) => (
-                <option key={i} value={a}>
-                  {a}
+              {areasDisponibles && areasDisponibles.length > 0 ? (
+                areasDisponibles.map((a, i) => (
+                  <option key={i} value={a}>
+                    {a}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>
+                  No hay áreas disponibles
                 </option>
-              ))}
+              )}
             </select>
             {errores.area && (
               <p className="forminsc-error-texto">Debe seleccionar un área</p>
+            )}
+            {areasDisponibles && areasDisponibles.length === 0 && (
+              <p className="forminsc-error-texto">
+                No hay áreas disponibles para esta convocatoria
+              </p>
             )}
           </div>
 
@@ -95,15 +107,23 @@ const FormularioInscripcion = () => {
             <select
               value={categoria}
               onChange={(e) => setCategoria(e.target.value)}
-              disabled={categoriasDisponibles.length === 0}
+              disabled={!area || categoriasDisponibles.length === 0}
               className={errores.categoria ? "forminsc-input-error" : ""}
             >
               <option value="">Seleccione una categoría</option>
-              {categoriasDisponibles.map((c, i) => (
-                <option key={i} value={c}>
-                  {c}
+              {categoriasDisponibles && categoriasDisponibles.length > 0 ? (
+                categoriasDisponibles.map((c, i) => (
+                  <option key={i} value={c}>
+                    {c}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>
+                  {!area
+                    ? "Seleccione un área primero"
+                    : "No hay categorías disponibles"}
                 </option>
-              ))}
+              )}
             </select>
             {errores.categoria && (
               <p className="forminsc-error-texto">
@@ -122,11 +142,17 @@ const FormularioInscripcion = () => {
               className={errores.grado ? "forminsc-input-error" : ""}
             >
               <option value="">Seleccione su grado</option>
-              {gradosDisponibles.map((g, i) => (
-                <option key={i} value={g}>
-                  {g}
+              {gradosDisponibles && gradosDisponibles.length > 0 ? (
+                gradosDisponibles.map((g, i) => (
+                  <option key={i} value={g}>
+                    {g}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>
+                  No hay grados disponibles
                 </option>
-              ))}
+              )}
             </select>
             {errores.grado && (
               <p className="forminsc-error-texto">
@@ -143,11 +169,17 @@ const FormularioInscripcion = () => {
               className={errores.nivel ? "forminsc-input-error" : ""}
             >
               <option value="">Seleccione un nivel</option>
-              {nivelesDisponibles.map((n, i) => (
-                <option key={i} value={n}>
-                  {n}
+              {nivelesDisponibles && nivelesDisponibles.length > 0 ? (
+                nivelesDisponibles.map((n, i) => (
+                  <option key={i} value={n}>
+                    {n}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>
+                  No hay niveles disponibles
                 </option>
-              ))}
+              )}
             </select>
             {errores.nivel && (
               <p className="forminsc-error-texto">
@@ -188,23 +220,18 @@ const FormularioInscripcion = () => {
               </span>
               {nuevoTutor.length >= 3 && tutoresEncontrados.length > 0 && (
                 <ul className="forminsc-lista-sugerencias">
-                  {tutoresEncontrados
-                    .filter((t) =>
-                      t.nombre.toLowerCase().includes(nuevoTutor.toLowerCase())
-                    )
-                    .slice(0, 5)
-                    .map((tutor, index) => (
-                      <li
-                        key={index}
-                        className="forminsc-sugerencia-item"
-                        onClick={() => {
-                          setNuevoTutor(tutor.nombre);
-                          setAreaTutorSeleccionada(tutor.area);
-                        }}
-                      >
-                        {tutor.nombre} - {tutor.area}
-                      </li>
-                    ))}
+                  {tutoresEncontrados.slice(0, 5).map((tutor, index) => (
+                    <li
+                      key={index}
+                      className="forminsc-sugerencia-item"
+                      onClick={() => {
+                        setNuevoTutor(tutor.nombre);
+                        setAreaTutorSeleccionada(tutor.area);
+                      }}
+                    >
+                      {tutor.nombre} - {tutor.area}
+                    </li>
+                  ))}
                 </ul>
               )}
               {nuevoTutor.length >= 3 && tutoresEncontrados.length === 0 && (
@@ -225,11 +252,17 @@ const FormularioInscripcion = () => {
               onChange={(e) => setAreaTutorSeleccionada(e.target.value)}
             >
               <option value="">Seleccione área del tutor</option>
-              {areasDisponibles.map((a, i) => (
-                <option key={i} value={a}>
-                  {a}
+              {areasDisponibles && areasDisponibles.length > 0 ? (
+                areasDisponibles.map((a, i) => (
+                  <option key={i} value={a}>
+                    {a}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>
+                  No hay áreas disponibles
                 </option>
-              ))}
+              )}
             </select>
           </div>
 
@@ -264,6 +297,9 @@ const FormularioInscripcion = () => {
           Completar inscripción
         </button>
       </div>
+
+      {/* Componente de depuración */}
+      <DebugComponent convocatoriaId={parseInt(convocatoriaId)} />
     </div>
   );
 };
