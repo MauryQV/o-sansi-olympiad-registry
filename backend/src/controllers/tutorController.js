@@ -3,65 +3,28 @@ import prisma from '../config/prismaClient.js';
 import bcrypt from 'bcrypt';
 import { validarToken } from '../utils/jwtUtils.js';
 
-// Registrar tutor
+//registrar un nuevo tutor
 export const registrarTutor = async (req, res, next) => {
     try {
-        const { nombre, apellido, correo_electronico, password, carnet_identidad, numero_celular, area_id } = req.body;
+        const { nombre, apellido, correo_electronico, carnet_identidad, numero_celular, area_id } = req.body;
 
-        // Verificar si ya existe un usuario con ese correo
-        const usuarioExistente = await prisma.usuario.findFirst({
-            where: { correo_electronico: correo_electronico }
-        });
-
-        if (usuarioExistente) {
-            return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
-        }
-
-        // Verificar si ya existe un tutor con ese CI
-        const tutorExistente = await prisma.tutor.findFirst({
-            where: { carnet_identidad: carnet_identidad }
-        });
-
-        if (tutorExistente) {
-            return res.status(400).json({ error: 'El carnet de identidad ya está registrado' });
-        }
-
-        // Hashear la contraseña
-        const passwordHash = await bcrypt.hash(password, 10);
-
-        // Crear usuario con rol de tutor (rol_id 2)
-        const nuevoUsuario = await prisma.usuario.create({
-            data: {
-                nombre,
-                apellido,
-                correo_electronico,
-                password: passwordHash,
-                rol_id: 2, // Rol de tutor
-            }
-        });
-
-        // Crear tutor asociado al usuario
-        const nuevoTutor = await prisma.tutor.create({
-            data: {
-                usuario_id: nuevoUsuario.id,
-                carnet_identidad,
-                numero_celular,
-                area_id: parseInt(area_id)
-            }
+        // servicio para crear el tutor
+        const nuevoTutor = await tutorService.crearTutor({
+            nombre,
+            apellido,
+            correo_electronico,
+            carnet_identidad,
+            numero_celular,
+            area_id,
         });
 
         res.status(201).json({
             mensaje: 'Tutor registrado exitosamente',
-            tutor: {
-                id: nuevoTutor.id,
-                nombre,
-                apellido,
-                correo: correo_electronico,
-                area_id
-            }
+            tutor: nuevoTutor.tutor,
+            credenciales: nuevoTutor.credenciales, // Devolver credenciales (correo y contraseña)
         });
     } catch (error) {
-        console.error('Error al registrar tutor:', error);
+        console.error('Error al registrar tutor:', error.message);
         res.status(500).json({ error: 'Error en el servidor al registrar tutor' });
     }
 };
@@ -229,12 +192,17 @@ export const obtenerTutorPorId = async (req, res, next) => {
     }
 };
 */
-export const obtenerSolicitudesPendientes = async (req, res, next) => {
+
+
+export const getSolicitudesPendientes = async (req, res) => {
     try {
-        const solicitudes = await tutorService.obtenerSolicitudesPendientes(req.user.id);
+        const usuarioId = req.user.id;
+
+        const solicitudes = await tutorService.obtenerSolicitudesPendientes(usuarioId);
+
         res.status(200).json(solicitudes);
     } catch (error) {
         console.error('Error al obtener solicitudes pendientes:', error);
-        next(error);
+        res.status(500).json({ error: error.message || 'Error al cargar solicitudes pendientes.' });
     }
 };

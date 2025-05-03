@@ -97,7 +97,11 @@ export const obtenerSolicitudesDelCompetidor = async (usuarioId) => {
     }
 
     const inscripciones = await prisma.inscripcion_tutor.findMany({
-        where: { competidor_id: competidor.id },
+        where: {
+            inscripcion: {
+                competidor_id: competidor.id
+            }
+        },
         include: {
             inscripcion: true,
             tutor: {
