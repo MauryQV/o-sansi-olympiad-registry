@@ -68,7 +68,7 @@ const handleRechazar = (id) => {
               {!rol && (
                 <>
                   <li><Link to="/" className="menu-item">Inicio</Link></li>
-                  <li><Link to="/inscripciones" className="menu-item">Áreas</Link></li>
+                  <li><Link to="/areas" className="menu-item">Áreas</Link></li>
                   <li><Link to="/disciplinas" className="menu-item">Convocatorias</Link></li>
                   <li><Link to="/acerca" className="menu-item">Acerca de..</Link></li>
                 </>

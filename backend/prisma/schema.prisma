@@ -8,16 +8,17 @@ datasource db {
 }
 
 model Usuario {
-  id                 String      @id @default(uuid())
-  correo_electronico String      @unique
+  id                 String         @id @default(uuid())
+  correo_electronico String         @unique
   nombre             String
   apellido           String
   password           String
   rol_id             Int
-  createdAt          DateTime    @default(now())
+  createdAt          DateTime       @default(now())
   competidor         Competidor?
   tutor              Tutor?
-  role               Rol         @relation(fields: [rol_id], references: [id])
+  role               Rol            @relation(fields: [rol_id], references: [id])
+  Notificacion       Notificacion[]
 }
 
 model Rol {
@@ -52,8 +53,8 @@ model Competidor {
   colegio          Colegio             @relation(fields: [colegio_id], references: [id])
   provincia        Provincia           @relation(fields: [provincia_id], references: [id])
   usuario          Usuario             @relation(fields: [usuario_id], references: [id])
-  Inscripciones    Inscripcion_tutor[]
   Inscripcion_area Inscripcion_area[]
+  Inscripciones    Inscripcion_tutor[]
 }
 
 model Tutor {
@@ -63,8 +64,8 @@ model Tutor {
   numero_celular      String              @unique
   area_id             Int
   Inscripciones_tutor Inscripcion_tutor[]
-  usuario             Usuario             @relation(fields: [usuario_id], references: [id])
   area                Area                @relation(fields: [area_id], references: [id])
+  usuario             Usuario             @relation(fields: [usuario_id], references: [id])
 }
 
 model Departamento {
@@ -94,7 +95,6 @@ model Convocatoria {
   id                       Int                 @id @default(autoincrement())
   nombre_convocatoria      String
   id_estado_convocatoria   Int
-  estado_convocatoria      estado_convocatoria @relation(fields: [id_estado_convocatoria], references: [id])
   fecha_inicio             DateTime
   fecha_fin                DateTime
   pago_fin                 DateTime
@@ -103,6 +103,7 @@ model Convocatoria {
   competicion_fin          DateTime
   descripcion_convocatoria String
   Area_convocatoria        Area_convocatoria[]
+  estado_convocatoria      estado_convocatoria @relation(fields: [id_estado_convocatoria], references: [id])
   Inscripcion_area         Inscripcion_area[]
 }
 
@@ -132,9 +133,9 @@ model Grado {
   id             Int         @id @default(autoincrement())
   nombre_grado   String
   id_nivel       Int
-  nivel          Nivel       @relation(fields: [id_nivel], references: [id])
   categorias_max Categoria[] @relation("GradoMax")
   categorias_min Categoria[] @relation("GradoMin")
+  nivel          Nivel       @relation(fields: [id_nivel], references: [id])
 }
 
 model Pago {
@@ -168,8 +169,8 @@ model Categoria_area {
   id           Int       @id @default(autoincrement())
   categoria_id Int
   area_id      Int
-  categoria    Categoria @relation(fields: [categoria_id], references: [id])
   area         Area      @relation(fields: [area_id], references: [id])
+  categoria    Categoria @relation(fields: [categoria_id], references: [id])
 }
 
 model Inscripcion_tutor {
@@ -196,15 +197,14 @@ model estado_convocatoria {
   Convocatoria Convocatoria[]
 }
 
-// Modelo para inscripción de participantes en áreas con restricción de máximo 2 por participante
 model Inscripcion_area {
   id                Int          @id @default(autoincrement())
   competidor_id     String
   area_id           Int
   convocatoria_id   Int
   fecha_inscripcion DateTime     @default(now())
-  competidor        Competidor   @relation(fields: [competidor_id], references: [id])
   area              Area         @relation(fields: [area_id], references: [id])
+  competidor        Competidor   @relation(fields: [competidor_id], references: [id])
   convocatoria      Convocatoria @relation(fields: [convocatoria_id], references: [id])
 }
 
@@ -212,4 +212,14 @@ model Nivel {
   id           Int     @id @default(autoincrement())
   nombre_nivel String
   Grado        Grado[]
+}
+
+model Notificacion {
+  id        Int      @id @default(autoincrement())
+  usuarioId String
+  tipo      String // ejemplo: "solicitud", "respuesta"
+  mensaje   String
+  leido     Boolean  @default(false)
+  createdAt DateTime @default(now())
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
 }

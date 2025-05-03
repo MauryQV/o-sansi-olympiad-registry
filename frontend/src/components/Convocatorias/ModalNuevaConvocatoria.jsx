@@ -87,6 +87,8 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
         id_estado_convocatoria: parseInt(formulario.id_estado_convocatoria),
         fecha_inicio: new Date(formulario.inscripcionInicio).toISOString(),
         fecha_fin: new Date(formulario.inscripcionFin).toISOString(),
+        pago_inicio: new Date(formulario.pagoInicio).toISOString(),
+        pago_fin: new Date(formulario.pagoFin).toISOString(),
         competicion_inicio: new Date(formulario.competenciaInicio).toISOString(),
         competicion_fin: new Date(formulario.competenciaFin).toISOString(),
         descripcion_convocatoria: formulario.descripcion,

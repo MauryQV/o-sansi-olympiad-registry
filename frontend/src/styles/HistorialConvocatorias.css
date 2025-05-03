@@ -2,9 +2,9 @@
 html, body, #root {
   height: 100%;
   margin: 0;
-  padding: 0;
+  padding-top: 40px;
   font-family: 'Comfortaa', sans-serif;
-  background: #f1f6f9;
+  background: #F4F8FA;
 }
 
 /* Contenedor principal */
