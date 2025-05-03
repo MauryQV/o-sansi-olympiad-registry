@@ -76,7 +76,7 @@ const handleRechazar = (id) => {
 
               {rol === 'admin' && (
                 <>
-                  <li><Link to="/inicio-admin" className="menu-item">Inicio (Admin)</Link></li>
+                  <li><Link to="/inicio-admin" className="menu-item">Inicio</Link></li>
                   <li><Link to="/areas-admin" className="menu-item">Áreas</Link></li>
                   <li><Link to="/convocatorias" className="menu-item">Convocatorias</Link></li>
                   <li><Link to="/usuarios" className="menu-item">Usuarios</Link></li>
@@ -99,7 +99,7 @@ const handleRechazar = (id) => {
 
               {rol === 'tutor' && (
                 <>
-                  <li><Link to="/inicio-tutor" className="menu-item">Inicio (Tutor)</Link></li>
+                  <li><Link to="/inicio-tutor" className="menu-item">Inicio</Link></li>
                   <li><Link to="/solicitudes" className="menu-item">Solicitudes</Link></li>
                   <li classsName= "campanita">
                     <div className="campana-notificacion" onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}>
@@ -157,7 +157,7 @@ const handleRechazar = (id) => {
 
               {rol === 'cajero' && (
                 <>
-                  <li><Link to="/inicio-cajero" className="menu-item">Inicio (Cajero)</Link></li>
+                  <li><Link to="/inicio-cajero" className="menu-item">Inicio</Link></li>
                   <li><Link to="/pagos" className="menu-item">Pagos</Link></li>
                   <li className="dropdown">
                     <div className="menu-rol">

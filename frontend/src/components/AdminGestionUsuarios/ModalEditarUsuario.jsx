@@ -63,7 +63,7 @@ const ModalEditarUsuario = ({ usuario, onClose, onActualizarUsuario }) => {
 
           <label>Correo Electrónico *</label>
           <input
-            type="email"
+            type="text"
             name="correo"
             className={errores.correo ? "input-error" : ""}
             value={formData.correo}
