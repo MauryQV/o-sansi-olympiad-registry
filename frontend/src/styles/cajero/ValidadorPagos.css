@@ -45,7 +45,7 @@
     font-size: 0.95rem;
     border: 1px solid #ccc;
     border-radius: 8px;
-    width: 220px;
+    width: 565px;
   }
   
   .btn-buscar,
@@ -53,7 +53,7 @@
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    background-color: #8674d6;
+    background-color: #b0a1f3;
     border: none;
     padding: 0.6rem 1rem;
     border-radius: 8px;
@@ -61,10 +61,11 @@
     cursor: pointer;
     font-size: 0.95rem;
     transition: background-color 0.2s ease;
+  
   }
   
   .btn-buscar:hover {
-    background-color: #9d8fe1;
+    background-color: #2f17a6;
   }
   
   .btn-resetear {
@@ -90,7 +91,7 @@
   }
   
   .validador-tabla table {
-    width: 100%;
+    width: 113%;
     border-collapse: collapse;
     font-size: 0.95rem;
   }
@@ -103,7 +104,7 @@
   }
   
   .validador-tabla th {
-    color: #666;
+    color: #050101;
     font-weight: 600;
   }
   

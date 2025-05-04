@@ -38,14 +38,14 @@ const RegistroCompetidores = () => {
       </div>
 
       <div className="contenedor-info-tarjetas">
-        <div className="tarjeta-inscripcion-activa">
+        <div className="tarjeta-inscripcion-activa posicion-con-estado">
           <h3 className="titulo-tarjeta">Mis Inscripciones</h3>
           {inscripcionActiva ? (
             <>
               <p><strong>{inscripcionActiva.area}</strong></p>
               <p>Categoría: {inscripcionActiva.categoria}, Grado: {inscripcionActiva.grado}</p>
               <p>Fecha: {inscripcionActiva.fecha}</p>
-              <span className={`estado-inscripcion ${inscripcionActiva.estado.toLowerCase()}`}>
+              <span className={`badge-estado validada`}>
                 {inscripcionActiva.estado}
               </span>
             </>
@@ -54,14 +54,14 @@ const RegistroCompetidores = () => {
           )}
         </div>
 
-        <div className="tarjeta-convocatoria-activa">
+        <div className="tarjeta-convocatoria-activa posicion-con-estado">
           <h3 className="titulo-tarjeta">Convocatorias Activas</h3>
           {convocatoriaActiva ? (
             <>
               <p><strong>{convocatoriaActiva.nombre}</strong></p>
               <p>{convocatoriaActiva.descripcion}</p>
               <p>Inscripción {convocatoriaActiva.fechaInicio} - {convocatoriaActiva.fechaFin}</p>
-              <span className="estado-inscripcion en-inscripcion">En Inscripción</span>
+              <span className="badge-estado en-inscripcion">En Inscripción</span>
             </>
           ) : (
             <p>No hay convocatorias activas.</p>

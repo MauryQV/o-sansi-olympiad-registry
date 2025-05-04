@@ -9,7 +9,7 @@ export const useFormularioInscripcion = () => {
   const [nivel, setNivel] = useState('');
   const [tutores, setTutores] = useState([]);
   const [nuevoTutor, setNuevoTutor] = useState('');
-  const [areaTutorSeleccionada, setAreaTutorSeleccionada] = useState('');
+  const [mostrarModal, setMostrarModal] = useState(false);
   const [errores, setErrores] = useState({});
 
   const [areasDisponibles, setAreasDisponibles] = useState([]);
@@ -43,9 +43,9 @@ export const useFormularioInscripcion = () => {
   }, [area, categoriasPorArea]);
 
   const agregarTutor = () => {
-    if (nuevoTutor && areaTutorSeleccionada && tutores.length < 3) {
-      const tutor = tutorExiste(tutoresDisponibles, nuevoTutor, areaTutorSeleccionada);
-      const duplicado = tutorYaAgregado(tutores, nuevoTutor, areaTutorSeleccionada);
+    if (nuevoTutor && area && tutores.length < 3) {
+      const tutor = tutorExiste(tutoresDisponibles, nuevoTutor, area);
+      const duplicado = tutorYaAgregado(tutores, nuevoTutor, area);
 
       if (!tutor) {
         Swal.fire({ icon: 'error', title: 'Tutor no válido', text: 'Debe seleccionar un tutor existente.' });
@@ -54,7 +54,7 @@ export const useFormularioInscripcion = () => {
       } else {
         setTutores([...tutores, tutor]);
         setNuevoTutor('');
-        setAreaTutorSeleccionada('');
+        setMostrarModal(false);
       }
     }
   };
@@ -86,12 +86,12 @@ export const useFormularioInscripcion = () => {
     }
   };
 
-  const tutoresFiltrados = tutoresDisponibles.filter(t => t.area === areaTutorSeleccionada);
+  const tutoresFiltrados = tutoresDisponibles.filter(t => t.area === area);
 
   return {
-    area, categoria, grado, nivel, tutores, nuevoTutor, areaTutorSeleccionada, errores,
+    area, categoria, grado, nivel, tutores, nuevoTutor, errores, mostrarModal,
     areasDisponibles, categoriasDisponibles, gradosDisponibles, nivelesDisponibles, tutoresDisponibles,
-    setArea, setCategoria, setGrado, setNivel, setNuevoTutor, setAreaTutorSeleccionada,
+    setArea, setCategoria, setGrado, setNivel, setNuevoTutor, setMostrarModal,
     agregarTutor, eliminarTutor, manejarEnvio, tutoresFiltrados
   };
 };

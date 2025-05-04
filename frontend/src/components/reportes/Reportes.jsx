@@ -11,7 +11,8 @@ const Reportes = () => {
     estadoFiltro, setEstadoFiltro,
     areaFiltro, setAreaFiltro,
     areas, datosPagina, datosFiltrados,
-    limpiar, currentPage, setCurrentPage, totalPages
+    limpiar, currentPage, setCurrentPage, totalPages,
+    aplicarFiltrosManual, filtrosAplicados
   } = useReporteInscripciones();
 
   const estados = ['Pendiente', 'Completado', 'Cancelado'];
@@ -33,19 +34,22 @@ const Reportes = () => {
         areaFiltro={areaFiltro}
         setAreaFiltro={setAreaFiltro}
         limpiar={limpiar}
+        onFiltrar={aplicarFiltrosManual}
       />
 
-      <TablaInscripciones datosPagina={datosPagina} />
+      {filtrosAplicados && <TablaInscripciones datosPagina={datosPagina} />}
 
-      <div className="reportes-minimal__paginacion">
-        <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>&lt;</button>
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={currentPage === i + 1 ? 'activo' : ''}>
-            {i + 1}
-          </button>
-        ))}
-        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>&gt;</button>
-      </div>
+      {filtrosAplicados && (
+        <div className="reportes-minimal__paginacion">
+          <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>&lt;</button>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={currentPage === i + 1 ? 'activo' : ''}>
+              {i + 1}
+            </button>
+          ))}
+          <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>&gt;</button>
+        </div>
+      )}
     </div>
   );
 };

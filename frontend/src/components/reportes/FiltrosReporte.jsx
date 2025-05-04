@@ -1,7 +1,16 @@
 import React from 'react';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, Filter } from 'lucide-react';
 
-const FiltrosReporte = ({ estados, areas, estadoFiltro, setEstadoFiltro, areaFiltro, setAreaFiltro, limpiar }) => (
+const FiltrosReporte = ({
+  estados,
+  areas,
+  estadoFiltro,
+  setEstadoFiltro,
+  areaFiltro,
+  setAreaFiltro,
+  limpiar,
+  onFiltrar
+}) => (
   <div className="reportes-minimal__filtros">
     <div style={{ width: '100%' }}>
       <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600 }}>Filtros</h3>
@@ -27,6 +36,9 @@ const FiltrosReporte = ({ estados, areas, estadoFiltro, setEstadoFiltro, areaFil
     </div>
 
     <div className="reportes-minimal__acciones">
+      <button onClick={onFiltrar} className="primario">
+        <Filter size={16} style={{ marginRight: '6px' }} /> Filtrar
+      </button>
       <button onClick={limpiar} className="secundario">
         <RotateCcw size={16} style={{ marginRight: '6px' }} /> Restablecer
       </button>

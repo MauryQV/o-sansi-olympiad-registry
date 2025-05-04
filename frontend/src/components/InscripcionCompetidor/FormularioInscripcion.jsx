@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import '../../styles/InscripcionCompetidor/FormularioInscripcion.css';
 import { useFormularioInscripcion } from '../../hooks/useFormularioInscripcion';
 import TutoresTable from './TutoresTable';
+import ModalTutores from './ModalTutores';
 import { esTextoValido } from '../../forms/formularioInscripcionValidator';
 
 const FormularioInscripcion = () => {
   const {
-    area, categoria, grado, nivel, tutores, nuevoTutor, areaTutorSeleccionada, errores,
+    area, categoria, grado, nivel, tutores, nuevoTutor, errores,
     areasDisponibles, categoriasDisponibles, gradosDisponibles, nivelesDisponibles,
-    setArea, setCategoria, setGrado, setNivel, setNuevoTutor, setAreaTutorSeleccionada,
+    setArea, setCategoria, setGrado, setNivel, setNuevoTutor,
     agregarTutor, eliminarTutor, manejarEnvio, tutoresFiltrados
   } = useFormularioInscripcion();
+
+  const [mostrarModal, setMostrarModal] = useState(false);
 
   return (
     <div className="forminsc-contenedor">
@@ -20,6 +23,7 @@ const FormularioInscripcion = () => {
 
       <section className="forminsc-seccion">
         <h2 className="forminsc-seccion-titulo">Información de la Competencia</h2>
+        <p className="forminsc-descripcion">Seleccione el área y la categoría en la que desea participar</p>
 
         <div className="forminsc-fila">
           <div className="forminsc-campo">
@@ -68,6 +72,7 @@ const FormularioInscripcion = () => {
 
       <section className="forminsc-seccion">
         <h2 className="forminsc-seccion-titulo">Tutores</h2>
+        <p className="forminsc-descripcion">Seleccione de uno a tres tutores para su participación</p>
 
         <div className="forminsc-fila-buscador-alineado">
           <div className="forminsc-input-con-icono">
@@ -76,47 +81,34 @@ const FormularioInscripcion = () => {
               className="forminsc-input"
               placeholder="Buscar tutor..."
               value={nuevoTutor}
-              onChange={(e) => {
-                const valor = e.target.value;
-                if (esTextoValido(valor)) {
-                  setNuevoTutor(valor);
-                }
-              }}
+              readOnly
+              onClick={() => setMostrarModal(true)}
             />
             <span className="forminsc-icono-lupa"><Search size={18} /></span>
-            {nuevoTutor && tutoresFiltrados.length > 0 && (
-              <ul className="forminsc-lista-sugerencias">
-                {tutoresFiltrados
-                  .filter((t) => t.nombre.toLowerCase().includes(nuevoTutor.toLowerCase()))
-                  .slice(0, 5)
-                  .map((t, index) => (
-                    <li key={index} className="forminsc-sugerencia-item" onClick={() => setNuevoTutor(t.nombre)}>
-                      {t.nombre}
-                    </li>
-                  ))}
-              </ul>
-            )}
           </div>
 
-          <select className="forminsc-select" value={areaTutorSeleccionada} onChange={(e) => setAreaTutorSeleccionada(e.target.value)}>
-            <option value="">Área del Tutor</option>
-            {areasDisponibles.map((a, i) => (
-              <option key={i} value={a}>{a}</option>
-            ))}
-          </select>
           <button className="forminsc-boton-anadir" onClick={agregarTutor}>+ Añadir</button>
         </div>
 
         {errores.tutores && (
           <p className="forminsc-mensaje forminsc-mensaje-error">
-            Debe seleccionar al menos un tutor.
+            No hay tutores seleccionados. Añada al menos uno para continuar.
           </p>
         )}
 
         <TutoresTable tutores={tutores} onDelete={eliminarTutor} />
+
+        {mostrarModal && (
+          <ModalTutores
+            tutores={tutoresFiltrados}
+            areaSeleccionada={area}
+            onClose={() => setMostrarModal(false)}
+            onSelect={(nombre) => setNuevoTutor(nombre)}
+          />
+        )}
       </section>
 
-      <div className="forminsc-finalizar-wrapper">
+      <div className="forminsc-finalizar-wrapper alineado-derecha">
         <button className="forminsc-boton-finalizar" onClick={manejarEnvio}>
           Completar inscripción
         </button>
