@@ -1,5 +1,7 @@
 /* Reset básico */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding-top: 40px;
@@ -73,8 +75,8 @@ html, body, #root {
 
 .historial-fechas {
   display: flex;
-  gap: 2rem;
-  margin-top: 0.5rem;
+  gap: 3rem;
+  margin-top: 4rem;
   font-size: 0.9rem;
   color: #444;
 }
@@ -86,7 +88,8 @@ html, body, #root {
 }
 
 .historial-icono {
-  color: red; /* color rojo para los íconos */
+  color: rgb(24, 143, 212);
+  /* color rojo para los íconos */
 }
 
 /* Estados */

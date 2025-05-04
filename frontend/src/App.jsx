@@ -4,8 +4,6 @@ import Navbar from "./components/Navbar"; // Importamos la barra de navegación
 import Login from "./components/Login";
 import InicioAdmin from "./components/InicioAdmin";
 import TablaArea from "./components/Areas/TablaArea.jsx";
-import Disciplinas from "./components/Disciplinas.jsx";
-import RegistrarTutores from "./components/RegistrarTutores.jsx";
 import RegistroUsuario from "./components/RegistroUsuario.jsx";
 import Pagos from "./components/PagosCompetidor/Pagos.jsx";
 import DetallePago from "./components/PagosCompetidor/DetallePago.jsx";
@@ -19,7 +17,7 @@ import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
 import InicioTutor from "./components/InicioTutor.jsx";
 import InicioCajero from "./components/InicioCajero.jsx";
 import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
-import GestionUsuarios from "./components/admin/GestionUsuarios.jsx";
+//import GestionUsuarios from "./components/admin/GestionUsuarios.jsx";
 import Inicio from "./components/Inicio.jsx";
 import Areas from "./components/AreasInicio.jsx";
 import Acercade from "./components/AcercaDe.jsx";
@@ -83,7 +81,7 @@ function App() {
             path="/inicio-cajero"
             element={<InicioCajero setRol={setRol} />}
           />
-          <Route path="/admin/usuarios" element={<GestionUsuarios />} />
+          
         </Routes>
       </div>
     </Router>
