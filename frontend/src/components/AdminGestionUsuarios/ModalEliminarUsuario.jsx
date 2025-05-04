@@ -17,9 +17,9 @@ const ModalEliminarUsuario = ({ usuario, onClose, onConfirmarEliminar }) => {
           Esta acción no se puede deshacer. Eliminará permanentemente al usuario <strong>"{usuario.nombre}"</strong>.
         </p>
 
-        <div className="modal-botones">
-          <button className="btn-cancelar" onClick={onClose}>Cancelar</button>
-          <button className="btn-eliminar" onClick={onConfirmarEliminar}>Eliminar</button>
+        <div className="modales-botones">
+          <button className="boton-cancelar" onClick={onClose}><b>Cancelar</b></button>
+          <button className="boton-eliminar" onClick={onConfirmarEliminar}>Eliminar</button>
         </div>
       </div>
     </div>

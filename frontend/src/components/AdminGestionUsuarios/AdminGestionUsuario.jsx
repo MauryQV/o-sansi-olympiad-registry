@@ -8,6 +8,7 @@ import lapizEditar from '../../image/editarLapiz.svg';
 import borrarUsuario from '../../image/borrarUsuario.svg';
 import ModalEliminarUsuario from './ModalEliminarUsuario';
 import { actualizarUsuarioEnLista } from '../../utils/actualizarUsuario';
+import nuevoUsuario from '../../image/nuevoUsuario.svg';
 
 const usuariosEjemplo = [
   {
@@ -86,7 +87,11 @@ const usuariosFiltrados = filtroRol === 'Todos'
             className="boton-nuevo-usuario"
             onClick={() => setModalNuevoUsuarioAbierto(true)}
           >
-            + Nuevo Usuario
+            <img
+              src={nuevoUsuario}
+              alt="nuevo-usuario"
+              className="icono-nuevo-usuario" />
+              Nuevo Usuario
           </button>
         </div>
       </div>

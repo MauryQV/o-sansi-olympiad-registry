@@ -73,14 +73,13 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  max-width: 100%; 
-  white-space: nowrap;
+  min-width: 0; 
+  flex-grow: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
   
 }
 .nombre-usuario-texto {
-  display: inline-block;
+  max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -88,6 +87,7 @@
 
 .gestion-usuario-inicio-dato {
   display: flex;
+  width: 100%;
   justify-content: space-between; 
   align-items: center;
   font-size: 1.125rem;

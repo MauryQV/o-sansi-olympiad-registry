@@ -4,7 +4,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -124,14 +124,14 @@
   }
   
   /* Botones */
-  .modal-botones {
+  .modales-botones-nuevo-usuario {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
     margin-top: 1rem;
   }
   
-  .btn-cancelar {
+  .boton-cancelar-usuario-nuevo{
     background-color: white;
     color: black;
     border: 1px solid #ccc;
@@ -141,12 +141,12 @@
     font-size: 0.85rem;
   }
   
-  .btn-cancelar:hover {
+  .boton-cancelar-usuario-nuevo {
     background-color: #f1f1f1;
   }
   
-  .btn-crear {
-    background-color: #007bff;
+  .boton-crear-usuario-nuevo {
+    background-color: #0284C7;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -155,8 +155,8 @@
     font-size: 0.85rem;
   }
   
-  .btn-crear:hover {
-    background-color: #0066cc;
+  .boton-crear-usuario-nuevo:hover {
+    background-color: #005fc1;
   }
   .error-campo {
     color: red !important;
