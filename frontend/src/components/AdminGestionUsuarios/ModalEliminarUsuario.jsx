@@ -1,6 +1,6 @@
 
 import React from 'react';
-import '../styles/ModalEliminarUsuario.css'; // creamos este CSS también
+import '../../styles/AdminGestionUsuarios/ModalEliminarUsuario.css'; // creamos este CSS también
 import { X } from 'lucide-react'; // para el botón cerrar
 
 const ModalEliminarUsuario = ({ usuario, onClose, onConfirmarEliminar }) => {

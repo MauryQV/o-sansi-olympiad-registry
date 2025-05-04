@@ -9,7 +9,34 @@ const Navbar = ({ rol, setRol }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
+//datos simulados para nottificacion
+const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
+const [notificaciones, setNotificaciones] = useState([
+  { id: 1, mensaje: 'María Gonzáles solicitó tu tutoría', detalle: 'Área: Matemática - Categoría: Quinto Nivel' },
+  { id: 2, mensaje: 'Juan Pérez solicitó tu tutoría', detalle: 'Área: Física - Categoría: 4S' },
+  { id: 3, mensaje: 'Jose Escobar solicitó tu tutoría', detalle: 'Área: Naturales - Categoría: 4S' },
+  { id: 4, mensaje: 'Juan Pérez solicitó tu tutoría', detalle: 'Área: Física - Categoría: 4S' },
+  { id: 5, mensaje: 'Jose Escobar solicitó tu tutoría', detalle: 'Área: Naturales - Categoría: 4S' }
+]);
 
+//compettidor
+const fueAceptado = true; 
+
+const [mostrarNotifComp, setMostrarNotifComp] = useState(false);
+const [notificacionesComp, setNotificacionesComp] = useState(
+  fueAceptado
+    ? [{ id: 1, mensaje: 'Usted fue aceptado para participar en la competencia' }]
+    : [{ id: 1, mensaje: 'Usted fue rechazado para participar en la competencia' }]
+);
+
+
+const handleAceptar = (id) => {
+  setNotificaciones(prev => prev.filter(n => n.id !== id));
+};
+
+const handleRechazar = (id) => {
+  setNotificaciones(prev => prev.filter(n => n.id !== id));
+};
 
   return (
     <nav className="nav">
@@ -41,7 +68,7 @@ const Navbar = ({ rol, setRol }) => {
               {!rol && (
                 <>
                   <li><Link to="/" className="menu-item">Inicio</Link></li>
-                  <li><Link to="/inscripciones" className="menu-item">Áreas</Link></li>
+                  <li><Link to="/areas" className="menu-item">Áreas</Link></li>
                   <li><Link to="/disciplinas" className="menu-item">Convocatorias</Link></li>
                   <li><Link to="/acerca" className="menu-item">Acerca de..</Link></li>
                 </>
@@ -49,7 +76,7 @@ const Navbar = ({ rol, setRol }) => {
 
               {rol === 'admin' && (
                 <>
-                  <li><Link to="/inicio-admin" className="menu-item">Inicio (Admin)</Link></li>
+                  <li><Link to="/inicio-admin" className="menu-item">Inicio</Link></li>
                   <li><Link to="/areas-admin" className="menu-item">Áreas</Link></li>
                   <li><Link to="/convocatorias" className="menu-item">Convocatorias</Link></li>
                   <li><Link to="/usuarios" className="menu-item">Usuarios</Link></li>
@@ -72,8 +99,16 @@ const Navbar = ({ rol, setRol }) => {
 
               {rol === 'tutor' && (
                 <>
-                  <li><Link to="/inicio-tutor" className="menu-item">Inicio (Tutor)</Link></li>
+                  <li><Link to="/inicio-tutor" className="menu-item">Inicio</Link></li>
                   <li><Link to="/solicitudes" className="menu-item">Solicitudes</Link></li>
+                  <li classsName= "campanita">
+                    <div className="campana-notificacion" onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}>
+                      <img src="/src/image/campana-notificacion.svg" alt="Notificaciones" />
+                      {notificaciones.length > 0 && (
+                        <span className="notificacion-circulo">{notificaciones.length}</span>
+                      )}
+                    </div>
+                  </li>
                   <li className="dropdown">
                     <div className="menu-rol">
                       <img className="imagen-user" src={usuario} alt="usuario" />
@@ -95,6 +130,15 @@ const Navbar = ({ rol, setRol }) => {
                   <li><Link to="/inicio-competidor" className="menu-item">Inicio </Link></li>
                   <li><Link to="/inscripcion" className="menu-item">Inscripción</Link></li>
                   <li><Link to="/pagos-competidor" className="menu-item">Pagos</Link></li>
+                  <li className="campanita">
+                    <div className="campana-notificacion" onClick={() => setMostrarNotifComp(!mostrarNotifComp)}>
+                      <img src="/src/image/campana-notificacion.svg" alt="Notificaciones" />
+                      {notificacionesComp.length > 0 && (
+                        <span className="notificacion-circulo">{notificacionesComp.length}</span>
+                      )}
+                    </div>
+                  </li>
+
                   <li className="dropdown">
                     <div className="menu-rol">
                       <img className="imagen-user" src={usuario} alt="usuario" />
@@ -113,7 +157,7 @@ const Navbar = ({ rol, setRol }) => {
 
               {rol === 'cajero' && (
                 <>
-                  <li><Link to="/inicio-cajero" className="menu-item">Inicio (Cajero)</Link></li>
+                  <li><Link to="/inicio-cajero" className="menu-item">Inicio</Link></li>
                   <li><Link to="/pagos" className="menu-item">Pagos</Link></li>
                   <li className="dropdown">
                     <div className="menu-rol">
@@ -142,6 +186,43 @@ const Navbar = ({ rol, setRol }) => {
 
 
         </div>
+        {mostrarNotificaciones && (
+          <div className="panel-notificaciones">
+            <h4>Solicitudes pendientes</h4>
+            <div className="lista-notificaciones">
+              {notificaciones.map(n => (
+                <div key={n.id} className="notificacion-item">
+                  <p><strong>{n.mensaje}</strong></p>
+                  <p className="detalle">{n.detalle}</p>
+                  <div className="acciones">
+                    <button className="rechazar" onClick={() => handleRechazar(n.id)}>Rechazar</button>
+                    <button className="aceptar" onClick={() => handleAceptar(n.id)}>Aceptar</button>
+                  </div>
+                </div>
+              ))}
+              {notificaciones.length === 0 && <p>No tienes solicitudes pendientes.</p>}
+            </div>
+          </div>
+        )}
+
+        {mostrarNotifComp && notificacionesComp.length > 0 && (
+          <div className="panel-notificaciones">
+            <h4>Notificaciones</h4>
+            <div className="lista-notificaciones">
+              {notificacionesComp.map((n) => (
+                <div key={n.id} className="notificacion-item">
+                  <p className="mensaje">{n.mensaje}</p>
+                  <button className="cerrar-notif" onClick={() =>
+                    setNotificacionesComp([])
+                  }>
+                    Cerrar
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
       
     </nav>
   );

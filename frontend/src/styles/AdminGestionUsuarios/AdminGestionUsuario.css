@@ -36,6 +36,7 @@
   border-radius: 6px;
   border: 1px solid #ccc;
   margin-bottom: 1rem;
+  cursor: pointer;
 }
 
 .gestion-usuario-grid {

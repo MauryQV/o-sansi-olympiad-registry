@@ -15,13 +15,13 @@
     background: #ffffff;
     width: 90vw;
     max-width: 600px;
-    padding: 1rem 1.5rem; /* Menos padding */
+    padding: 1rem 1.5rem; 
     border-radius: 10px;
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    max-height: 85vh; /* Reducimos el máximo */
+    max-height: 85vh; 
     overflow-y: auto;
     box-sizing: border-box;
   }
@@ -159,12 +159,25 @@
     background-color: #0066cc;
   }
   .error-campo {
-    color: red !important;/* ✅ Ahora sí rojo */
-    font-size: 0.75rem; /* ✅ Un tamaño legible */
+    color: red !important;
+    font-size: 0.75rem; 
     margin-top: 0.2rem;
     margin-bottom: 0.5rem;
     margin-left: 0.2rem;
     font-weight: 500;
   }
+  /*control de errores en el formulario*/
+  .input-error {
+    border: 1.5px solid red;
+    outline: none;
+  }
+  
+  .error-campo {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.8rem;
+  }
+  
   
   

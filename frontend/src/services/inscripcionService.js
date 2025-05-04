@@ -59,16 +59,17 @@ export const buscarTutores = async (nombre, area = null) => {
     }
 };
 
+
 /**
- * Realiza la inscripción de un competidor con sus tutores
+ Realiza la inscripción de un competidor con sus tutores
  * @param {Object} datosInscripcion - Datos de la inscripción
  * @returns {Promise} - Promesa con la respuesta del servidor
  */
 export const registrarInscripcion = async (datosInscripcion) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await api.post(
-            '/inscripciones/registrar', 
+        const response = await axios.post(
+            `${API_URL}/inscripciones/registrar`, 
             datosInscripcion,
             { headers: { Authorization: token } }
         );

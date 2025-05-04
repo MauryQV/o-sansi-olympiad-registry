@@ -9,7 +9,7 @@ import RegistrarTutores from "./components/RegistrarTutores.jsx";
 import RegistroUsuario from "./components/RegistroUsuario.jsx";
 import Pagos from "./components/PagosCompetidor/Pagos.jsx";
 import DetallePago from "./components/PagosCompetidor/DetallePago.jsx";
-import AdminGestionUsuario from "./components/AdminGestionUsuario.jsx";
+import AdminGestionUsuario from './components/AdminGestionUsuarios/AdminGestionUsuario.jsx';
 import RegistroCompetidores from "./components/InscripcionCompetidor/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/InscripcionCompetidor/FormularioInscripcion.jsx";
 import Reportes from "./components/reportes/Reportes.jsx";
@@ -20,6 +20,10 @@ import InicioTutor from "./components/InicioTutor.jsx";
 import InicioCajero from "./components/InicioCajero.jsx";
 import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
 import GestionUsuarios from "./components/admin/GestionUsuarios.jsx";
+import Inicio from "./components/Inicio.jsx";
+import Areas from "./components/AreasInicio.jsx";
+import Acercade from "./components/AcercaDe.jsx";
+
 
 function App() {
   const [rol, setRol] = useState(() => localStorage.getItem("rol"));
@@ -35,12 +39,13 @@ function App() {
   return (
     <Router>
       <Navbar rol={rol} setRol={setRol} />
-      <div className="container mx-auto p-4">
+      <div>
         <Routes>
-          <Route path="/" element={<h2>Bienvenido a la aplicación</h2>} />
+          <Route path="/" element={<Inicio />} />
+          <Route path="/areas" element={<Areas />} />
           <Route path="/inscripciones" element={<RegistroUsuario />} />
           <Route path="/disciplinas" element={<HistorialConvocatorias />} />
-          <Route path="/acerca" element={<h2>Acerca de nosotros.</h2>} />
+          <Route path="/acerca" element={<Acercade />} />
           <Route path="/login" element={<Login setRol={setRol} />} />
           <Route
             path="/inicio-admin"

@@ -1,13 +1,13 @@
 // src/components/Usuarios.jsx
 import React, { useState } from 'react';
-import '../styles/AdminGestionUsuario.css';
+import '../../styles/AdminGestionUsuarios/AdminGestionUsuario.css';
 import { Edit2, Trash2, User } from 'lucide-react';
 import ModalNuevoUsuario from './ModalNuevoUsuario';
 import ModalEditarUsuario from './ModalEditarUsuario';
-import lapizEditar from '../image/editarLapiz.svg'; 
-import borrarUsuario from '../image/borrarUsuario.svg';
+import lapizEditar from '../../image/editarLapiz.svg'; 
+import borrarUsuario from '../../image/borrarUsuario.svg';
 import ModalEliminarUsuario from './ModalEliminarUsuario';
-import { actualizarUsuarioEnLista } from '../utils/actualizarUsuario';
+import { actualizarUsuarioEnLista } from '../../utils/actualizarUsuario';
 
 const usuariosEjemplo = [
   {
@@ -17,7 +17,7 @@ const usuariosEjemplo = [
     rol: 'Administrador',
     telefono: '77712345',
     estado: 'Activo',
-    contraseña: 'abc@1Aavav'
+    contraseña: '9388259'
   },
   {
     id: 2,
@@ -26,7 +26,7 @@ const usuariosEjemplo = [
     rol: 'Cajero',
     telefono: '77723456',
     estado: 'Activo',
-    contraseña: 'Luis@Flores1'
+    contraseña: '9388258'
   },
   {
     id: 3,
@@ -35,7 +35,7 @@ const usuariosEjemplo = [
     rol: 'Tutor',
     telefono: '77734567',
     estado: 'Activo',
-    contraseña: 'Alejandra@Sandoval1'
+    contraseña: '9388245'
   },
   {
     id: 4,
@@ -44,7 +44,7 @@ const usuariosEjemplo = [
     rol: 'Tutor',
     telefono: '77745678',
     estado: 'Activo',
-    contraseña: 'Pedro@Perez1'
+    contraseña: '923332422-A'
   }
 ];
 
@@ -70,8 +70,12 @@ const Usuarios = () => {
   const agregarUsuario = (nuevoUsuario) => {
     setUsuarios([...usuarios, { id: Date.now(), ...nuevoUsuario, estado: 'Activo' }]);
   };
+//filtro porr rol
+const [filtroRol, setFiltroRol] = useState('Todos');
 
-
+const usuariosFiltrados = filtroRol === 'Todos'
+  ? usuarios
+  : usuarios.filter(usuario => usuario.rol === filtroRol);
 
   return (
     <div className="gestion-usuario">
@@ -88,13 +92,18 @@ const Usuarios = () => {
       </div>
       
       <div className="gestion-usuarios-header">
-        <select>
-          <option>Todos los roles</option>
+        <select value={filtroRol} onChange={(e) => setFiltroRol(e.target.value)}>
+          <option value="Todos">Todos los roles</option>
+          <option value="Administrador">Administrador</option>
+          <option value="Cajero">Cajero</option>
+          <option value="Tutor">Tutor</option>
+          <option value="Competidor">Competidor</option>
         </select>
       </div>
+      
 
       <div className="gestion-usuario-grid">
-        {usuarios.map(usuario => (
+        {usuariosFiltrados.map(usuario => (
           <div key={usuario.id} className="gestion-usuario-card">
             <div className="gestion-usuario-inicio-dato">
               <User size={16} /> {usuario.nombre}
