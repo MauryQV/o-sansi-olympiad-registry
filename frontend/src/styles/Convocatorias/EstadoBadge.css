@@ -1,0 +1,53 @@
+.estado-badge {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 8px;
+  font-weight: 600;
+  width: fit-content;
+  margin-top: 0.2rem;
+  display: inline-block;
+}
+
+/* Estados normalizados */
+.estado-badge.borrador {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.estado-badge.en-inscripcion,
+.estado-badge.en-inscripción {
+  background-color: #007bff;
+  color: white;
+}
+
+.estado-badge.en-competencia {
+  background-color: orange;
+  color: white;
+}
+
+.estado-badge.finalizada {
+  background-color: #d3d3d3;
+  color: #333;
+}
+
+/* Versiones en mayúsculas */
+.estado-badge.BORRADOR {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.estado-badge.EN-INSCRIPCION,
+.estado-badge.EN-INSCRIPCIÓN {
+  background-color: #007bff;
+  color: white;
+}
+
+.estado-badge.EN-COMPETENCIA {
+  background-color: orange;
+  color: white;
+}
+
+.estado-badge.FINALIZADA {
+  background-color: #d3d3d3;
+  color: #333;
+}

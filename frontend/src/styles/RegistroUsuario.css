@@ -25,7 +25,7 @@ body {
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.08);
-  width: 720px; /* Aumentado */
+  width: 720px; 
   max-width: 95%;
 }
 
@@ -167,12 +167,3 @@ body {
   border: 1px solid red;
 }
 
-.registro-btn.cancelar {
-  background-color: #ccc;
-  color: #333;
-  margin-top: 10px;
-}
-
-.registro-btn.cancelar:hover {
-  background-color: #bbb;
-}

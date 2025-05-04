@@ -4,13 +4,20 @@
     display: flex;
     align-items: center;         /* Centra verticalmente */
     justify-content: center;     /* Centra horizontalmente */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
   }
   .link-pagina {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    padding-left: 30px;
+    padding-right: 64px;
    
     margin:0 ;
   }
@@ -80,19 +87,70 @@ h3{
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     text-decoration: none;
   }
+  /*para salir */
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
   
   .menu-rol {
-    font-size: 20px;
-    color:#000;
     display: flex;
-    align-items: center; /* Alinea la imagen y el texto verticalmente */
-    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-    text-decoration: none;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    font-family: 'Comfortaa', cursive;
+    
   }
-
+  
   .menu-rol:hover {
     color: #0284C7;
+    
   }
+  
+  .rol-nombre {
+    font-weight: 500;
+  }
+  
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    min-width: 140px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    z-index: 1000;
+    padding: 0.5rem 0;
+    font-family: 'Comfortaa', cursive;
+  }
+  
+  .dropdown-menu li {
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap; 
+  }
+  
+  .dropdown-menu li:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+
+  .cerrar-sesion:hover{
+    color: #0284C7;
+  }
+  
+  .imagen-user {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+  }
+  
 
   .menu-item img {
     margin-right: 8px; /* Espaciado entre la imagen y el texto */
@@ -107,25 +165,27 @@ h3{
   
   .btn-login{
     background-color: #fff;
-    border: none;
-    border-radius: 5px;
+    height: 30px;
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    padding-top: 4px;
+    padding-left: 25px;
+    padding-right: 25px;
     cursor: pointer;
     color: #000;
-    font-weight: bold;
+    font-weight: normal;
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.6); /* sombra fuerte */
     transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
   .btn-registrarse {
+    height: 30px;
     background-color: #0284C7;
-    border: none;
-    border-radius: 5px;
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    padding-top: 4px;
+    padding-left: 30px;
+    padding-right: 30px;
     cursor: pointer;
     color: white;
-    font-weight: bold;
+    font-weight: normal;
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.6); /* sombra fuerte */
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 

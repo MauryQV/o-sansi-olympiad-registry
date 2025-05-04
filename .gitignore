@@ -2,4 +2,6 @@ node_modules
 .env
 .env.local
 .env.production
-supabase.exe
+supabase.exe.qodo/
+.qodo/
+.qodo
