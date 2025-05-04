@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-// módulo reportes del administrador
 export const useReporteInscripciones = () => {
   const [estadoFiltro, setEstadoFiltro] = useState('');
   const [areaFiltro, setAreaFiltro] = useState('');
@@ -8,6 +7,7 @@ export const useReporteInscripciones = () => {
   const [areas, setAreas] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const [filtrosAplicados, setFiltrosAplicados] = useState(false);
 
   useEffect(() => {
     // Datos de prueba
@@ -37,6 +37,11 @@ export const useReporteInscripciones = () => {
     setAreas(mockAreas);
   }, []);
 
+  const aplicarFiltrosManual = () => {
+    setFiltrosAplicados(true);
+    setCurrentPage(1);
+  };
+
   const filtrar = () => {
     return inscripciones.filter(i =>
       (estadoFiltro === '' || i.estado === estadoFiltro) &&
@@ -47,13 +52,10 @@ export const useReporteInscripciones = () => {
   const limpiar = () => {
     setEstadoFiltro('');
     setAreaFiltro('');
+    setFiltrosAplicados(false);
   };
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [estadoFiltro, areaFiltro]);
-
-  const datosFiltrados = filtrar();
+  const datosFiltrados = filtrosAplicados ? filtrar() : inscripciones;
   const totalPages = Math.ceil(datosFiltrados.length / itemsPerPage);
   const datosPagina = datosFiltrados.slice(
     (currentPage - 1) * itemsPerPage,
@@ -70,6 +72,7 @@ export const useReporteInscripciones = () => {
     limpiar,
     currentPage, setCurrentPage,
     totalPages,
-    itemsPerPage
+    aplicarFiltrosManual,
+    filtrosAplicados, setFiltrosAplicados
   };
 };

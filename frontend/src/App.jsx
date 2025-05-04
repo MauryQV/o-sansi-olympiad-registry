@@ -4,11 +4,9 @@ import Navbar from "./components/Navbar"; // Importamos la barra de navegación
 import Login from "./components/Login";
 import InicioAdmin from "./components/InicioAdmin";
 import TablaArea from "./components/Areas/TablaArea.jsx";
-import Disciplinas from "./components/Disciplinas.jsx";
-import RegistrarTutores from "./components/RegistrarTutores.jsx";
 import RegistroUsuario from "./components/RegistroUsuario.jsx";
 import Pagos from "./components/PagosCompetidor/Pagos.jsx";
-import DetallePago from './components/PagosCompetidor/DetallePago.jsx';
+import DetallePago from "./components/PagosCompetidor/DetallePago.jsx";
 import AdminGestionUsuario from './components/AdminGestionUsuarios/AdminGestionUsuario.jsx';
 import RegistroCompetidores from "./components/InscripcionCompetidor/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/InscripcionCompetidor/FormularioInscripcion.jsx";
@@ -19,6 +17,7 @@ import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
 import InicioTutor from "./components/InicioTutor.jsx";
 import InicioCajero from "./components/InicioCajero.jsx";
 import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
+//import GestionUsuarios from "./components/admin/GestionUsuarios.jsx";
 import Inicio from "./components/Inicio.jsx";
 import Areas from "./components/AreasInicio.jsx";
 import Acercade from "./components/AcercaDe.jsx";
@@ -64,13 +63,25 @@ function App() {
           />
           <Route path="/pagos-competidor" element={<Pagos />} />
           <Route path="/pagos/detalle/:boleta" element={<DetallePago />} />
-          <Route path="/usuarios" element={<AdminGestionUsuario setRol={setRol} />} />
+          <Route
+            path="/usuarios"
+            element={<AdminGestionUsuario setRol={setRol} />}
+          />
           <Route path="/reportes" element={<Reportes />} />
           <Route path="/pagos" element={<ValidadorPagos />} />
-          <Route path="/solicitudes" element={<SolicitudesTutoria setRol={setRol} />} />
-          <Route path="/inicio-tutor" element={<InicioTutor setRol={setRol} />} />
-          <Route path="/inicio-cajero" element={<InicioCajero setRol={setRol} />} />
-
+          <Route
+            path="/solicitudes"
+            element={<SolicitudesTutoria setRol={setRol} />}
+          />
+          <Route
+            path="/inicio-tutor"
+            element={<InicioTutor setRol={setRol} />}
+          />
+          <Route
+            path="/inicio-cajero"
+            element={<InicioCajero setRol={setRol} />}
+          />
+          
         </Routes>
       </div>
     </Router>

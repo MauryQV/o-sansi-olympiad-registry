@@ -1,128 +1,128 @@
 .validador-container {
-    font-family: 'Comfortaa', sans-serif;
-    background-color: #f6f8f9;
-    padding: 2rem;
-    min-height: 100vh;
-    color: #111;
-  }
-  
-  .validador-busqueda {
-    background-color: #fff;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin-bottom: 2rem;
-    border: 1px solid #e5e5e5;
-  }
-  
-  .validador-busqueda h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: 1.25rem;
-  }
-  
-  .validador-formulario {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    align-items: flex-end;
-  }
-  
-  .validador-formulario div {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .validador-formulario label {
-    font-size: 0.9rem;
-    margin-bottom: 0.4rem;
-    color: #333;
-  }
-  
-  .validador-formulario select,
-  .validador-formulario input {
-    padding: 0.6rem;
-    font-size: 0.95rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 220px;
-  }
-  
-  .btn-buscar,
-  .btn-resetear {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    background-color: #ede9fe;
-    border: none;
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-    font-size: 0.95rem;
-    transition: background-color 0.2s ease;
-  }
-  
-  .btn-buscar:hover {
-    background-color: #c7bdfc;
-  }
-  
-  .btn-resetear {
-    background-color: #f3f4f6;
-  }
-  
-  .btn-resetear:hover {
-    background-color: #d1d5db;
-  }
-  
-  .validador-tabla {
-    background-color: #fff;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    border: 1px solid #e5e5e5;
-  }
-  
-  .validador-tabla h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: 1.25rem;
-  }
-  
-  .validador-tabla table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-  }
-  
-  .validador-tabla th,
-  .validador-tabla td {
-    text-align: left;
-    padding: 0.75rem;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .validador-tabla th {
-    color: #666;
-    font-weight: 600;
-  }
-  
-  .validador-tabla td {
-    color: #222;
-  }
-  
-  .btn-validar {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .btn-validar:hover {
-    background-color: #3c9742;
-  }
-  
+  font-family: 'Comfortaa', sans-serif;
+  background-color: #f6f8f9;
+  padding: 2rem;
+  min-height: 100vh;
+  color: #111;
+}
+
+.validador-busqueda {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  border: 1px solid #e5e5e5;
+}
+
+.validador-busqueda h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.validador-formulario {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.validador-formulario div {
+  display: flex;
+  flex-direction: column;
+}
+
+.validador-formulario label {
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  color: #333;
+}
+
+.validador-formulario select,
+.validador-formulario input {
+  padding: 0.6rem;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 565px;
+}
+
+.btn-buscar,
+.btn-resetear {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #b0a1f3;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+
+}
+
+.btn-buscar:hover {
+  background-color: #2f17a6;
+}
+
+.btn-resetear {
+  background-color: #f3f4f6;
+}
+
+.btn-resetear:hover {
+  background-color: #d1d5db;
+}
+
+.validador-tabla {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e5e5;
+}
+
+.validador-tabla h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.validador-tabla table {
+  width: 113%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.validador-tabla th,
+.validador-tabla td {
+  text-align: left;
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.validador-tabla th {
+  color: #050101;
+  font-weight: 600;
+}
+
+.validador-tabla td {
+  color: #222;
+}
+
+.btn-validar {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-validar:hover {
+  background-color: #3c9742;
+}
