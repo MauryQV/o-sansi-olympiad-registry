@@ -65,16 +65,39 @@ export const useFormularioInscripcion = (convocatoriaId) => {
         setCargando(true);
         const data = await obtenerInfoAcademica(convocatoriaId);
         
-        setAreasDisponibles(data.areas.map(a => a.nombre_area));
+        console.log("Datos recibidos:", data);
         
+        if (!data || !data.areas || !data.grados || !data.niveles) {
+          console.error('Estructura de datos académicos incorrecta:', data);
+          throw new Error('La estructura de datos académicos es incorrecta');
+        }
+        
+        // Extraer y procesar áreas
+        const nombreAreas = data.areas.map(a => a.nombre_area);
+        setAreasDisponibles(nombreAreas.length > 0 ? nombreAreas : []);
+        console.log("Áreas disponibles:", nombreAreas);
+        
+        // Crear mapa de categorías por área
         const categoriasMap = {};
         data.areas.forEach(area => {
-          categoriasMap[area.nombre_area] = area.categorias.map(c => c.nombre_categoria);
+          if (area.categorias && Array.isArray(area.categorias)) {
+            categoriasMap[area.nombre_area] = area.categorias.map(c => c.nombre_categoria);
+          } else {
+            categoriasMap[area.nombre_area] = [];
+          }
         });
         setCategoriasPorArea(categoriasMap);
+        console.log("Categorías por área:", categoriasMap);
         
-        setGradosDisponibles(data.grados.map(g => g.nombre_grado));
-        setNivelesDisponibles(data.niveles.map(n => n.nombre_nivel));
+        // Extraer grados y niveles
+        const nombresGrados = data.grados.map(g => g.nombre_grado);
+        const nombresNiveles = data.niveles.map(n => n.nombre_nivel);
+        
+        setGradosDisponibles(nombresGrados.length > 0 ? nombresGrados : []);
+        setNivelesDisponibles(nombresNiveles.length > 0 ? nombresNiveles : []);
+        
+        console.log("Grados disponibles:", nombresGrados);
+        console.log("Niveles disponibles:", nombresNiveles);
       } catch (error) {
         console.error('Error cargando información académica:', error);
         Swal.fire({
@@ -97,6 +120,7 @@ export const useFormularioInscripcion = (convocatoriaId) => {
     const cargarTutores = async () => {
       try {
         const tutores = await obtenerTutoresDisponibles();
+        console.log("Tutores disponibles:", tutores);
         setTutoresDisponibles(tutores);
       } catch (error) {
         console.error('Error cargando tutores:', error);
@@ -110,7 +134,13 @@ export const useFormularioInscripcion = (convocatoriaId) => {
 
   // Actualizar categorías disponibles cuando cambia el área
   useEffect(() => {
-    setCategoriasDisponibles(categoriasPorArea[area] || []);
+    if (area && categoriasPorArea[area]) {
+      setCategoriasDisponibles(categoriasPorArea[area]);
+      console.log("Categorías actualizadas para área", area, ":", categoriasPorArea[area]);
+    } else {
+      setCategoriasDisponibles([]);
+      console.log("No hay categorías disponibles para el área:", area);
+    }
   }, [area, categoriasPorArea]);
 
   // Buscar tutores cuando cambia el texto de búsqueda
@@ -118,7 +148,9 @@ export const useFormularioInscripcion = (convocatoriaId) => {
     const buscarTutoresAsync = async () => {
       if (nuevoTutor.length >= 3) {
         try {
+          console.log("Buscando tutores:", nuevoTutor, areaTutorSeleccionada);
           const tutoresEncontrados = await buscarTutores(nuevoTutor, areaTutorSeleccionada || null);
+          console.log("Tutores encontrados:", tutoresEncontrados);
           setTutoresEncontrados(tutoresEncontrados);
         } catch (error) {
           console.error('Error buscando tutores:', error);
@@ -133,15 +165,20 @@ export const useFormularioInscripcion = (convocatoriaId) => {
   }, [nuevoTutor, areaTutorSeleccionada]);
 
   const agregarTutor = () => {
-    if (nuevoTutor && areaTutorSeleccionada && tutores.length < 3) {
-      const tutor = tutoresEncontrados.find(t => t.nombre === nuevoTutor && t.area === areaTutorSeleccionada);
-      const duplicado = tutores.some(t => t.nombre === nuevoTutor);
+    if (nuevoTutor && tutores.length < 3) {
+      // Buscar el tutor en los resultados encontrados (puede haber o no un área seleccionada)
+      const tutorEncontrado = tutoresEncontrados.find(t => 
+        t.nombre === nuevoTutor && 
+        (!areaTutorSeleccionada || t.area === areaTutorSeleccionada)
+      );
+      
+      const duplicado = tutores.some(t => t.id === (tutorEncontrado?.id || ''));
 
-      if (!tutor) {
+      if (!tutorEncontrado) {
         Swal.fire({ 
           icon: 'error', 
           title: 'Tutor no válido', 
-          text: 'El tutor no está registrado.' 
+          text: 'El tutor no está registrado o no coincide con el área seleccionada.' 
         });
       } else if (duplicado) {
         Swal.fire({ 
@@ -150,7 +187,7 @@ export const useFormularioInscripcion = (convocatoriaId) => {
           text: 'Este tutor ya fue añadido.' 
         });
       } else {
-        setTutores([...tutores, tutor]);
+        setTutores([...tutores, tutorEncontrado]);
         setNuevoTutor('');
         setAreaTutorSeleccionada('');
       }
@@ -188,13 +225,23 @@ export const useFormularioInscripcion = (convocatoriaId) => {
       try {
         setCargando(true);
         
+        // Buscar el ID del área seleccionada
+        const areaSeleccionada = await obtenerInfoAcademica(convocatoriaId);
+        const areaId = areaSeleccionada.areas.find(a => a.nombre_area === area)?.id;
+        
+        if (!areaId) {
+          throw new Error('No se pudo obtener el ID del área seleccionada');
+        }
+        
         const datosInscripcion = {
           convocatoria_id: convocatoriaId,
-          area_id: areasDisponibles.indexOf(area) + 1, // Ajustar según la estructura real del backend
+          area_id: areaId,
           grado,
           nivel,
           tutores: tutores.map(t => t.id)
         };
+        
+        console.log("Enviando datos de inscripción:", datosInscripcion);
         
         const resultado = await registrarInscripcion(datosInscripcion);
         
