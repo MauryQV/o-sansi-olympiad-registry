@@ -44,26 +44,26 @@ const DetallePago = () => {
   return (
     <div className="detallepago-container">
       <div className="detallepago-header">
-        <h2>Detalles de Pago</h2>
-        <button className="detallepago-volver" onClick={volver}>Volver</button>
+        <h2><b>Detalles de Pago</b></h2>
+        <button className="detallepago-volver" onClick={volver}><b>Volver</b></button>
       </div>
 
       <div className="detallepago-tarjeta">
         <div className="detallepago-info">
           <div>
-            <h3>Boleta de Pago: {boleta}</h3>
+            <h3><b>Boleta de Pago: {boleta}</b></h3>
             <p className="detallepago-estado-texto">Pendiente de Pago</p>
             <br />
             <p className="detallepago-estado-texto">Competidor</p>
-            <p><strong>{nombreCompetidor}</strong></p>
+            <p><strong><b>Competidor {nombreCompetidor}</b></strong></p>
             <p className="detallepago-estado-texto">CI: {ci}</p>
             <br />
             <p className="detallepago-estado-texto">Monto</p>
             <span className="detallepago-monto">Bs. {monto.toFixed(2)}</span>
           </div>
-          <div>
+          <div className="detalles-de-detalles-pago">
             <p>Detalles</p>
-            <p><b>Área:</b> {area}</p>
+            <p className="detalle-area"><b>Área: {area}</b></p>
             <p><b>Emisión:</b> {fechaEmision}</p>
             <p><b>Estado:</b><br/><span className="detallepago-estado">{estado}</span></p>
           </div>
@@ -98,7 +98,7 @@ const DetallePago = () => {
       </div>
 
       <div className="detallepago-pago">
-        <h3>Realizar Pago</h3>
+        <h3><b>Realizar Pago</b></h3>
         <p className="detallepago-sub">Seleccione su método de pago preferido</p>
         <div className="detallepago-metodos">
           <button

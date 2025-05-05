@@ -121,9 +121,9 @@ const ModalEditarUsuario = ({ usuario, onClose, onActualizarUsuario }) => {
             <label htmlFor="activo">Usuario activo</label>
           </div>
 
-          <div className="modal-botones">
-            <button type="button" className="btn-cancelar" onClick={onClose}>Cancelar</button>
-            <button type="submit" className="btn-crear">Actualizar</button>
+          <div className="modales-botones-nuevo-usuario">
+            <button type="button" className="boton-cancelar-usuario-nuevo" onClick={onClose}>Cancelar</button>
+            <button type="submit" className="boton-crear-usuario-nuevo ">Actualizar</button>
           </div>
         </form>
       </div>

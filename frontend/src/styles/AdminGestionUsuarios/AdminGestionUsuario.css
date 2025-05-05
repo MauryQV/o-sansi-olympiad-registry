@@ -5,6 +5,7 @@
 }
 
 .gestion-boton {
+  font-size: 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,7 +13,7 @@
 }
 
 .boton-nuevo-usuario {
-  background-color: #007bff;
+  background-color: #0284C7;
   color: white;
   border: none;
   padding: 0.4rem 1.2rem;
@@ -44,29 +45,52 @@
   flex-wrap: wrap;
   gap: 2rem;
   justify-content: flex-start;
-
-
+  padding-inline: 1.5rem;         
+  box-sizing: border-box
 }
 
 .gestion-usuario-card {
   background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
+  border-radius: 12px; 
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); 
+  border: 1px solid rgba(0, 0, 0, 0.12); 
+  padding: 1.8rem;
   width: 28rem;
-  flex: 0 0 auto; /* no se expande, no se contrae */
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: normal;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.usuario-de-cada-tar{
+  color:#999999;
+}
+.nombres-con-icono{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0; 
+  flex-grow: 1;
+  overflow: hidden;
+  
+}
+.nombre-usuario-texto {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .gestion-usuario-inicio-dato {
   display: flex;
-  justify-content: space-between;
+  width: 100%;
+  justify-content: space-between; 
   align-items: center;
+  font-size: 1.125rem;
   margin-bottom: 0.6rem;
   font-weight: 600;
 }
@@ -77,8 +101,20 @@
   margin: 0.3rem 0;
   gap: 0.5rem;
   white-space: nowrap;
+  color: #23263D;
+}
+.correo-usuario-entre-iconos{
+  display: inline-block;
+  max-width: 12rem;       
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
 }
 
+.gestion-usuario-dato span{
+  font-size: 1rem;
+}
 .gestion-usuario-dato span:last-child {
   max-width: 60%;
   text-align: right;
@@ -99,17 +135,18 @@
 }
 
 .tag-rol {
-  background-color: #0ea5e9;
+  background-color: #0284C7;
 }
 
 .tag-estado {
-  background-color: #8b5cf6;
+  background-color: #6542FF;
 }
 
 .acciones {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.8rem;
   cursor: pointer;
+  flex-shrink: 0;
 }
 /*icocnos*/
 .icono-editar {
