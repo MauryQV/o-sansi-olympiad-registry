@@ -1,3 +1,4 @@
+// src/components/reportes/Reportes.jsx
 import React from 'react';
 import '../../styles/reportes/Reportes.css';
 import { Download } from 'lucide-react';
