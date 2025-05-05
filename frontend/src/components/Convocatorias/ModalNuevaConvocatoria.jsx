@@ -110,6 +110,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
     <div className="modal-overlay">
       <div className="modal-convocatoria">
         <h3>Nueva Convocatoria</h3>
+        <p>Complete la información para crear una convocatoria</p>
         <form className="modal-form" onSubmit={manejarSubmit}>
           
           {/* Nombre */}
@@ -159,7 +160,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
           {/* Fechas */}
           <div className="input-row">
             <div className="form-group">
-              <label>Fecha Inicio Inscripción *</label>
+              <label>Inicio Inscripción *</label>
               <input
                 type="date"
                 name="inscripcionInicio"
@@ -170,7 +171,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
               {errores.inscripcionInicio && <span className="error-text">{errores.inscripcionInicio}</span>}
             </div>
             <div className="form-group">
-              <label>Fecha Fin Inscripción *</label>
+              <label>Fin Inscripción *</label>
               <input
                 type="date"
                 name="inscripcionFin"
@@ -184,7 +185,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
 
           <div className="input-row">
             <div className="form-group">
-              <label>Fecha Inicio Pago *</label>
+              <label>Inicio Pago *</label>
               <input
                 type="date"
                 name="pagoInicio"
@@ -196,7 +197,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
             </div>
 
             <div className="form-group">
-              <label>Fecha Fin Pago *</label>
+              <label>Fin Pago *</label>
               <input
                 type="date"
                 name="pagoFin"
@@ -210,7 +211,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
 
           <div className="input-row">
             <div className="form-group">
-              <label>Fecha Inicio Competencia *</label>
+              <label>Inicio Competencia *</label>
               <input
                 type="date"
                 name="competenciaInicio"
@@ -222,7 +223,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
             </div>
 
             <div className="form-group">
-              <label>Fecha Fin Competencia *</label>
+              <label>Fin Competencia *</label>
               <input
                 type="date"
                 name="competenciaFin"

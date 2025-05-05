@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
+import { X, Check } from 'lucide-react';
 import '../styles/SolicitudesTutoria.css';
 
 const solicitudesIniciales = [
@@ -66,8 +67,15 @@ const SolicitudesTutoria = () => {
                 <td>
                   {s.estado === 'Pendiente' && (
                     <>
-                      <button className="btn-rechazar" onClick={() => actualizarEstado(s.id, 'Rechazada')}>Rechazar</button>
-                      <button className="btn-aceptar" onClick={() => actualizarEstado(s.id, 'Aceptada')}>Aceptar</button>
+                      <button className="btn-rechazar">
+                        <X size={16} style={{ marginRight: '0.4rem' }} />
+                        Rechazar
+                      </button>
+
+                      <button className="btn-aceptar">
+                        <Check size={16} style={{ marginRight: '0.4rem' }} />
+                        Aceptar
+                      </button>
                     </>
                   )}
                 </td>

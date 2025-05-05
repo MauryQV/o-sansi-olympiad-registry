@@ -122,23 +122,26 @@ const RegistroUsuario = () => {
             {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
 
-          <div className="registro-group">
-            <label>Área*</label>
-            <select
-              id="area"
-              value={data.area}
-              onChange={handleInputChange}
-              className={errors.area ? 'error' : ''}
-            >
-              <option value="">Seleccionar área</option>
-              <option value="Quimica">Quimica</option>
-              <option value="Fisica">Fisica</option>
-              <option value="Biologia">Biologia</option>
-              <option value="Informatica">Informatica</option>
-              <option value="Robotica">Robotica</option>
-            </select>
-            {errors.area && <span className="error-message">{errors.area}</span>}
-          </div>
+          {/* Sólo el tutor puede seleccionar un área */}
+          {userType === 'tutor' && (
+              <div className="registro-group">
+                <label>Área*</label>
+                <select
+                  id="area"
+                  value={data.area}
+                  onChange={handleInputChange}
+                  className={errors.area ? 'error' : ''}
+                  >
+                  <option value="">Seleccionar área</option>
+                  <option value="Quimica">Quimica</option>
+                  <option value="Fisica">Fisica</option>
+                  <option value="Biologia">Biologia</option>
+                  <option value="Informatica">Informatica</option>
+                  <option value="Robotica">Robotica</option>
+                </select>
+                {errors.area && <span className="error-message">{errors.area}</span>}
+              </div>
+            )}
 
           {/* Competidor tiene Departamento, Provincia y Colegio */}
           {userType === 'competidor' && (
