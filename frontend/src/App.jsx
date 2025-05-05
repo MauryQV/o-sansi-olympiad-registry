@@ -3,19 +3,26 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar"; // Importamos la barra de navegación
 import Login from "./components/Login";
 import InicioAdmin from "./components/InicioAdmin";
-import TablaArea from "./components/areas/TablaArea.jsx";
-import Disciplinas from "./components/Disciplinas.jsx";
-import RegistrarTutores from "./components/RegistrarTutores.jsx";
+import TablaArea from "./components/Areas/TablaArea.jsx";
 import RegistroUsuario from "./components/RegistroUsuario.jsx";
+import Pagos from "./components/PagosCompetidor/Pagos.jsx";
+import DetallePago from "./components/PagosCompetidor/DetallePago.jsx";
+import AdminGestionUsuario from './components/AdminGestionUsuarios/AdminGestionUsuario.jsx';
 import RegistroCompetidores from "./components/InscripcionCompetidor/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/InscripcionCompetidor/FormularioInscripcion.jsx";
-import Pagos from "./components/Pagos.jsx";
-import DetallePago from './components/DetallePago';
 import Reportes from "./components/reportes/Reportes.jsx";
 import HistorialConvocatorias from "./components/HistorialConvocatorias.jsx";
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
 import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
+import InicioTutor from "./components/InicioTutor.jsx";
+import InicioCajero from "./components/InicioCajero.jsx";
 import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
+//import GestionUsuarios from "./components/admin/GestionUsuarios.jsx";
+import Inicio from "./components/Inicio.jsx";
+import Areas from "./components/AreasInicio.jsx";
+import Acercade from "./components/AcercaDe.jsx";
+
+
 function App() {
   const [rol, setRol] = useState(() => localStorage.getItem("rol"));
 
@@ -30,26 +37,51 @@ function App() {
   return (
     <Router>
       <Navbar rol={rol} setRol={setRol} />
-      <div className="container mx-auto p-4">
+      <div>
         <Routes>
-          <Route path="/" element={<h2>Bienvenido a la aplicación</h2>} />
+          <Route path="/" element={<Inicio />} />
+          <Route path="/areas" element={<Areas />} />
           <Route path="/inscripciones" element={<RegistroUsuario />} />
           <Route path="/disciplinas" element={<HistorialConvocatorias />} />
-          <Route path="/acerca" element={<h2>Acerca de nosotros.</h2>} />
+          <Route path="/acerca" element={<Acercade />} />
           <Route path="/login" element={<Login setRol={setRol} />} />
-          <Route path="/inicio-admin" element={<InicioAdmin setRol={setRol} />} />
+          <Route
+            path="/inicio-admin"
+            element={<InicioAdmin setRol={setRol} />}
+          />
           <Route path="/areas-admin" element={<TablaArea setRol={setRol} />} />
-          <Route path="/convocatorias" element={<Convocatorias setRol={setRol} />} />
+          <Route
+            path="/convocatorias"
+            element={<Convocatorias setRol={setRol} />}
+          />
           <Route path="/registro" element={<RegistroUsuario />} />
           <Route path="/inicio-competidor" element={<RegistroCompetidores />} />
           <Route path="/inscripcion" element={<FormularioInscripcion />} />
+          <Route
+            path="/inscripcion/:convocatoriaId"
+            element={<FormularioInscripcion />}
+          />
           <Route path="/pagos-competidor" element={<Pagos />} />
           <Route path="/pagos/detalle/:boleta" element={<DetallePago />} />
+          <Route
+            path="/usuarios"
+            element={<AdminGestionUsuario setRol={setRol} />}
+          />
           <Route path="/reportes" element={<Reportes />} />
           <Route path="/pagos" element={<ValidadorPagos />} />
-          <Route path="/solicitudes" element={<SolicitudesTutoria setRol={setRol} />} />
-
-
+          <Route
+            path="/solicitudes"
+            element={<SolicitudesTutoria setRol={setRol} />}
+          />
+          <Route
+            path="/inicio-tutor"
+            element={<InicioTutor setRol={setRol} />}
+          />
+          <Route
+            path="/inicio-cajero"
+            element={<InicioCajero setRol={setRol} />}
+          />
+          
         </Routes>
       </div>
     </Router>

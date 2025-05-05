@@ -36,13 +36,15 @@ const FiltrosReporte = ({
     </div>
 
     <div className="reportes-minimal__acciones">
-      <button onClick={onFiltrar} className="primario">
-        <Filter size={16} style={{ marginRight: '6px' }} /> Filtrar
-      </button>
-      <button onClick={limpiar} className="secundario">
-        <RotateCcw size={16} style={{ marginRight: '6px' }} /> Restablecer
-      </button>
-    </div>
+  <button className="boton-con-icono boton-filtrar">
+    <Filter size={16} />
+    Filtrar
+  </button>
+  <button className="boton-con-icono boton-restablecer">
+    <RotateCcw size={16} />
+    Restablecer
+  </button>
+</div>
   </div>
 );
 

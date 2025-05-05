@@ -1,36 +1,71 @@
-
 import * as tutorService from '../services/tutorService.js';
+import prisma from '../config/prismaClient.js';
+import bcrypt from 'bcrypt';
+import { validarToken } from '../utils/jwtUtils.js';
 
-// Registrar tutor
+//registrar un nuevo tutor
 export const registrarTutor = async (req, res, next) => {
     try {
-        const tutorData = {
-            nombre: req.body.nombre,
-            apellido: req.body.apellido,
-            carnet_identidad: req.body.carnet_identidad,
-            correo_electronico: req.body.correo_electronico,
-            numero_celular: req.body.numero_celular,
-            area_id: req.body.area_id,
-        };
+        const { nombre, apellido, correo_electronico, carnet_identidad, numero_celular, area_id } = req.body;
 
-        const { tutor, credenciales } = await tutorService.crearTutor(tutorData);
+        // servicio para crear el tutor
+        const nuevoTutor = await tutorService.crearTutor({
+            nombre,
+            apellido,
+            correo_electronico,
+            carnet_identidad,
+            numero_celular,
+            area_id,
+        });
 
-        // Enviar credenciales al frontend para que las maneje (por ejemplo: enviarlas por email)
         res.status(201).json({
             mensaje: 'Tutor registrado exitosamente',
-            tutor,
-            credenciales,
+            tutor: nuevoTutor.tutor,
+            credenciales: nuevoTutor.credenciales, // Devolver credenciales (correo y contraseña)
         });
     } catch (error) {
-        console.error('Error en registrarTutor:', error.message);
-        next(error);
+        console.error('Error al registrar tutor:', error.message);
+        res.status(500).json({ error: 'Error en el servidor al registrar tutor' });
+    }
+};
+
+/**
+ * Obtiene todos los tutores disponibles para inscripción
+ */
+export const obtenerTutoresDisponibles = async (req, res) => {
+    try {
+        console.log("Obteniendo tutores disponibles");
+        const tutores = await prisma.tutor.findMany({
+            include: {
+                usuario: true,
+                area: true
+            }
+        });
+
+        const tutoresFormateados = tutores.map(tutor => ({
+            id: tutor.id,
+            nombre: `${tutor.usuario.nombre} ${tutor.usuario.apellido}`,
+            correo: tutor.usuario.correo_electronico,
+            telefono: tutor.numero_celular,
+            area: tutor.area.nombre_area
+        }));
+
+        res.status(200).json(tutoresFormateados);
+    } catch (error) {
+        console.error('Error al obtener tutores disponibles:', error);
+        res.status(500).json({ error: 'Error en el servidor al obtener tutores disponibles' });
     }
 };
 
 // Obtener todos los tutores
 export const obtenerTutores = async (req, res, next) => {
     try {
-        const tutores = await tutorService.getTutores();
+        const tutores = await prisma.tutor.findMany({
+            include: {
+                usuario: true,
+                area: true
+            }
+        });
 
         const respuesta = tutores.map(tutor => ({
             id: tutor.id,
@@ -39,19 +74,26 @@ export const obtenerTutores = async (req, res, next) => {
             nombre: tutor.usuario.nombre,
             apellido: tutor.usuario.apellido,
             correo_electronico: tutor.usuario.correo_electronico,
+            area: tutor.area.nombre_area
         }));
 
         res.status(200).json(respuesta);
     } catch (error) {
-        console.error('Error en obtenerTutores:', error.message);
-        next(error);
+        console.error('Error en obtenerTutores:', error);
+        res.status(500).json({ error: 'Error al obtener tutores' });
     }
 };
 
 // Obtener tutor por ID
 export const obtenerTutorPorId = async (req, res, next) => {
     try {
-        const tutor = await tutorService.getTutorById(req.params.id);
+        const tutor = await prisma.tutor.findFirst({
+            where: { id: req.params.id },
+            include: {
+                usuario: true,
+                area: true
+            }
+        });
 
         if (!tutor) {
             return res.status(404).json({ error: 'Tutor no encontrado' });
@@ -64,32 +106,103 @@ export const obtenerTutorPorId = async (req, res, next) => {
             nombre: tutor.usuario.nombre,
             apellido: tutor.usuario.apellido,
             correo_electronico: tutor.usuario.correo_electronico,
+            area: tutor.area.nombre_area
         });
     } catch (error) {
-        console.error('Error en obtenerTutorPorId:', error.message);
-        next(error);
+        console.error('Error en obtenerTutorPorId:', error);
+        res.status(500).json({ error: 'Error al obtener tutor por ID' });
     }
 };
 
-export const buscarTutores = async (req, res, next) => {
+/*export const buscarTutores = async (req, res) => {
     try {
-        const { nombre } = req.query;
+        const { nombre, area } = req.query;
 
-        if (!nombre || nombre.length < 2) {
-            return res.status(400).json({ error: 'Debe ingresar al menos 2 letras para buscar' });
+        if (!nombre || nombre.length < 3) {
+            return res.status(400).json({ error: 'Se requiere al menos 3 caracteres para la búsqueda' });
         }
 
-        const resultados = await tutorService.buscarTutoresPorNombre(nombre);
+        console.log("Buscando tutores con nombre:", nombre, "y área:", area || "cualquiera");
 
-        const formateado = resultados.map(t => ({
-            id: t.id,
-            nombre: t.usuario.nombre,
-            apellido: t.usuario.apellido,
+        // Construir filtro para la búsqueda usando OR con contains
+        let filtro = {
+            OR: [
+                {
+                    usuario: {
+                        nombre: {
+                            contains: nombre,
+                            mode: 'insensitive'
+                        }
+                    }
+                },
+                {
+                    usuario: {
+                        apellido: {
+                            contains: nombre,
+                            mode: 'insensitive'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // Si se especifica un área, filtrar por ella también
+        if (area && area !== 'null' && area !== 'undefined' && area !== '') {
+            console.log(`Filtrando por área específica: ${area}`);
+            filtro = {
+                AND: [
+                    filtro,
+                    {
+                        area: {
+                            nombre_area: {
+                                equals: area,
+                                mode: 'insensitive'
+                            }
+                        }
+                    }
+                ]
+            };
+        }
+
+        console.log("Filtro de búsqueda:", JSON.stringify(filtro));
+
+        const tutores = await prisma.tutor.findMany({
+            where: filtro,
+            include: {
+                usuario: true,
+                area: true
+            },
+            take: 10 // Limitar a 10 resultados
+        });
+
+        console.log(`Encontrados ${tutores.length} tutores`);
+
+        const tutoresFormateados = tutores.map(tutor => ({
+            id: tutor.id,
+            nombre: `${tutor.usuario.nombre} ${tutor.usuario.apellido}`,
+            correo: tutor.usuario.correo_electronico,
+            telefono: tutor.numero_celular,
+            area: tutor.area.nombre_area
         }));
 
-        res.status(200).json(formateado);
+        res.status(200).json(tutoresFormateados);
     } catch (error) {
-        console.error('Error en buscarTutores:', error.message);
-        next(error);
+        console.error('Error al buscar tutores:', error);
+        res.status(500).json({ error: 'Error en el servidor al buscar tutores' });
+    }
+};
+*/
+
+
+export const getSolicitudesPendientes = async (req, res) => {
+    try {
+        const usuarioId = req.user.id;
+
+        const solicitudes = await tutorService.obtenerSolicitudesPendientes(usuarioId);
+
+        res.status(200).json(solicitudes);
+    } catch (error) {
+        console.error('Error al obtener solicitudes pendientes:', error);
+        res.status(500).json({ error: error.message || 'Error al cargar solicitudes pendientes.' });
     }
 };

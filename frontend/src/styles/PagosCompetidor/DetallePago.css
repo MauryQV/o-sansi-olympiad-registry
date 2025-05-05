@@ -1,0 +1,205 @@
+/* src/styles/DetallePago.css */
+
+.detallepago-container {
+    padding: 40px 6%;
+    font-family: 'Comfortaa', sans-serif;
+    background-color: #f7f9fb;
+    color: #111;
+    min-height: 100vh;
+  }
+  
+  .detallepago-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .detallepago-header h2{
+    font-size: 1.8rem;
+  }
+  
+  .detallepago-volver {
+    background: none;
+    border: 1px solid #bbb;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  .detallepago-volver:hover {
+    background-color: #e0f2ff;
+    border-color: #007bff;
+    color: #007bff;
+  }
+  
+  .detallepago-tarjeta {
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+  }
+  
+  .detallepago-info {
+    display: flex;
+    justify-content: flex-start;
+    gap: 30rem; 
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .detalles-de-detalles-pago{
+    padding-top: 5.5rem;
+  }
+
+  .detalles-de-detalles-pago{
+    color:#666
+  }
+  .detalle-area{
+    color:black;
+    font-size: 1.3rem;
+  }
+  
+  
+  .detallepago-estado {
+    background-color: #F9EDA2;
+    color: #893F06;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+  
+  .detallepago-estado-texto {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .detallepago-monto  {
+    color: #166534;
+    font-weight: bold;
+  }
+  .imagen-descargar{
+    width: 1rem;
+  }
+  
+  .detallepago-acciones {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .detallepago-descargar {
+    background-color: #fff;
+    border: 1.5px solid #111;
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center; 
+    gap: 8px;
+    font-family: 'Comfortaa', sans-serif;
+  }
+  .detallepago-descargar:hover{
+    background-color: #e0f2ff;
+    border-color: #007bff;
+    color: #007bff;
+  }
+
+  .imagen-casa{
+    width: 1rem;
+  }
+  
+  .detallepago-pago {
+    margin-top: 30px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 24px;
+    border: 1px solid #dfe3e8;
+  }
+  .detallepago-pago h3{
+    font-size: 1.2rem;
+  }
+  
+  .detallepago-sub {
+    color: #666;
+    margin-bottom: 16px;
+  }
+  
+  .detallepago-metodos {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    background-color: #dee1e6; 
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+  .detallepago-metodos button {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    background-color: transparent;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Comfortaa', sans-serif;
+    color: #444;
+    transition: all 0.3s ease;
+  }
+  
+  .detallepago-metodos button.activo {
+    background-color: white;
+    color: black;
+    box-shadow: 0 0 0 1.5px #b4b4b4;
+  }
+
+  .detallepago-metodos button:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .detallepago-instrucciones {
+    background-color: #eaf5ff;
+    color: #1E40AF;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  /*qr css*/
+.detallepago-qr-img {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.detallepago-qr-texto {
+  text-align: center;
+  font-size: 15px;
+  margin-top: 10px;
+  color: #555;
+}
+
+.detallepago-btn-qr-confirmar {
+  background-color: #6542FF;
+  color: white;
+  border: none;
+  padding: 5px 17px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin: 15px auto 0;
+  display: block;
+  cursor: pointer;
+}
+
+.detallepago-btn-qr-confirmar:hover{
+  padding: 9px 21px;
+
+}
+  
