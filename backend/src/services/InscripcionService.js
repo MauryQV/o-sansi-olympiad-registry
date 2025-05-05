@@ -74,17 +74,22 @@ export const crearInscripcion = async ({
         )
     );
 
-    // apartado de notificaciones
+    // Parte simplificada para notificaciones - esto es lo que modificamos:
     for (const tutor of tutores) {
-        const noti = await crearNotificacion({
-            usuarioId: tutor.usuario_id,
-            tipo: 'solicitud',
-            mensaje: 'Tienes una nueva solicitud de inscripción para validar.'
-        });
+        // Obtener el ID de usuario del tutor para la notificación
+        const tutorUsuarioId = tutor.usuario_id;
 
-        const tutorSocketId = connectedUsers.get(tutor.usuario_id);
-        if (tutorSocketId) {
-            io.to(tutorSocketId).emit('notificacion:nueva', noti);
+        console.log(`Enviando notificación al tutor con usuario_id: ${tutorUsuarioId}`);
+
+        // Enviar directamente la notificación vía socket
+        const socketId = connectedUsers.get(tutorUsuarioId);
+        if (socketId) {
+            console.log(`Socket ID encontrado: ${socketId}, enviando notificación...`);
+            io.to(socketId).emit('notificacion:nueva', {
+                mensaje: 'Tienes una nueva solicitud de inscripción'
+            });
+        } else {
+            console.log(`No se encontró socket conectado para el usuario ${tutorUsuarioId}`);
         }
     }
 
@@ -94,6 +99,7 @@ export const crearInscripcion = async ({
         tutores_asignados: vinculos
     };
 };
+
 
 
 

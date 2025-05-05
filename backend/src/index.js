@@ -2,6 +2,7 @@ import express from 'express';
 import "dotenv/config";
 import cors from 'cors';
 import http from 'http';
+import morgan from 'morgan';
 import { Server } from 'socket.io';
 
 // Importar rutas
@@ -32,6 +33,7 @@ const io = new Server(server, {
 // Middleware
 app.use(express.json());
 app.use(cors());
+app.use(morgan('dev'));
 
 // Rutas
 app.use('/api', authRoutes);
