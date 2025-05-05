@@ -160,7 +160,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
           {/* Fechas */}
           <div className="input-row">
             <div className="form-group">
-              <label>Inicio Inscripción *</label>
+              <label>Fecha Inicio Inscripción *</label>
               <input
                 type="date"
                 name="inscripcionInicio"
@@ -171,7 +171,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
               {errores.inscripcionInicio && <span className="error-text">{errores.inscripcionInicio}</span>}
             </div>
             <div className="form-group">
-              <label>Fin Inscripción *</label>
+              <label>Fecha Fin Inscripción *</label>
               <input
                 type="date"
                 name="inscripcionFin"
@@ -185,7 +185,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
 
           <div className="input-row">
             <div className="form-group">
-              <label>Inicio Pago *</label>
+              <label>Fecha Inicio Pago *</label>
               <input
                 type="date"
                 name="pagoInicio"
@@ -197,7 +197,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
             </div>
 
             <div className="form-group">
-              <label>Fin Pago *</label>
+              <label>Fecha Fin Pago *</label>
               <input
                 type="date"
                 name="pagoFin"
@@ -211,7 +211,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
 
           <div className="input-row">
             <div className="form-group">
-              <label>Inicio Competencia *</label>
+              <label>Fecha Inicio Competencia *</label>
               <input
                 type="date"
                 name="competenciaInicio"
@@ -223,7 +223,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
             </div>
 
             <div className="form-group">
-              <label>Fin Competencia *</label>
+              <label>Fecha Fin Competencia *</label>
               <input
                 type="date"
                 name="competenciaFin"
