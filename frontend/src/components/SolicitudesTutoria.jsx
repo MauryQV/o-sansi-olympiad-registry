@@ -67,12 +67,12 @@ const SolicitudesTutoria = () => {
                 <td>
                   {s.estado === 'Pendiente' && (
                     <>
-                      <button className="btn-rechazar">
+                      <button className="btn-rechazar" onClick={() => actualizarEstado(s.id, 'Rechazada')}>
                         <X size={16} style={{ marginRight: '0.4rem' }} />
                         Rechazar
                       </button>
 
-                      <button className="btn-aceptar">
+                      <button className="btn-aceptar" onClick={() => actualizarEstado(s.id, 'Aceptada')}>
                         <Check size={16} style={{ marginRight: '0.4rem' }} />
                         Aceptar
                       </button>
