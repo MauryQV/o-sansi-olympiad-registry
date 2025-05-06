@@ -1,0 +1,154 @@
+/* Reset básico */
+html,
+body,
+#root {
+    height: 100%;
+    margin: 0;
+    padding-top: 40px;
+    font-family: 'Comfortaa', sans-serif;
+    background: #F4F8FA;
+}
+
+/* Contenedor principal */
+.historial-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.historial-contenedor {
+    flex: 1;
+    padding: 2rem;
+    max-width: 3000px;
+    margin: 0 auto;
+}
+
+/* Título y subtítulo */
+.historial-titulo {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+    color: #111;
+}
+
+.historial-subtitulo {
+    text-align: center;
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+/* Card de convocatoria */
+.historial-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 5px;
+    margin-bottom: 3rem;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    min-height: 140px;
+}
+
+.historial-barra-anio {
+    width: 80px;
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+.historial-card-contenido {
+    flex-grow: 1;
+    padding: 1rem 1.5rem;
+}
+
+.historial-nombre {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #222;
+}
+
+.historial-fechas {
+    display: flex;
+    gap: 3rem;
+    margin-top: 4rem;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+.historial-fecha {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.historial-icono {
+    color: rgb(24, 143, 212);
+    /* color rojo para los íconos */
+}
+
+/* Estados */
+.historial-estado {
+    margin-right: 1rem;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.historial-estado.abierto {
+    background-color: #e3f9ed;
+    color: #28a745;
+}
+
+.historial-estado.finalizado {
+    background-color: #e9e9ec;
+    color: #5a5a5a;
+}
+
+/* Footer */
+.historial-footer {
+    width: 100%;
+    background-color: #0e1421;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+}
+
+.historial-footer-info {
+    max-width: 70%;
+    line-height: 1.6;
+}
+
+.historial-footer-logo {
+    text-align: right;
+}
+
+.historial-footer-logo p {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.historial-footer-icons {
+    width: 120px;
+    height: auto;
+    margin-top: 0.5rem;
+}
+
+/* Mensaje de carga (si lo dejas activado) */
+.historial-cargando {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 2rem;
+}
