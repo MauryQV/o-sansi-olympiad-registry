@@ -6,6 +6,7 @@ import ModalVisualizarConvocatoria from './ModalVisualizarConvocatoria';
 import ModalEditarConvocatoria from './ModalEditarConvocatoria';
 import ModalEliminarConvocatoria from './ModalEliminarConvocatoria';
 import { obtenerConvocatorias } from '../../services/convocatoriaService';
+import { obtenerConvocatoriaPorId } from '../../services/convocatoriaService';
 import '../../styles/Convocatorias/Convocatorias.css';
 
 const Convocatorias = () => {
@@ -29,12 +30,21 @@ const Convocatorias = () => {
     }
   };
 
-  const handleVer = (convocatoria) => {
-    setConvocatoriaSeleccionada(convocatoria);
+  const handleVer = async (convocatoria) => {
+  try {
+    const convocatoriaCompleta = await obtenerConvocatoriaPorId(convocatoria.id); // Asegúrate de usar el servicio actualizado
+    setConvocatoriaSeleccionada({
+      ...convocatoriaCompleta,
+      categorias: convocatoriaCompleta.Categoria_convocatoria?.map(c => c.categoria) || [],
+      areasSeleccionadas: convocatoriaCompleta.Area_convocatoria?.map(a => a.area.nombre_area) || [],
+    });
     setMostrarVisual(true);
-  };
+  } catch (error) {
+    console.error('Error al cargar la convocatoria:', error);
+  }
+};
 
-  const handleEditar = (convocatoria) => {
+  const handleEditar = async (convocatoria) => {
     if (convocatoria.estado === 'FINALIZADA') {
       Swal.fire({
         icon: 'warning',
@@ -43,9 +53,15 @@ const Convocatorias = () => {
       });
       return;
     }
-    setConvocatoriaEditando(convocatoria);
-    setMostrarEditar(true);
+    try {
+      const convocatoriaCompleta = await obtenerConvocatoriaPorId(convocatoria.id);
+      setConvocatoriaEditando(convocatoriaCompleta);
+      setMostrarEditar(true);
+    } catch (error) {
+      Swal.fire('Error', 'No se pudo cargar la convocatoria', 'error');
+    }
   };
+
 
   const handleEliminar = (convocatoria) => {
     if (convocatoria.estado !== 'BORRADOR') {

@@ -101,11 +101,9 @@ export const crearInscripcion = async ({
 };
 
 
-
-
-export const validarInscripcion = async ({ tutorId, inscripcionId, acepta }) => {
+export const aceptarInscripcion = async ({ inscripcion_id, tutorId }) => {
     const inscripcionTutor = await prisma.inscripcion_tutor.findFirst({
-        where: { inscripcion_id: inscripcionId, tutor_id: tutorId },
+        where: { inscripcion_id, tutor_id: tutorId },
         include: { inscripcion: true }
     });
 
@@ -120,45 +118,84 @@ export const validarInscripcion = async ({ tutorId, inscripcionId, acepta }) => 
     await prisma.inscripcion_tutor.update({
         where: { id: inscripcionTutor.id },
         data: {
-            aprobado: acepta,
-            fecha_aprobacion: new Date()
+            aprobado: true,
+            fecha_aprobacion: new Date(),
+            motivo_rechazo_id: null
         }
     });
 
-    if (!acepta) {
-        return { mensaje: 'Solicitud rechazada.' };
-    }
-
-    const otros = await prisma.inscripcion_tutor.findMany({
-        where: { inscripcion_id: inscripcionId }
-    });
-
+    const otros = await prisma.inscripcion_tutor.findMany({ where: { inscripcion_id } });
     const todosAprobados = otros.every(t => t.aprobado === true);
 
     if (todosAprobados) {
         await prisma.inscripcion.update({
-            where: { id: inscripcionId },
+            where: { id: inscripcion_id },
             data: { estado_inscripcion: 'aprobada' }
         });
 
-        const competidorId = inscripcionTutor.inscripcion.competidor_id;
-
-        const competidor = await prisma.competidor.findUnique({
-            where: { id: competidorId },
+        const { usuario } = await prisma.competidor.findUnique({
+            where: { id: inscripcionTutor.inscripcion.competidor_id },
             include: { usuario: true }
         });
 
         const noti = await crearNotificacion({
-            usuarioId: competidor.usuario.id,
+            usuarioId: usuario.id,
             tipo: 'estado',
             mensaje: 'Inscripción aprobada.'
         });
 
-        const socketId = connectedUsers.get(competidor.usuario.id);
+        const socketId = connectedUsers.get(usuario.id);
         if (socketId) {
             io.to(socketId).emit('notificacion:nueva', noti);
         }
     }
 
-    return { mensaje: 'Respuesta registrada correctamente.' };
+    return { mensaje: 'Solicitud aceptada correctamente.' };
+};
+
+
+export const rechazarInscripcion = async ({ inscripcion_id, tutorId, motivo_rechazo_id }) => {
+    const inscripcionTutor = await prisma.inscripcion_tutor.findFirst({
+        where: { inscripcion_id, tutor_id: tutorId },
+        include: { inscripcion: true }
+    });
+
+    if (!inscripcionTutor) {
+        throw new Error('No se encontro esta inscripción para este tutor.');
+    }
+
+    if (inscripcionTutor.aprobado !== false && inscripcionTutor.fecha_aprobacion) {
+        throw new Error('Esta solicitud ya fue respondida.');
+    }
+
+    if (!motivo_rechazo_id) {
+        throw new Error('Debes proporcionar un motivo de rechazo.');
+    }
+
+    await prisma.inscripcion_tutor.update({
+        where: { id: inscripcionTutor.id },
+        data: {
+            aprobado: false,
+            fecha_aprobacion: new Date(),
+            motivo_rechazo_id: motivo_rechazo_id
+        }
+    });
+
+    const { usuario } = await prisma.competidor.findUnique({
+        where: { id: inscripcionTutor.inscripcion.competidor_id },
+        include: { usuario: true }
+    });
+
+    const noti = await crearNotificacion({
+        usuarioId: usuario.id,
+        tipo: 'estado',
+        mensaje: 'Inscripción rechazada. Revisa el motivo asignado.'
+    });
+
+    const socketId = connectedUsers.get(usuario.id);
+    if (socketId) {
+        io.to(socketId).emit('notificacion:nueva', noti);
+    }
+
+    return { mensaje: 'Solicitud rechazada con motivo.' };
 };

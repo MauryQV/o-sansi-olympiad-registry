@@ -16,6 +16,17 @@ const CardConvocatoria = ({ data, onVer, onEditar, onEliminar }) => {
     return `${numAreas} áreas seleccionadas`;
   };
 
+  // Función para formatear fechas de manera segura
+  const formatDate = (dateStr) => {
+    if (!dateStr) return 'N/A';
+    try {
+      return dateStr.split('T')[0].split('-').reverse().join('/');
+    } catch (error) {
+      console.error('Error formateando fecha:', error);
+      return 'Fecha inválida';
+    }
+  };
+
   return (
     <div className="card-convocatoria">
       <div className="card-header">
@@ -39,12 +50,18 @@ const CardConvocatoria = ({ data, onVer, onEditar, onEliminar }) => {
       
       <div className="card-fecha">
         <span>Inscripción:</span>
-        <span>{new Date(data.fecha_inicio).toLocaleDateString()} - {new Date(data.fecha_fin).toLocaleDateString()}</span>
+        <span>
+          {data.fecha_inicio ? formatDate(data.fecha_inicio) : 'N/A'} - 
+          {data.fecha_fin ? formatDate(data.fecha_fin) : 'N/A'}
+        </span>
       </div>
       
       <div className="card-fecha">
         <span>Competencia:</span>
-        <span>{new Date(data.competicion_inicio).toLocaleDateString()} - {new Date(data.competicion_fin).toLocaleDateString()}</span>
+        <span>
+          {data.competicion_inicio ? formatDate(data.competicion_inicio) : 'N/A'} - 
+          {data.competicion_fin ? formatDate(data.competicion_fin) : 'N/A'}
+        </span>
       </div>
       
       <p className="card-areas">{getAreasText()}</p>
