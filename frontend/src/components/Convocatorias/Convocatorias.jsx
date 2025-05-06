@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { Plus } from 'lucide-react';
 import CardConvocatoria from './CardConvocatoria';
 import ModalNuevaConvocatoria from './ModalNuevaConvocatoria';
 import ModalVisualizarConvocatoria from './ModalVisualizarConvocatoria';
@@ -85,7 +86,10 @@ const Convocatorias = () => {
       <div className="convocatorias-header">
         <h2>Gestión de Convocatorias</h2>
         <button className="btn-nueva" onClick={() => setMostrarModal(true)}>
-          + Nueva Convocatoria
+          <span className="icono-circular">
+            <Plus size={16} strokeWidth={2.5} />
+          </span>
+          Nueva Convocatoria
         </button>
       </div>
 

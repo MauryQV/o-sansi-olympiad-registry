@@ -167,7 +167,7 @@ body {
   border: 1px solid red;
 }
 
-select {
+.registro-wrapper select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
