@@ -19,6 +19,9 @@
 }
 
 .reportes-minimal__btn-exportar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.5rem 1rem;
   background-color: #0284C7;
   border: none;
@@ -63,25 +66,42 @@
   font-size: 0.95rem;
 }
 
-.reportes-minimal__acciones button {
+.reportes-minimal__acciones {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.boton-con-icono {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.55rem 1.2rem;
-  margin-right: 0.5rem;
   border-radius: 6px;
   border: none;
   font-weight: bold;
-  background-color: #0284C7;
-  color: white;
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
-.reportes-minimal__acciones .secundario {
+.boton-filtrar {
+  background-color: #0284C7;
+  color: white;
+}
+
+.boton-filtrar:hover {
+  background-color: #026aa7;
+}
+
+.boton-restablecer {
   background-color: #e4e4e4;
   color: #333;
 }
 
-.reportes-minimal__acciones button:hover {
-  opacity: 0.9;
+.boton-restablecer:hover {
+  background-color: #ccc;
 }
 
 .reportes-minimal__tabla {
@@ -139,7 +159,6 @@
 .reportes-minimal__paginacion {
   display: flex;
   justify-content: flex-end;
-  /* mueve hacia la derecha */
   margin-top: 1.5rem;
   padding-right: 1rem;
   gap: 0.4rem;

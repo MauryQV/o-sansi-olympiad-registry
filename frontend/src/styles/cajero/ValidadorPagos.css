@@ -45,7 +45,7 @@
   font-size: 0.95rem;
   border: 1px solid #ccc;
   border-radius: 8px;
-  width: 565px;
+  width: 550px;
 }
 
 .btn-buscar,
@@ -125,4 +125,18 @@
 
 .btn-validar:hover {
   background-color: #3c9742;
+}
+.btn-buscar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #b0a1f3;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+  color: white; /* ← aquí se cambia el color del texto */
 }
