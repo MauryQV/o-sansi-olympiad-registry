@@ -30,31 +30,53 @@ export const registrarInscripcion = async (req, res, next) => {
 };
 
 
-export const validarInscripcion = async (req, res, next) => {
+export const aceptarInscripcionController = async (req, res) => {
   try {
-    const tutorUsuarioId = req.user.id;
+    // Obtener el usuario autenticado
+    const usuarioId = req.user.id;
 
+    // Buscar el tutor asociado al usuario
     const tutor = await prisma.tutor.findUnique({
-      where: { usuario_id: tutorUsuarioId }
+      where: { usuario_id: usuarioId },
     });
 
     if (!tutor) {
-      return res.status(403).json({ error: 'Solo tutores pueden realizar esta acción.' });
+      return res.status(404).json({ error: 'No se encontró un tutor asociado a este usuario.' });
     }
 
-    const { inscripcionId, acepta } = req.body;
+    const inscripcion_id = parseInt(req.params.id, 10);
 
-    const resultado = await inscripcionService.validarInscripcion({
-      tutorId: tutor.id,
-      inscripcionId,
-      acepta
-    });
-
+    // Llamar al servicio con el tutor.id
+    const resultado = await inscripcionService.aceptarInscripcion({ inscripcion_id, tutorId: tutor.id });
     res.status(200).json(resultado);
   } catch (error) {
-    console.error('Error al validar inscripción:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Error al aceptar inscripción:', error.message);
+    res.status(400).json({ error: error.message });
   }
 };
 
+export const rechazarInscripcionController = async (req, res) => {
+  try {
+    // Obtener el usuario autenticado
+    const usuarioId = req.user.id;
 
+    // Buscar el tutor asociado al usuario
+    const tutor = await prisma.tutor.findUnique({
+      where: { usuario_id: usuarioId },
+    });
+
+    if (!tutor) {
+      return res.status(404).json({ error: 'No se encontró un tutor asociado a este usuario.' });
+    }
+
+    const inscripcion_id = parseInt(req.params.id, 10);
+    const { motivo_rechazo_id } = req.body;
+
+    // Llamar al servicio con el tutor.id
+    const resultado = await inscripcionService.rechazarInscripcion({ inscripcion_id, tutorId: tutor.id, motivo_rechazo_id });
+    res.status(200).json(resultado);
+  } catch (error) {
+    console.error('Error al rechazar inscripción:', error.message);
+    res.status(400).json({ error: error.message });
+  }
+};
