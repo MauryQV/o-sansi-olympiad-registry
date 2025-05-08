@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { tutorExiste, tutorYaAgregado } from '../forms/formularioInscripcionValidator';
+import * as competidorInscripcion from '../services/competidorInscripcion';
 
 export const useFormularioInscripcion = () => {
   const [area, setArea] = useState('');
@@ -11,32 +12,92 @@ export const useFormularioInscripcion = () => {
   const [nuevoTutor, setNuevoTutor] = useState('');
   const [mostrarModal, setMostrarModal] = useState(false);
   const [errores, setErrores] = useState({});
-
   const [areasDisponibles, setAreasDisponibles] = useState([]);
   const [categoriasPorArea, setCategoriasPorArea] = useState({});
   const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
   const [gradosDisponibles, setGradosDisponibles] = useState([]);
   const [nivelesDisponibles, setNivelesDisponibles] = useState([]);
   const [tutoresDisponibles, setTutoresDisponibles] = useState([]);
+  const [busqueda, setBusqueda] = useState('');
+  const [resultados, setResultados] = useState([]);
 
   useEffect(() => {
-    setAreasDisponibles(['Matemática', 'Química', 'Física', 'Biología', 'Robótica']);
-    setCategoriasPorArea({
-      Matemática: ['Primaria', 'Secundaria'],
-      Química: ['Nivel 1', 'Nivel 2'],
-      Física: ['Nivel A', 'Nivel B'],
-      Biología: ['Celular', 'Ecología'],
-      Robótica: ['Junior', 'Senior']
-    });
-    setGradosDisponibles(['1°', '2°', '3°', '4°', '5°', '6°']);
-    setNivelesDisponibles(['Primaria', 'Secundaria']);
-    setTutoresDisponibles([
-      { nombre: 'Ana Martínez', correo: 'ana1@mail.com', telefono: '70123456', area: 'Biología' },
-      { nombre: 'Carlos Ramírez', correo: 'carlos@mail.com', telefono: '78912345', area: 'Física' },
-      { nombre: 'Luisa Gómez', correo: 'luisa@mail.com', telefono: '71234567', area: 'Matemática' },
-      { nombre: 'Pedro López', correo: 'pedro@mail.com', telefono: '73456789', area: 'Robótica' },
-    ]);
+    const cargarAreas = async () => {
+      try {
+        const data = await competidorInscripcion.obtenerAreas();
+        setAreasDisponibles(data); // ahora es un array de objetos: [{ id, nombre }]
+      } catch (error) {
+        console.error('error para cargar las areas:', error);
+      }
+    };
+
+    cargarAreas();
   }, []);
+
+  const buscarTutores = async () => {
+    try {
+      const data = await obtenerTutores(areaSeleccionada, busqueda);
+      setResultados(data);
+    } catch (error) {
+      console.error('Error al buscar tutores:', error);
+    }
+  };
+
+  useEffect(() => {
+    const cargarCategorias = async () => {
+      if (area) {
+        try {
+          const data = await competidorInscripcion.obtenerCategoriasArea(area);
+          const categorias = data.map(c => ({
+            id: c.categoria.id,
+            nombre: c.categoria.nombre_categoria,
+          }));
+          setCategoriasDisponibles(categorias);
+        } catch (error) {
+          console.error('Error al cargar categorias por areas :,v', error);
+          setCategoriasDisponibles([]);
+        }
+      }
+    };
+
+    cargarCategorias();
+  }, [area]);
+
+
+  useEffect(() => {
+
+    setGradosDisponibles(['1°', '2°', '3°', '4°', '5°', '6°']);
+
+    setNivelesDisponibles(['Primaria', 'Secundaria']);
+
+    const validarFormulario = () => {
+      const nuevos = {};
+      if (!area) nuevos.area = true;
+      if (!categoria) nuevos.categoria = true;
+      if (!grado) nuevos.grado = true;
+      if (!nivel) nuevos.nivel = true;
+      if (tutores.length === 0) nuevos.tutores = true;
+      setErrores(nuevos);
+      return Object.keys(nuevos).length === 0;
+    };
+
+  }, []);
+
+  useEffect(() => {
+    const cargarTutores = async () => {
+      if (area) {
+        try {
+          const data = await competidorInscripcion.obtenerTutores(area, ''); // sin nombre, carga todos los tutores del área
+          setTutoresDisponibles(data);
+        } catch (error) {
+          console.error('Error al cargar tutores del área:', error);
+          setTutoresDisponibles([]);
+        }
+      }
+    };
+
+    cargarTutores();
+  }, [area]);
 
   useEffect(() => {
     setCategoriasDisponibles(categoriasPorArea[area] || []);
@@ -44,15 +105,15 @@ export const useFormularioInscripcion = () => {
 
   const agregarTutor = () => {
     if (nuevoTutor && area && tutores.length < 3) {
-      const tutor = tutorExiste(tutoresDisponibles, nuevoTutor, area);
-      const duplicado = tutorYaAgregado(tutores, nuevoTutor, area);
+      const tutor = tutoresDisponibles.find(t => t.nombre_completo === nuevoTutor);
+      const duplicado = tutores.find(t => t.id === tutor?.id);
 
       if (!tutor) {
-        Swal.fire({ icon: 'error', title: 'Tutor no válido', text: 'Debe seleccionar un tutor existente.' });
+        Swal.fire({ icon: 'error', title: 'Tutor no válido', text: 'Debe seleccionar un tutor válido.' });
       } else if (duplicado) {
         Swal.fire({ icon: 'warning', title: 'Tutor duplicado', text: 'Este tutor ya fue añadido.' });
       } else {
-        setTutores([...tutores, tutor]);
+        setTutores([...tutores, { ...tutor, relacion: 'tutor' }]);
         setNuevoTutor('');
         setMostrarModal(false);
       }
@@ -65,16 +126,6 @@ export const useFormularioInscripcion = () => {
     setTutores(copia);
   };
 
-  const validarFormulario = () => {
-    const nuevos = {};
-    if (!area) nuevos.area = true;
-    if (!categoria) nuevos.categoria = true;
-    if (!grado) nuevos.grado = true;
-    if (!nivel) nuevos.nivel = true;
-    if (tutores.length === 0) nuevos.tutores = true;
-    setErrores(nuevos);
-    return Object.keys(nuevos).length === 0;
-  };
 
   const manejarEnvio = () => {
     if (validarFormulario()) {

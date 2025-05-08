@@ -129,6 +129,7 @@ model Categoria {
   grado_max              Grado            @relation("GradoMax", fields: [grado_max_id], references: [id])
   grado_min              Grado            @relation("GradoMin", fields: [grado_min_id], references: [id])
   Categoria_convocatoria Categoria_area[]
+  Inscripcion            Inscripcion[]
 }
 
 model Grado {
@@ -198,6 +199,7 @@ model Inscripcion {
   competidor_id      String
   area_id            Int
   convocatoria_id    Int
+  categoria_id       Int
   fecha_inscripcion  DateTime            @default(now())
   estado_inscripcion String              @default("pendiente") // pendiente, aprobado, rechazado
   tutorInscripciones Inscripcion_tutor[]
@@ -206,6 +208,7 @@ model Inscripcion {
   competidor   Competidor   @relation(fields: [competidor_id], references: [id])
   area         Area         @relation(fields: [area_id], references: [id])
   convocatoria Convocatoria @relation(fields: [convocatoria_id], references: [id])
+  categoria    Categoria    @relation(fields: [categoria_id], references: [id])
 }
 
 model Nivel {

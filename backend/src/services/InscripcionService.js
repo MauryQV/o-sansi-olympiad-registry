@@ -6,15 +6,104 @@ import { crearNotificacion } from './notificacionService.js';
 
 export const crearInscripcion = async ({
     competidorId,
-    convocatoriaId,
     areaId,
+    categoriaId,
     tutorIds
 }) => {
+    //validar tutores
+    const tutores = await validarTutores(tutorIds);
+
+    // buscar convocatoria activa asociada al área
+    const convocatoria = await obtenerConvocatoriaActivaParaArea(areaId);
+
+    // validar que no haya inscripcion previa en esa area/convocatoria
+    await validarInscripcionDuplicada(competidorId, convocatoria.id, areaId);
+
+    // crear inscripción
+    const inscripcion = await prisma.inscripcion.create({
+        data: {
+            competidor_id: competidorId,
+            convocatoria_id: convocatoria.id,
+            area_id: areaId,
+            categoria_id: categoriaId
+        }
+    });
+
+    // 5. Relacionar tutores
+    const vinculos = await Promise.all(
+        tutorIds.map((tutorId) =>
+            prisma.inscripcion_tutor.create({
+                data: {
+                    inscripcion_id: inscripcion.id,
+                    tutor_id: tutorId,
+                    competidorId
+                }
+            })
+        )
+    );
+
+    // notificaciones a tutores
+    for (const tutor of tutores) {
+        const socketId = connectedUsers.get(tutor.usuario_id);
+        if (socketId) {
+            io.to(socketId).emit('notificacion:nueva', {
+                mensaje: 'Tienes una nueva solicitud de inscripción'
+            });
+        }
+    }
+
+    return {
+        mensaje: 'Inscripción realizada correctamente.',
+        inscripcion,
+        tutores_asignados: vinculos
+    };
+};
+
+//Validar que existen los tutores y que son 1 a 3
+const validarTutores = async (tutorIds) => {
     if (!Array.isArray(tutorIds) || tutorIds.length < 1 || tutorIds.length > 3) {
         throw new Error('Debes seleccionar entre 1 y 3 tutores.');
     }
 
-    // Validar que no exista ya una inscripción en esa convocatoria y área
+    const tutores = await prisma.tutor.findMany({
+        where: { id: { in: tutorIds } }
+    });
+
+    if (tutores.length !== tutorIds.length) {
+        throw new Error('Uno o más tutores seleccionados no existen.');
+    }
+
+    return tutores;
+};
+
+
+
+const obtenerConvocatoriaActivaParaArea = async (areaId) => {
+    const ahora = new Date();
+
+    const areaConvocatoria = await prisma.area_convocatoria.findFirst({
+        where: {
+            area_id: areaId,
+            convocatoria: {
+                estado_convocatoria: {
+                    nombre: { equals: 'en inscripciones', mode: 'insensitive' }
+                },
+                fecha_inicio: { lte: ahora },
+                fecha_fin: { gte: ahora }
+            }
+        },
+        include: { convocatoria: true }
+    });
+
+    if (!areaConvocatoria) {
+        throw new Error('No hay convocatoria activa para esta área.');
+    }
+
+    return areaConvocatoria.convocatoria;
+};
+
+
+const validarInscripcionDuplicada = async (competidorId, convocatoriaId, areaId) => {
     const existe = await prisma.inscripcion.findFirst({
         where: {
             competidor_id: competidorId,
@@ -24,81 +113,11 @@ export const crearInscripcion = async ({
     });
 
     if (existe) {
-        throw new Error('Ya tienes una inscripción en esta área y convocatoria.');
+        throw new Error('Ya tienes una inscripción en esta área.');
     }
-
-    const convocatoria = await prisma.convocatoria.findUnique({
-        where: { id: convocatoriaId },
-        include: { estado_convocatoria: true }
-    });
-
-    const ahora = new Date();
-
-    if (
-        !convocatoria ||
-        convocatoria.estado_convocatoria.nombre.toLowerCase() !== 'en inscripciones' ||
-        ahora < convocatoria.fecha_inicio ||
-        ahora > convocatoria.fecha_fin
-    ) {
-        throw new Error('La convocatoria no está activa o está fuera de fechas válidas.');
-    }
-
-    // validacion de tutores
-    const tutores = await prisma.tutor.findMany({
-        where: { id: { in: tutorIds } }
-    });
-
-    if (tutores.length !== tutorIds.length) {
-        throw new Error('Uno o más tutores seleccionados no existen.');
-    }
-
-    // crear una inscripción
-    const inscripcion = await prisma.inscripcion.create({
-        data: {
-            competidor_id: competidorId,
-            convocatoria_id: convocatoriaId,
-            area_id: areaId
-        }
-    });
-
-    // crear los vínculos entre la inscripción y los tutores
-    const vinculos = await Promise.all(
-        tutorIds.map((tutorId) =>
-            prisma.inscripcion_tutor.create({
-                data: {
-                    inscripcion_id: inscripcion.id,
-                    tutor_id: tutorId,
-                    competidorId: competidorId
-                }
-            })
-        )
-    );
-
-    // Parte simplificada para notificaciones - esto es lo que modificamos:
-    for (const tutor of tutores) {
-        // Obtener el ID de usuario del tutor para la notificación
-        const tutorUsuarioId = tutor.usuario_id;
-
-        console.log(`Enviando notificación al tutor con usuario_id: ${tutorUsuarioId}`);
-
-        // Enviar directamente la notificación vía socket
-        const socketId = connectedUsers.get(tutorUsuarioId);
-        if (socketId) {
-            console.log(`Socket ID encontrado: ${socketId}, enviando notificación...`);
-            io.to(socketId).emit('notificacion:nueva', {
-                mensaje: 'Tienes una nueva solicitud de inscripción'
-            });
-        } else {
-            console.log(`No se encontró socket conectado para el usuario ${tutorUsuarioId}`);
-        }
-    }
-
-    return {
-        mensaje: 'inscripcion realizada correctamente.',
-        inscripcion,
-        tutores_asignados: vinculos
-    };
 };
+
+
 
 
 export const aceptarInscripcion = async ({ inscripcion_id, tutorId }) => {

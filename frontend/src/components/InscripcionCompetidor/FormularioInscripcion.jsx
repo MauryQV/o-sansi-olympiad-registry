@@ -4,12 +4,21 @@ import '../../styles/InscripcionCompetidor/FormularioInscripcion.css';
 import { useFormularioInscripcion } from '../../hooks/useFormularioInscripcion';
 import TutoresTable from './TutoresTable';
 import ModalTutores from './ModalTutores';
-import { esTextoValido } from '../../forms/formularioInscripcionValidator';
+
 
 const FormularioInscripcion = () => {
   const {
-    area, categoria, grado, nivel, tutores, nuevoTutor, errores,
-    areasDisponibles, categoriasDisponibles, gradosDisponibles, nivelesDisponibles,
+    area, 
+    categoria, 
+    grado, 
+    nivel, 
+    tutores,
+    nuevoTutor, 
+    errores,
+    areasDisponibles,
+    categoriasDisponibles, 
+    gradosDisponibles, 
+    nivelesDisponibles,
     setArea, setCategoria, setGrado, setNivel, setNuevoTutor,
     agregarTutor, eliminarTutor, manejarEnvio, tutoresFiltrados
   } = useFormularioInscripcion();
@@ -29,21 +38,22 @@ const FormularioInscripcion = () => {
           <div className="forminsc-campo">
             <label>Área *</label>
             <select value={area} onChange={(e) => setArea(e.target.value)} className={errores.area ? 'forminsc-input-error' : ''}>
-              <option value="">Seleccione un área</option>
-              {areasDisponibles.map((a, i) => (
-                <option key={i} value={a}>{a}</option>
-              ))}
-            </select>
+        <option value="">Seleccione un área</option>
+     {areasDisponibles.map((a) => (
+     <option key={a.id} value={a.id}>{a.nombre_area}</option>
+      ))}
+        </select>
           </div>
 
           <div className="forminsc-campo">
             <label>Categoría *</label>
             <select value={categoria} onChange={(e) => setCategoria(e.target.value)} disabled={categoriasDisponibles.length === 0} className={errores.categoria ? 'forminsc-input-error' : ''}>
-              <option value="">Seleccione una categoría</option>
-              {categoriasDisponibles.map((c, i) => (
-                <option key={i} value={c}>{c}</option>
-              ))}
-            </select>
+            <option value="">Seleccione una categoría</option>
+             {categoriasDisponibles.map((c) => (
+            <option key={c.id} value={c.id}>{c.nombre}</option>
+         ))}
+         </select>
+
           </div>
         </div>
 
@@ -69,6 +79,9 @@ const FormularioInscripcion = () => {
           </div>
         </div>
       </section>
+
+
+
 
       <section className="forminsc-seccion">
         <h2 className="forminsc-seccion-titulo">Tutores</h2>
@@ -103,7 +116,10 @@ const FormularioInscripcion = () => {
             tutores={tutoresFiltrados}
             areaSeleccionada={area}
             onClose={() => setMostrarModal(false)}
-            onSelect={(nombre) => setNuevoTutor(nombre)}
+            onSelect={(tutor) => {
+              setNuevoTutor(tutor.nombre_completo); // solo se muestra en el input
+              setTutoresDisponibles([tutor]); // guarda los datos completos
+            }}
           />
         )}
       </section>
