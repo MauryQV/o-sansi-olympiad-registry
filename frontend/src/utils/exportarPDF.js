@@ -6,7 +6,6 @@ export const exportarPDF = (datos, currentPage = 1, nombreUsuario = 'Administrad
     const doc = new jsPDF();
     const fechaActual = new Date().toLocaleDateString('es-BO');
 
-    
     const titulo = datos.length > 20
       ? 'Reporte de Inscripciones (Todos los datos)'
       : 'Reporte de Inscripciones';
@@ -25,12 +24,13 @@ export const exportarPDF = (datos, currentPage = 1, nombreUsuario = 'Administrad
       i.categoria,
       i.grado,
       i.fecha,
-      i.estado
+      i.estado,
+      i.estado === 'Cancelado' ? i.motivoCancelacion || 'Sin motivo' : '-'
     ]);
 
     autoTable(doc, {
       startY: 45,
-      head: [['ID', 'Estudiante', 'Área', 'Categoría', 'Grado', 'Fecha', 'Estado']],
+      head: [['ID', 'Estudiante', 'Área', 'Categoría', 'Grado', 'Fecha', 'Estado', 'Motivo']],
       body: filas,
       styles: { fontSize: 9 },
       headStyles: { fillColor: [33, 150, 243] }

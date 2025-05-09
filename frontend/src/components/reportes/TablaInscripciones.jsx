@@ -1,4 +1,6 @@
 import React from 'react';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 
 const TablaInscripciones = ({ datosPagina }) => (
   <>
@@ -24,9 +26,15 @@ const TablaInscripciones = ({ datosPagina }) => (
             <td>{i.grado}</td>
             <td>{i.fecha}</td>
             <td>
-              <span className={`estado estado--${i.estado.toLowerCase()}`}>
-                {i.estado}
-              </span>
+              {i.estado === 'Cancelado' ? (
+                <Tippy content={i.motivoCancelacion || 'Sin motivo disponible'}>
+                  <span className={`estado estado--${i.estado.toLowerCase()}`}>
+                    {i.estado}
+                  </span>
+                </Tippy>
+              ) : (
+                <span className={`estado estado--${i.estado.toLowerCase()}`}>{i.estado}</span>
+              )}
             </td>
           </tr>
         ))}
