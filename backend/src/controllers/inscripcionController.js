@@ -5,6 +5,7 @@ export const registrarInscripcion = async (req, res, next) => {
   try {
     const usuarioId = req.user.id;
 
+    // Buscar el competidor asociado al usuario autenticado
     const competidor = await prisma.competidor.findUnique({
       where: { usuario_id: usuarioId }
     });
@@ -13,13 +14,15 @@ export const registrarInscripcion = async (req, res, next) => {
       return res.status(404).json({ error: 'Competidor no encontrado para este usuario.' });
     }
 
-    const { convocatoriaId, areaId, tutorIds } = req.body;
+    // Obtener los datos del cuerpo de la solicitud
+    const { area_id, categoria_id, tutor_ids } = req.body;
 
+    // Llamar al servicio para crear la inscripción
     const resultado = await inscripcionService.crearInscripcion({
-      competidorId: competidor.id,
-      convocatoriaId,
-      areaId,
-      tutorIds
+      competidor_id: competidor.id, // Obtenido del usuario autenticado
+      categoria_id,
+      area_id,
+      tutor_ids
     });
 
     res.status(201).json(resultado);
@@ -32,10 +35,10 @@ export const registrarInscripcion = async (req, res, next) => {
 
 export const aceptarInscripcionController = async (req, res) => {
   try {
-    // Obtener el usuario autenticado
+    // obtener el usuario autenticado
     const usuarioId = req.user.id;
 
-    // Buscar el tutor asociado al usuario
+    // buscar el tutor asociado al usuario
     const tutor = await prisma.tutor.findUnique({
       where: { usuario_id: usuarioId },
     });
@@ -46,7 +49,7 @@ export const aceptarInscripcionController = async (req, res) => {
 
     const inscripcion_id = parseInt(req.params.id, 10);
 
-    // Llamar al servicio con el tutor.id
+    // llamar al servicio con el tutor.id
     const resultado = await inscripcionService.aceptarInscripcion({ inscripcion_id, tutorId: tutor.id });
     res.status(200).json(resultado);
   } catch (error) {

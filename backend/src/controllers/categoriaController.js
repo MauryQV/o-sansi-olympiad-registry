@@ -36,3 +36,37 @@ export const verGrados = async (req, res, next) => {
         next(error);
     }
 }
+
+export const obtenerGradosPorCategoria = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const grados = await categoriaService.obtenerGradosCategorias(id);
+
+        // Mapeo para reasignar los valores de los grados
+        const formatearGrado = (grado) => {
+            const equivalencias = {
+                "Primero": "1º",
+                "Segundo": "2º",
+                "Tercero": "3º",
+                "Cuarto": "4º",
+                "Quinto": "5º",
+                "Sexto": "6º",
+            };
+
+            return {
+                nombre_grado: equivalencias[grado.nombre_grado] || grado.nombre_grado, // Reasignar si existe en equivalencias
+                nivel: grado.nivel.nombre_nivel, // Mantener el nombre del nivel
+            };
+        };
+
+        const respuestaFormateada = {
+            nombre_categoria: grados.nombre_categoria,
+            grado_min: formatearGrado(grados.grado_min),
+            grado_max: formatearGrado(grados.grado_max),
+        };
+
+        res.status(200).json(respuestaFormateada);
+    } catch (error) {
+        next(error);
+    }
+};

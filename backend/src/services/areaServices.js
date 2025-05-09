@@ -65,3 +65,17 @@ export const deleteArea = async (id) => {
     });
 }
 
+export const getCategoriasArea = async (id) => {
+    return await prisma.categoria_area.findMany({
+        where: { area_id: parseInt(id, 10) },
+        select: {
+            categoria: {
+                select: {
+                    id: true,
+                    nombre_categoria: true,
+                },
+            },
+        },
+    });
+};
+

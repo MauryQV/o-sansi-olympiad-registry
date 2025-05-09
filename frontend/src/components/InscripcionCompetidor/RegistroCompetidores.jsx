@@ -58,9 +58,11 @@ const RegistroCompetidores = () => {
           <h3 className="titulo-tarjeta">Convocatorias Activas</h3>
           {convocatoriaActiva ? (
             <>
-              <p><strong>{convocatoriaActiva.nombre}</strong></p>
-              <p>{convocatoriaActiva.descripcion}</p>
-              <p>Inscripción {convocatoriaActiva.fechaInicio} - {convocatoriaActiva.fechaFin}</p>
+              <p><strong>{convocatoriaActiva.nombre_convocatoria}</strong></p>
+              <p>{convocatoriaActiva.descripcion_convocatoria}</p>
+              <p>
+                Inscripción {new Date(convocatoriaActiva.fecha_inicio).toLocaleDateString()} - {new Date(convocatoriaActiva.competicion_fin).toLocaleDateString()}
+            </p>
               <span className="badge-estado en-inscripcion">En Inscripción</span>
             </>
           ) : (

@@ -13,4 +13,6 @@ router.patch('/actualizar-categorias/:id', categoriaController.actualizarCategor
 
 router.get('/ver-grados', categoriaController.verGrados);
 
+router.get('/ver-grados-categoria/:id', categoriaController.obtenerGradosPorCategoria);
+
 export default router;
