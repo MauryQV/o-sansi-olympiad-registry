@@ -1,119 +1,114 @@
 .solicitudes-tutoria-container {
-    padding: 2rem;
-    font-family: 'Comfortaa', sans-serif;
-    background-color: #f8f9fa;
-  }
-  
-  .descripcion-subtitulo {
-    margin-bottom: 2rem;
-    color: #666;
-    font-size: 0.95rem;
-  }
-  
-  .tabla-solicitudes {
-    background-color: #fff;
-    border: 1px solid #dcdcdc;
-    border-radius: 10px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  }
-  
-  .tabla-solicitudes h3 {
-    margin: 0;
-    font-size: 1.2rem;
-  }
-  
-  .tabla-subtitulo {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 1.2rem;
-  }
-  
-  .tabla {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-  }
-  
-  .tabla th,
-  .tabla td {
-    padding: 0.75rem;
-    text-align: center;
-    border-bottom: 1px solid #e0e0e0;
-    vertical-align: top;
-  }
+  padding: 2rem;
+  font-family: 'Comfortaa', sans-serif;
+  background-color: #f8f9fa;
+}
 
-  .tabla td:first-child {
-    font-weight: bold;
-  }
+.descripcion-subtitulo {
+  margin-bottom: 2rem;
+  color: #666;
+  font-size: 0.95rem;
+}
 
-  .estado {
-    padding: 0.35rem 0.9rem;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    display: inline-block;
-  }
-  
-  .estado.pendiente {
-    background-color: #e0e9ff;
-    color: #2962ff;
-  }
-  
-  .estado.aceptada {
-    background-color: #d4f6e4;
-    color: #2e7d32;
-  }
-  
-  .estado.rechazada {
-    background-color: #ffd6d6;
-    color: #d32f2f;
-  }
-  
-  .btn-aceptar,
-  .btn-rechazar {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    padding: 0.3rem 0.8rem;
-    font-size: 0.85rem;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    color: white;
-    border: none;
-    margin-right: 0.6rem; /* separa los botones */
-  }
-  
-  .btn-aceptar {
-    background-color: #007bff;
-  }
-  
-  .btn-aceptar::before {
-    content: '✔';
-    margin-right: 0.4rem;
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-  
-  .btn-aceptar:hover {
-    background-color: #0056b3;
-  }
-  
-  .btn-rechazar {
-    background-color: #d32f2f;
-  }
-  
-  .btn-rechazar::before {
-    content: '✖';
-    margin-right: 0.4rem;
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-  
-  .btn-rechazar:hover {
-    background-color: #a10000;
-  }
-  
-  
+.tabla-solicitudes {
+  background-color: #fff;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.tabla-solicitudes h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.tabla-subtitulo {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1.2rem;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.tabla th,
+.tabla td {
+  padding: 0.75rem;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: top;
+}
+
+.tabla td:first-child {
+  font-weight: bold;
+}
+
+.estado {
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
+.estado.pendiente {
+  background-color: #3B82F6;
+  color: white;
+}
+
+.estado.aceptada {
+  background-color: #10B981; 
+  color: white;
+}
+
+.estado.rechazada {
+  background-color: #E4272A; 
+  color: white;
+}
+
+
+.btn-aceptar,
+.btn-rechazar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: white;
+  border: none;
+  margin-right: 0.6rem;
+}
+
+.btn-aceptar {
+  background-color: #0284C7;
+}
+
+.btn-aceptar::before {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+.btn-aceptar:hover {
+  background-color: #026aa7;
+}
+
+.btn-rechazar {
+  background-color: #E4272A;
+}
+
+.btn-rechazar::before {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+.btn-rechazar:hover {
+  background-color: #c02024;
+}

@@ -1,0 +1,55 @@
+.modal-contenido-eliminar {
+    background: #ffffff;
+    width: 37.5rem;
+    padding: 2rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .modal-subtitulo {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .modales-botones{
+      display: flex;
+      justify-content: flex-end; 
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+  .modales-botones button {
+    font-family: inherit;
+    font-size: 1rem;
+    border-radius: 6px;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+  }
+
+  .boton-cancelar{
+    color: #333;
+    background-color: transparent;
+    border-radius: 8px;
+    border: 1.5px solid #ccc;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+  
+  .boton-eliminar {
+    background-color: #E4272A;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .btn-eliminar:hover {
+    background-color: darkred;
+  }
+  

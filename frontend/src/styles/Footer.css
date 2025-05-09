@@ -1,0 +1,30 @@
+.footer{
+    width: 100%;
+    background-color: #111827;
+    color: white;
+    font-size: 0.75rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.container-footer{
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2.25rem;
+    padding-right: 2.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container-text{
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.image-footer{
+    height: 9rem;
+    width: auto;
+}

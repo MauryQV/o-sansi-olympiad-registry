@@ -12,6 +12,7 @@ const TablaInscripciones = ({ datosPagina }) => (
           <th>Grado</th>
           <th>Fecha de Inscripción</th>
           <th>Estado</th>
+          <th>Motivo</th> {/* Nueva columna */}
         </tr>
       </thead>
       <tbody>
@@ -27,6 +28,15 @@ const TablaInscripciones = ({ datosPagina }) => (
               <span className={`estado estado--${i.estado.toLowerCase()}`}>
                 {i.estado}
               </span>
+            </td>
+            <td>
+              {i.estado === 'Cancelado' ? (
+                <span style={{ color: '#c00', fontSize: '0.95rem' }}>
+                  {i.motivoCancelacion || 'Sin motivo especificado'}
+                </span>
+              ) : (
+                '-'
+              )}
             </td>
           </tr>
         ))}

@@ -1,0 +1,131 @@
+.pagoscomp-container-principal {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f7f8fa;
+  font-family: 'Comfortaa', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #111;
+  box-sizing: border-box;
+}
+
+.pagoscomp-titulo-seccion {
+  width: 100%;
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.pagoscomp-tarjeta-listado {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+.pagoscomp-subtitulo-tabla {
+  font-size: 20px;
+  margin-bottom: 18px;
+  font-weight: bold;
+}
+
+.pagoscomp-tabla-pagos {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 15px;
+}
+
+.pagoscomp-tabla-pagos thead {
+  background-color: #f3f4f6;
+  border-radius: 10px;
+}
+
+.pagoscomp-tabla-pagos th,
+.pagoscomp-tabla-pagos td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #ddd;
+  text-align: center; 
+}
+
+.pagoscomp-tabla-pagos th {
+  font-weight: 600;
+  font-size: 14px;
+  color: #555;
+}
+
+.pagoscomp-tabla-pagos td {
+  font-size: 15px;
+  color: #111;
+}
+
+.estado-pago.pendiente {
+  background-color: #F9EDA2;
+  color: #893F06;
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.estado-pago.pagado {
+  background-color: #d1fae5; 
+  color: #065f46;
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.pagoscomp-columna-acciones {
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+  gap: 8px;
+  height: 100%;
+}
+
+
+.pagoscomp-boton-ver,
+.pagoscomp-boton-descargar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagoscomp-boton-ver:hover {
+  background-color: #eaf4ff;
+  border-color: #3399ff;
+  color: #3399ff;
+}
+
+.pagoscomp-boton-descargar:hover {
+  background-color: #eaffea;
+  border-color:  #3399ff;
+  color: #3399ff;
+}
+.imagen-ver-descargar{
+  width: 1rem;
+}
+
+.pagoscomp-tabla-pagos th:first-child,
+.pagoscomp-tabla-pagos td:first-child {
+  border-top-left-radius: 10px;
+}
+
+.pagoscomp-tabla-pagos th:last-child,
+.pagoscomp-tabla-pagos td:last-child {
+  border-top-right-radius: 10px;
+}
+

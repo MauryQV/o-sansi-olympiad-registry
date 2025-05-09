@@ -30,11 +30,13 @@
   font-size: 14px;
   color: #555;
   margin-bottom: 8px;
+  text-align: left;
 }
 
 .tarjeta-estadistica h3 {
   font-size: 22px;
   margin: 0;
+  text-align: left;
 }
 
 .contenedor-info-tarjetas {
@@ -52,11 +54,6 @@
   border: 1px solid #e0e0e0;
 }
 
-.titulo-tarjeta {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 12px;
-}
 
 .estado-inscripcion {
   display: inline-block;
@@ -67,19 +64,9 @@
   font-weight: 500;
 }
 
-.validada {
-  background-color: #e6f4ea;
-  color: #2e7d32;
-}
-
-.en-inscripcion {
-  background-color: #eaf4fe;
-  color: #1565c0;
-}
-
 .pendiente {
-  background-color: #fff8e1;
-  color: #b28704;
+  background-color: #F9EDA2;
+  color: #985910;
 }
 
 .seccion-tabla-pagos {
@@ -114,7 +101,7 @@
 }
 
 .boton-ver-detalles {
-  background-color: #dceada;
+  background-color: #e2ebe1;
   color: #111;
   border: none;
   padding: 8px 14px;
@@ -126,4 +113,51 @@
 
 .boton-ver-detalles:hover {
   background-color: #94ec61;
+}
+.titulo-tarjeta,
+.titulo-tabla-pagos {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #111;
+}
+.tarjeta-pagos-box {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  margin-top: 2rem;
+  font-family: 'Comfortaa', sans-serif;
+}
+.titulo-tabla-pagos {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #111;
+}
+.tarjeta-inscripcion-activa,
+.tarjeta-convocatoria-activa {
+  position: relative;
+  padding-bottom: 2rem;
+  font-size: 15px;
+}
+
+.badge-estado {
+  position: absolute;
+  bottom: 1.2rem;
+  right: 1.2rem;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.validada {
+  background-color: #B8E0A9;
+  color: #111212;
+}
+
+.en-inscripcion {
+  background-color: #ACCCFF;
+  color: #121314;
 }

@@ -31,7 +31,7 @@ const Disciplinas = () => {
   return (
     <div className="disciplina-content-wrapper">
       <div className="slogan-section">
-        <h2>OLIMPIADAS CIENTÍFICAS ESCOLARES</h2>
+        <h2>OLIMPIADAS CIENTÍFICAS ESCOLARES.</h2>
         <p className="slogan-text">
           "¡Despierta el científico que llevas dentro! Participa en nuestras Olimpiadas Científicas y vive la emoción de explorar, descubrir y compartir. ¡El futuro de la ciencia comienza aquí!"
         </p>

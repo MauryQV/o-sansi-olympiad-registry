@@ -1,0 +1,119 @@
+.inicio-cajero-wrapper {
+    padding: 2rem;
+    font-family: 'Comfortaa', sans-serif;
+    background-color: #f5f6f8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .inicio-cajero-titulo {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 1050px;
+    text-align: left;
+  }
+  
+  .inicio-cajero-content {
+    width: 100%;
+    max-width: 1050px;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+  
+  /* Tarjetas resumen */
+  .inicio-cajero-cards {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  
+  .inicio-cajero-card {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  
+  .inicio-cajero-card.pendiente .inicio-cajero-valor {
+    color: #ff9800;
+  }
+  
+  .inicio-cajero-card.pagado .inicio-cajero-valor {
+    color: #4caf50;
+  }
+  
+  .inicio-cajero-card.cancelado .inicio-cajero-valor {
+    color: #f44336;
+  }
+  
+  .inicio-cajero-label {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .inicio-cajero-valor {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 0.3rem;
+  }
+  
+  /* Tabla de pagos */
+  .inicio-cajero-seccion {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  
+  .inicio-cajero-subtitulo {
+    margin-bottom: 1.2rem;
+    font-size: 1.2rem;
+  }
+  
+  .inicio-cajero-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+  }
+  
+  .inicio-cajero-tabla th,
+  .inicio-cajero-tabla td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+    white-space: nowrap;
+  }
+  
+  .inicio-cajero-tabla th {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Botón */
+  .inicio-cajero-boton-contenedor {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .inicio-cajero-btn {
+    font-family: 'Comfortaa', sans-serif;
+    padding: 0.5rem 1.3rem;
+    border: 2px solid #111;
+    background: white;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .inicio-cajero-btn:hover {
+    background: #f0f0f0;
+  }
+  
