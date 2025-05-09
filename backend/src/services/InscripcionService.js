@@ -5,44 +5,44 @@ import { crearNotificacion } from './notificacionService.js';
 //import { DateTime } from 'luxon'; //deseable
 
 export const crearInscripcion = async ({
-    competidorId,
-    areaId,
-    categoriaId,
-    tutorIds
+    competidor_id,
+    area_id,
+    categoria_id,
+    tutor_ids
 }) => {
-    //validar tutores
-    const tutores = await validarTutores(tutorIds);
+    // validacion de la existencia de los tutores
+    const tutores = await validarTutores(tutor_ids);
 
-    // buscar convocatoria activa asociada al área
-    const convocatoria = await obtenerConvocatoriaActivaParaArea(areaId);
+    // convocatoria asociada al area
+    const convocatoria = await obtenerConvocatoriaActivaParaArea(area_id);
 
-    // validar que no haya inscripcion previa en esa area/convocatoria
-    await validarInscripcionDuplicada(competidorId, convocatoria.id, areaId);
+    // validar que no se haya inscrito antes
+    await validarInscripcionDuplicada(competidor_id, convocatoria.id, area_id);
 
-    // crear inscripción
+    // creamos la inscripcion
     const inscripcion = await prisma.inscripcion.create({
         data: {
-            competidor_id: competidorId,
+            competidor_id,
             convocatoria_id: convocatoria.id,
-            area_id: areaId,
-            categoria_id: categoriaId
+            area_id,
+            categoria_id
         }
     });
 
-    // 5. Relacionar tutores
+    //relaciones
     const vinculos = await Promise.all(
-        tutorIds.map((tutorId) =>
+        tutor_ids.map((tutor_id) =>
             prisma.inscripcion_tutor.create({
                 data: {
                     inscripcion_id: inscripcion.id,
-                    tutor_id: tutorId,
-                    competidorId
+                    tutor_id,
+                    competidorId: competidor_id
                 }
             })
         )
     );
 
-    // notificaciones a tutores
+    // notificacion a los tutores
     for (const tutor of tutores) {
         const socketId = connectedUsers.get(tutor.usuario_id);
         if (socketId) {
@@ -59,17 +59,18 @@ export const crearInscripcion = async ({
     };
 };
 
+
 //Validar que existen los tutores y que son 1 a 3
-const validarTutores = async (tutorIds) => {
-    if (!Array.isArray(tutorIds) || tutorIds.length < 1 || tutorIds.length > 3) {
+const validarTutores = async (tutor_ids) => {
+    if (!Array.isArray(tutor_ids) || tutor_ids.length < 1 || tutor_ids.length > 3) {
         throw new Error('Debes seleccionar entre 1 y 3 tutores.');
     }
 
     const tutores = await prisma.tutor.findMany({
-        where: { id: { in: tutorIds } }
+        where: { id: { in: tutor_ids } }
     });
 
-    if (tutores.length !== tutorIds.length) {
+    if (tutores.length !== tutor_ids.length) {
         throw new Error('Uno o más tutores seleccionados no existen.');
     }
 
@@ -78,37 +79,39 @@ const validarTutores = async (tutorIds) => {
 
 
 
-const obtenerConvocatoriaActivaParaArea = async (areaId) => {
+
+const obtenerConvocatoriaActivaParaArea = async (area_id) => {
     const ahora = new Date();
 
     const areaConvocatoria = await prisma.area_convocatoria.findFirst({
         where: {
-            area_id: areaId,
+            area_id,
             convocatoria: {
-                estado_convocatoria: {
-                    nombre: { equals: 'en inscripciones', mode: 'insensitive' }
-                },
+                id_estado_convocatoria: 2, // solo con el id, en inscripciones
                 fecha_inicio: { lte: ahora },
                 fecha_fin: { gte: ahora }
             }
         },
-        include: { convocatoria: true }
+        include: {
+            convocatoria: true
+        }
     });
 
     if (!areaConvocatoria) {
-        throw new Error('No hay convocatoria activa para esta área.');
+        throw new Error('No hay convocatorias disponibles para esta área.');
     }
 
     return areaConvocatoria.convocatoria;
 };
 
 
-const validarInscripcionDuplicada = async (competidorId, convocatoriaId, areaId) => {
+
+const validarInscripcionDuplicada = async (competidor_id, convocatoria_id, area_id) => {
     const existe = await prisma.inscripcion.findFirst({
         where: {
-            competidor_id: competidorId,
-            convocatoria_id: convocatoriaId,
-            area_id: areaId
+            competidor_id: competidor_id,
+            convocatoria_id: convocatoria_id,
+            area_id: area_id
         }
     });
 

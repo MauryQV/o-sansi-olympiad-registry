@@ -19,8 +19,8 @@ const FormularioInscripcion = () => {
     categoriasDisponibles, 
     gradosDisponibles, 
     nivelesDisponibles,
-    setArea, setCategoria, setGrado, setNivel, setNuevoTutor,
-    agregarTutor, eliminarTutor, manejarEnvio, tutoresFiltrados
+    setArea, setCategoria, setGrado, setNivel,
+    agregarTutor, eliminarTutor, manejarEnvio, 
   } = useFormularioInscripcion();
 
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -112,16 +112,12 @@ const FormularioInscripcion = () => {
         <TutoresTable tutores={tutores} onDelete={eliminarTutor} />
 
         {mostrarModal && (
-          <ModalTutores
-            tutores={tutoresFiltrados}
-            areaSeleccionada={area}
-            onClose={() => setMostrarModal(false)}
-            onSelect={(tutor) => {
-              setNuevoTutor(tutor.nombre_completo); // solo se muestra en el input
-              setTutoresDisponibles([tutor]); // guarda los datos completos
-            }}
-          />
-        )}
+  <ModalTutores
+    areaSeleccionada={area}
+    onClose={() => setMostrarModal(false)}
+    onSelect={agregarTutor} // ← usa directamente la función del hook
+  />
+)}
       </section>
 
       <div className="forminsc-finalizar-wrapper alineado-derecha">

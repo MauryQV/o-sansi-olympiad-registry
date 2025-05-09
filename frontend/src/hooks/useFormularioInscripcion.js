@@ -21,6 +21,17 @@ export const useFormularioInscripcion = () => {
   const [busqueda, setBusqueda] = useState('');
   const [resultados, setResultados] = useState([]);
 
+  const validarFormulario = () => {
+    const nuevos = {};
+    if (!area) nuevos.area = true;
+    if (!categoria) nuevos.categoria = true;
+    //if (!grado) nuevos.grado = true;
+    //if (!nivel) nuevos.nivel = true;
+    if (tutores.length === 0) nuevos.tutores = true;
+    setErrores(nuevos);
+    return Object.keys(nuevos).length === 0;
+  };
+
   useEffect(() => {
     const cargarAreas = async () => {
       try {
@@ -70,16 +81,7 @@ export const useFormularioInscripcion = () => {
 
     setNivelesDisponibles(['Primaria', 'Secundaria']);
 
-    const validarFormulario = () => {
-      const nuevos = {};
-      if (!area) nuevos.area = true;
-      if (!categoria) nuevos.categoria = true;
-      if (!grado) nuevos.grado = true;
-      if (!nivel) nuevos.nivel = true;
-      if (tutores.length === 0) nuevos.tutores = true;
-      setErrores(nuevos);
-      return Object.keys(nuevos).length === 0;
-    };
+
 
   }, []);
 
@@ -103,22 +105,21 @@ export const useFormularioInscripcion = () => {
     setCategoriasDisponibles(categoriasPorArea[area] || []);
   }, [area, categoriasPorArea]);
 
-  const agregarTutor = () => {
-    if (nuevoTutor && area && tutores.length < 3) {
-      const tutor = tutoresDisponibles.find(t => t.nombre_completo === nuevoTutor);
-      const duplicado = tutores.find(t => t.id === tutor?.id);
+  const agregarTutor = (tutor) => {
+    if (tutor && area && tutores.length < 3) {
+      const duplicado = tutores.find(t => t.id === tutor.id);
 
-      if (!tutor) {
-        Swal.fire({ icon: 'error', title: 'Tutor no válido', text: 'Debe seleccionar un tutor válido.' });
-      } else if (duplicado) {
+      if (duplicado) {
         Swal.fire({ icon: 'warning', title: 'Tutor duplicado', text: 'Este tutor ya fue añadido.' });
       } else {
         setTutores([...tutores, { ...tutor, relacion: 'tutor' }]);
-        setNuevoTutor('');
         setMostrarModal(false);
       }
+    } else if (!tutor) {
+      Swal.fire({ icon: 'error', title: 'Tutor no válido', text: 'Debe seleccionar un tutor válido.' });
     }
   };
+
 
   const eliminarTutor = (index) => {
     const copia = [...tutores];
@@ -127,11 +128,34 @@ export const useFormularioInscripcion = () => {
   };
 
 
-  const manejarEnvio = () => {
+  const manejarEnvio = async () => {
     if (validarFormulario()) {
-      Swal.fire({ icon: 'success', title: '¡Registro exitoso!' });
-      setArea(''); setCategoria(''); setGrado(''); setNivel('');
-      setTutores([]); setErrores({});
+      try {
+        const resultado = await competidorInscripcion.registrarInscripcion({
+          area_id: parseInt(area),
+          categoria_id: parseInt(categoria),
+          tutor_ids: tutores.map(t => t.id)
+        });
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Inscripción completada',
+          text: resultado.mensaje || 'Se ha registrado correctamente'
+        });
+
+        setArea('');
+        setCategoria('');
+        setGrado('');
+        setNivel('');
+        setTutores([]);
+        setErrores({});
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al registrar',
+          text: error.response?.data?.error || 'Ocurrió un error inesperado'
+        });
+      }
     } else {
       Swal.fire({ icon: 'error', title: 'Campos incompletos' });
     }
@@ -140,9 +164,9 @@ export const useFormularioInscripcion = () => {
   const tutoresFiltrados = tutoresDisponibles.filter(t => t.area === area);
 
   return {
-    area, categoria, grado, nivel, tutores, nuevoTutor, errores, mostrarModal,
+    area, categoria, grado, nivel, tutores, errores, mostrarModal,
     areasDisponibles, categoriasDisponibles, gradosDisponibles, nivelesDisponibles, tutoresDisponibles,
-    setArea, setCategoria, setGrado, setNivel, setNuevoTutor, setMostrarModal,
+    setArea, setCategoria, setGrado, setNivel, agregarTutor, setMostrarModal,
     agregarTutor, eliminarTutor, manejarEnvio, tutoresFiltrados
   };
 };
