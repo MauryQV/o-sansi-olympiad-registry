@@ -21,7 +21,7 @@
     background: #f7f7f7;
     padding: 1rem;
     border-radius: 12px;
-    text-align: center;
+    text-align: left;
     font-weight: 600;
     font-size: 1rem;
     border: 1px solid #ccc;
@@ -109,7 +109,7 @@
   }
   
   .estado-tag.en-inscripción {
-    background-color: #007bff;
+    background-color: #3B82F6;
   }
   
   .estado-tag.finalizado {
