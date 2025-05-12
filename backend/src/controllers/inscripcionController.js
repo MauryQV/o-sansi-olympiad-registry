@@ -5,7 +5,7 @@ export const registrarInscripcion = async (req, res, next) => {
   try {
     const usuarioId = req.user.id;
 
-    // Buscar el competidor asociado al usuario autenticado
+    // buscar el competidor asociado al usuario autenticado
     const competidor = await prisma.competidor.findUnique({
       where: { usuario_id: usuarioId }
     });
