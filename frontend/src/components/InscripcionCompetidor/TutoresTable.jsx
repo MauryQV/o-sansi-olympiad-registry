@@ -11,20 +11,20 @@ const TutoresTable = ({ tutores, onDelete }) => (
             <th>Nombre</th>
             <th>Correo</th>
             <th>Teléfono</th>
-            <th>Área</th>
+            <th>Rol</th>
             <th>Acción</th>
           </tr>
         </thead>
         <tbody>
           {tutores.map((t, i) => (
             <tr key={i}>
-              <td>{t.nombre}</td>
+              <td>{t.nombre_completo}</td>
               <td>{t.correo}</td>
               <td>{t.telefono}</td>
-              <td>{t.area}</td>
+              <td>Tutor</td>
               <td>
                 <button onClick={() => onDelete(i)} className="forminsc-btn-eliminar-tutor">
-                  <Trash2 size={16} />
+                  <Trash2 size={16} color='red' />
                 </button>
               </td>
             </tr>

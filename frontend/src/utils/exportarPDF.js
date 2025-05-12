@@ -6,7 +6,7 @@ export const exportarPDF = (datos, currentPage = 1, nombreUsuario = 'Administrad
     const doc = new jsPDF();
     const fechaActual = new Date().toLocaleDateString('es-BO');
 
-
+    
     const titulo = datos.length > 20
       ? 'Reporte de Inscripciones (Todos los datos)'
       : 'Reporte de Inscripciones';

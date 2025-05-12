@@ -10,7 +10,6 @@ export const useReporteInscripciones = () => {
   const [filtrosAplicados, setFiltrosAplicados] = useState(false);
 
   useEffect(() => {
-    // Datos de prueba
     const mockInscripciones = [
       { id: 1, estudiante: 'Ana López', area: 'Robótica', categoria: 'Builders P', grado: '5to Primaria', fecha: '15/01/2025', estado: 'Pendiente' },
       { id: 2, estudiante: 'Carlos Pérez', area: 'Física', categoria: '6S', grado: '6to Secundaria', fecha: '16/01/2025', estado: 'Completado' },

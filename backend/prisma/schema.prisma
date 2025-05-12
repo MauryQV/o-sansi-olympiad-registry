@@ -15,7 +15,6 @@ model Usuario {
   password           String
   rol_id             Int
   createdAt          DateTime       @default(now())
-  estado             Boolean        @default(true)
   competidor         Competidor?
   tutor              Tutor?
   role               Rol            @relation(fields: [rol_id], references: [id])
@@ -130,6 +129,7 @@ model Categoria {
   grado_max              Grado            @relation("GradoMax", fields: [grado_max_id], references: [id])
   grado_min              Grado            @relation("GradoMin", fields: [grado_min_id], references: [id])
   Categoria_convocatoria Categoria_area[]
+  Inscripcion            Inscripcion[]
 }
 
 model Grado {
@@ -169,16 +169,17 @@ model Categoria_area {
 }
 
 model Inscripcion_tutor {
-  id               Int       @id @default(autoincrement())
-  inscripcion_id   Int
-  tutor_id         String
-  aprobado         Boolean   @default(false)
-  fecha_aprobacion DateTime?
-
-  inscripcion  Inscripcion @relation(fields: [inscripcion_id], references: [id])
-  tutor        Tutor       @relation(fields: [tutor_id], references: [id])
-  Competidor   Competidor? @relation(fields: [competidorId], references: [id])
-  competidorId String?
+  id                Int             @id @default(autoincrement())
+  inscripcion_id    Int
+  tutor_id          String
+  aprobado          Boolean         @default(false)
+  fecha_aprobacion  DateTime?
+  motivo_rechazo_id Int? //campo opcional para el motivo de rechazo :v 
+  inscripcion       Inscripcion     @relation(fields: [inscripcion_id], references: [id])
+  tutor             Tutor           @relation(fields: [tutor_id], references: [id])
+  Competidor        Competidor?     @relation(fields: [competidorId], references: [id])
+  competidorId      String?
+  MotivoRechazo     Motivo_rechazo? @relation(fields: [motivo_rechazo_id], references: [id])
 }
 
 model Metodo_pago {
@@ -198,6 +199,7 @@ model Inscripcion {
   competidor_id      String
   area_id            Int
   convocatoria_id    Int
+  categoria_id       Int
   fecha_inscripcion  DateTime            @default(now())
   estado_inscripcion String              @default("pendiente") // pendiente, aprobado, rechazado
   tutorInscripciones Inscripcion_tutor[]
@@ -206,6 +208,7 @@ model Inscripcion {
   competidor   Competidor   @relation(fields: [competidor_id], references: [id])
   area         Area         @relation(fields: [area_id], references: [id])
   convocatoria Convocatoria @relation(fields: [convocatoria_id], references: [id])
+  categoria    Categoria    @relation(fields: [categoria_id], references: [id])
 }
 
 model Nivel {
@@ -222,4 +225,10 @@ model Notificacion {
   leido     Boolean  @default(false)
   createdAt DateTime @default(now())
   usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+}
+
+model Motivo_rechazo {
+  id                 Int                 @id @default(autoincrement())
+  mensaje            String
+  inscripcionesTutor Inscripcion_tutor[]
 }

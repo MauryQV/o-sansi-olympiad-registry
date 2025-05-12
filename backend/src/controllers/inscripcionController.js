@@ -5,6 +5,7 @@ export const registrarInscripcion = async (req, res, next) => {
   try {
     const usuarioId = req.user.id;
 
+    // Buscar el competidor asociado al usuario autenticado
     const competidor = await prisma.competidor.findUnique({
       where: { usuario_id: usuarioId }
     });
@@ -13,13 +14,15 @@ export const registrarInscripcion = async (req, res, next) => {
       return res.status(404).json({ error: 'Competidor no encontrado para este usuario.' });
     }
 
-    const { convocatoriaId, areaId, tutorIds } = req.body;
+    // Obtener los datos del cuerpo de la solicitud
+    const { area_id, categoria_id, tutor_ids } = req.body;
 
+    // Llamar al servicio para crear la inscripción
     const resultado = await inscripcionService.crearInscripcion({
-      competidorId: competidor.id,
-      convocatoriaId,
-      areaId,
-      tutorIds
+      competidor_id: competidor.id, // Obtenido del usuario autenticado
+      categoria_id,
+      area_id,
+      tutor_ids
     });
 
     res.status(201).json(resultado);
@@ -30,31 +33,53 @@ export const registrarInscripcion = async (req, res, next) => {
 };
 
 
-export const validarInscripcion = async (req, res, next) => {
+export const aceptarInscripcionController = async (req, res) => {
   try {
-    const tutorUsuarioId = req.user.id;
+    // obtener el usuario autenticado
+    const usuarioId = req.user.id;
 
+    // buscar el tutor asociado al usuario
     const tutor = await prisma.tutor.findUnique({
-      where: { usuario_id: tutorUsuarioId }
+      where: { usuario_id: usuarioId },
     });
 
     if (!tutor) {
-      return res.status(403).json({ error: 'Solo tutores pueden realizar esta acción.' });
+      return res.status(404).json({ error: 'No se encontró un tutor asociado a este usuario.' });
     }
 
-    const { inscripcionId, acepta } = req.body;
+    const inscripcion_id = parseInt(req.params.id, 10);
 
-    const resultado = await inscripcionService.validarInscripcion({
-      tutorId: tutor.id,
-      inscripcionId,
-      acepta
-    });
-
+    // llamar al servicio con el tutor.id
+    const resultado = await inscripcionService.aceptarInscripcion({ inscripcion_id, tutorId: tutor.id });
     res.status(200).json(resultado);
   } catch (error) {
-    console.error('Error al validar inscripción:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Error al aceptar inscripción:', error.message);
+    res.status(400).json({ error: error.message });
   }
 };
 
+export const rechazarInscripcionController = async (req, res) => {
+  try {
+    // Obtener el usuario autenticado
+    const usuarioId = req.user.id;
 
+    // Buscar el tutor asociado al usuario
+    const tutor = await prisma.tutor.findUnique({
+      where: { usuario_id: usuarioId },
+    });
+
+    if (!tutor) {
+      return res.status(404).json({ error: 'No se encontró un tutor asociado a este usuario.' });
+    }
+
+    const inscripcion_id = parseInt(req.params.id, 10);
+    const { motivo_rechazo_id } = req.body;
+
+    // Llamar al servicio con el tutor.id
+    const resultado = await inscripcionService.rechazarInscripcion({ inscripcion_id, tutorId: tutor.id, motivo_rechazo_id });
+    res.status(200).json(resultado);
+  } catch (error) {
+    console.error('Error al rechazar inscripción:', error.message);
+    res.status(400).json({ error: error.message });
+  }
+};

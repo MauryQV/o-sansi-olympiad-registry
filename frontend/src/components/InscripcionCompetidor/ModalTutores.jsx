@@ -2,25 +2,29 @@ import React, { useState } from 'react';
 import { Search, X, Plus } from 'lucide-react';
 import '../../styles/InscripcionCompetidor/ModalTutores.css';
 import { esTextoValido } from '../../forms/formularioInscripcionValidator';
+import { obtenerTutores } from '../../services/competidorInscripcion';
 
-const ModalTutores = ({ tutores, areaSeleccionada, onClose, onSelect }) => {
+const ModalTutores = ({ areaSeleccionada, onClose, onSelect }) => {
   const [busqueda, setBusqueda] = useState('');
+  const [resultados, setResultados] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleChange = (e) => {
-    const texto = e.target.value;
-    if (esTextoValido(texto)) {
-      setBusqueda(texto);
+  const handleBuscar = async () => {
+    if (!areaSeleccionada || !esTextoValido(busqueda)) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await obtenerTutores(areaSeleccionada, busqueda);
+      setResultados(data);
+    } catch (err) {
+      setError('Error al buscar tutores');
+    } finally {
+      setLoading(false);
     }
   };
-
-  // Solo filtra si hay texto válido escrito
-  const tutoresFiltrados = busqueda.trim().length > 0
-    ? tutores.filter(
-        (t) =>
-          t.area === areaSeleccionada &&
-          t.nombre.toLowerCase().includes(busqueda.toLowerCase())
-      )
-    : [];
 
   return (
     <div className="modal-tutores-overlay">
@@ -31,7 +35,8 @@ const ModalTutores = ({ tutores, areaSeleccionada, onClose, onSelect }) => {
             type="text"
             placeholder="Buscar tutores..."
             value={busqueda}
-            onChange={handleChange}
+            onChange={(e) => setBusqueda(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleBuscar()}
           />
           <button className="modal-tutores-boton-cerrar" onClick={onClose}>
             <X />
@@ -41,20 +46,26 @@ const ModalTutores = ({ tutores, areaSeleccionada, onClose, onSelect }) => {
         <p className="modal-tutores-subtitulo">Tutores disponibles</p>
 
         <div className="modal-tutores-lista">
-          {busqueda.trim().length > 0 ? (
-            tutoresFiltrados.length > 0 ? (
-              tutoresFiltrados.map((t, i) => (
-                <div key={i} className="modal-tutores-item" onClick={() => { onSelect(t.nombre); onClose(); }}>
-                  <span className="modal-tutores-texto">{t.nombre} - {t.correo}</span>
-                  <span className="modal-tutores-icono-agregar"><Plus size={14} /></span>
-                </div>
-              ))
-            ) : (
-              <p className="modal-tutores-vacio">No se encontraron tutores.</p>
-            )
-          ) : (
-            <p className="modal-tutores-vacio">Escriba para buscar tutores.</p>
+          {loading && <p className="modal-tutores-cargando">Cargando...</p>}
+          {error && <p className="modal-tutores-error">{error}</p>}
+
+          {!loading && !error && resultados.length === 0 && (
+            <p className="modal-tutores-vacio">Escriba un nombre y presione Enter</p>
           )}
+
+          {resultados.map((tutor) => (
+            <div
+              key={tutor.id}
+              className="modal-tutores-item"
+              onClick={() => {
+                onSelect(tutor); // ← Envía todo el objeto al padre
+                onClose();
+              }}
+            >
+              <span className="modal-tutores-texto">{tutor.nombre_completo}</span>
+              <span className="modal-tutores-icono-agregar"><Plus size={14} /></span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

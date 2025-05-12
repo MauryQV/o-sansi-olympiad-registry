@@ -8,19 +8,18 @@ import usuario from '../image/user.svg';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/socketContext';
 
-
-
-
 const Navbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const { usuario: usuarioAuth, logout } = useAuth();
 
+  // Sistema de notificaciones para ambos roles
   const [notificaciones, setNotificaciones] = useState([]);
-const [notificationCounter, setNotificationCounter] = useState(1);
-const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
-const { socket } = useSocket();
-
+  const [notificacionesComp, setNotificacionesComp] = useState([]);
+  const [notificationCounter, setNotificationCounter] = useState(1);
+  const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
+  const [mostrarNotifComp, setMostrarNotifComp] = useState(false);
+  const { socket } = useSocket();
   
   // Determinar el rol basado en el rol_id
   const getRol = () => {
@@ -37,10 +36,72 @@ const { socket } = useSocket();
   
   const rol = getRol();
 
+  // Escuchar notificaciones para competidor
+  useEffect(() => {
+    if (socket && rol === 'competidor') {
+      // Eliminar primero cualquier listener existente para evitar duplicados
+      socket.off('notificacion:resultadoSolicitud');
+      socket.off('notificacion:competidor');
+      socket.off('notificacion:nueva');
+      
+      // Escuchar el evento que envía el backend (notificacion:nueva)
+      socket.on('notificacion:nueva', (data) => {
+        console.log('Notificación recibida por competidor:', data);
+  
+        // Agregar la nueva notificación al inicio del array con un ID único
+        setNotificacionesComp((prev) => [
+          {
+            id: Date.now(),
+            mensaje: data.mensaje || 'Nueva notificación',
+            fecha: new Date().toLocaleString()
+          },
+          ...prev,
+        ]);
+      });
+
+      // Mantener también los otros listeners por si acaso se usan en otro lado
+      socket.on('notificacion:resultadoSolicitud', (data) => {
+        console.log('Notificación de resultado recibida por competidor:', data);
+        
+        setNotificacionesComp((prev) => [
+          {
+            id: Date.now(),
+            mensaje: data.mensaje || 'Resultado de tu solicitud',
+            fecha: new Date().toLocaleString()
+          },
+          ...prev,
+        ]);
+      });
+
+      socket.on('notificacion:competidor', (data) => {
+        console.log('Notificación general para competidor:', data);
+        
+        setNotificacionesComp((prev) => [
+          {
+            id: Date.now(),
+            mensaje: data.mensaje || 'Nueva notificación',
+            fecha: new Date().toLocaleString()
+          },
+          ...prev,
+        ]);
+      });
+    }
+  
+    return () => {
+      if (socket && rol === 'competidor') {
+        socket.off('notificacion:resultadoSolicitud');
+        socket.off('notificacion:competidor');
+        socket.off('notificacion:nueva');
+      }
+    };
+  }, [socket, rol]);
+  
+  // Escuchar notificaciones para tutor
   useEffect(() => {
     if (socket && rol === 'tutor') {
       console.log('Configurando listener para notificaciones');
   
+      socket.off('notificacion:nueva');
       socket.on('notificacion:nueva', (data) => {
         console.log('Notificación recibida:', data);
   
@@ -51,7 +112,8 @@ const { socket } = useSocket();
           {
             id: newId,
             mensaje: data.mensaje || 'Nueva solicitud recibida',
-            detalle: 'Tienes una nueva solicitud pendiente'
+            detalle: 'Tienes una nueva solicitud pendiente',
+            fecha: new Date().toLocaleString()
           },
           ...prev
         ]);
@@ -66,17 +128,30 @@ const { socket } = useSocket();
     };
   }, [socket, notificationCounter, rol]);
 
-  // El resto del componente Navbar queda igual...
+  // Simular una notificación inicial para competidor si es necesario para pruebas
+  useEffect(() => {
+    if (rol === 'competidor' && notificacionesComp.length === 0) {
+      // Puedes comentar esto en producción, esto es solo para probar
+      /* 
+      setNotificacionesComp([
+        { 
+          id: Date.now(), 
+          mensaje: 'Bienvenido al sistema de competiciones',
+          fecha: new Date().toLocaleString()
+        }
+      ]);
+      */
+    }
+  }, [rol]);
 
-  
-  const fueAceptado = true; 
+  const handleCerrarNotificacion = (id) => {
+    setNotificacionesComp(prev => prev.filter(n => n.id !== id));
+  };
 
-  const [mostrarNotifComp, setMostrarNotifComp] = useState(false);
-  const [notificacionesComp, setNotificacionesComp] = useState(
-    fueAceptado
-      ? [{ id: 1, mensaje: 'Usted fue aceptado para participar en la competencia' }]
-      : [{ id: 1, mensaje: 'Usted fue rechazado para participar en la competencia' }]
-  );
+  const limpiarTodasNotificaciones = () => {
+    setNotificacionesComp([]);
+    setMostrarNotifComp(false);
+  };
 
   const handleAceptar = (id) => {
     setNotificaciones(prev => prev.filter(n => n.id !== id));
@@ -220,38 +295,50 @@ const { socket } = useSocket();
         </div>
       </div>
       {mostrarNotificaciones && (
-  <div className="panel-notificaciones">
-    <h4>Solicitudes pendientes</h4>
-    <div className="lista-notificaciones">
-      {notificaciones.map(n => (
-        <div key={n.id} className="notificacion-item">
-          <p><strong>{n.mensaje}</strong></p>
-          <p className="detalle">{n.detalle}</p>
-          <div className="acciones">
-            <button className="rechazar" onClick={() => handleRechazar(n.id)}>Rechazar</button>
-            <button className="aceptar" onClick={() => handleAceptar(n.id)}>Aceptar</button>
+        <div className="panel-notificaciones">
+          <h4>Solicitudes pendientes</h4>
+          <div className="lista-notificaciones">
+            {notificaciones.map(n => (
+              <div key={n.id} className="notificacion-item">
+                <p><strong>{n.mensaje}</strong></p>
+                <p className="detalle">{n.detalle}</p>
+                <div className="acciones">
+                  <button className="rechazar" onClick={() => handleRechazar(n.id)}>Rechazar</button>
+                  <button className="aceptar" onClick={() => handleAceptar(n.id)}>Aceptar</button>
+                </div>
+              </div>
+            ))}
+            {notificaciones.length === 0 && <p>No tienes solicitudes pendientes.</p>}
           </div>
         </div>
-      ))}
-      {notificaciones.length === 0 && <p>No tienes solicitudes pendientes.</p>}
-    </div>
-  </div>
-)}
+      )}
 
-      {mostrarNotifComp && notificacionesComp.length > 0 && (
+      {mostrarNotifComp && (
         <div className="panel-notificaciones">
           <h4>Notificaciones</h4>
           <div className="lista-notificaciones">
-            {notificacionesComp.map((n) => (
-              <div key={n.id} className="notificacion-item">
-                <p className="mensaje">{n.mensaje}</p>
-                <button className="cerrar-notif" onClick={() =>
-                  setNotificacionesComp([])
-                }>
-                  Cerrar
-                </button>
-              </div>
-            ))}
+            {notificacionesComp.length > 0 ? (
+              <>
+                {notificacionesComp.map((n) => (
+                  <div key={n.id} className="notificacion-item">
+                    <div className="notif-header">
+                      <p className="mensaje"><strong>{n.mensaje}</strong></p>
+                      <small className="fecha">{n.fecha}</small>
+                    </div>
+                    <button className="cerrar-notif" onClick={() => handleCerrarNotificacion(n.id)}>
+                      ×
+                    </button>
+                  </div>
+                ))}
+                <div className="notif-actions">
+                  <button className="limpiar-notif" onClick={limpiarTodasNotificaciones}>
+                    Limpiar todas
+                  </button>
+                </div>
+              </>
+            ) : (
+              <p>No tienes notificaciones nuevas.</p>
+            )}
           </div>
         </div>
       )}

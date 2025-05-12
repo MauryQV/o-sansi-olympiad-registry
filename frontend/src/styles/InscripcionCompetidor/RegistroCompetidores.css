@@ -114,14 +114,12 @@
 .boton-ver-detalles:hover {
   background-color: #94ec61;
 }
-
 .titulo-tarjeta,
 .titulo-tabla-pagos {
   font-weight: bold;
   font-size: 1.2rem;
   color: #111;
 }
-
 .tarjeta-pagos-box {
   background-color: #fff;
   padding: 1.5rem;
@@ -131,14 +129,12 @@
   margin-top: 2rem;
   font-family: 'Comfortaa', sans-serif;
 }
-
 .titulo-tabla-pagos {
   font-weight: bold;
   font-size: 1.2rem;
   margin-bottom: 1rem;
   color: #111;
 }
-
 .tarjeta-inscripcion-activa,
 .tarjeta-convocatoria-activa {
   position: relative;

@@ -133,3 +133,34 @@ export const obtenerGradosSecundaria = async () => {
         }
     });
 }**/
+
+export const obtenerGradosCategorias = async (id_categoria) => {
+    return await prisma.categoria.findUnique({
+        where: { id: parseInt(id_categoria, 10) },
+        select: {
+            nombre_categoria: true, // Incluir el nombre de la categoría
+            grado_min: {
+                select: {
+                    nombre_grado: true, // Nombre del grado mínimo
+                    id_nivel: true,     // ID del nivel asociado al grado mínimo
+                    nivel: {            // Relación con el modelo Nivel
+                        select: {
+                            nombre_nivel: true, // Nombre del nivel
+                        },
+                    },
+                },
+            },
+            grado_max: {
+                select: {
+                    nombre_grado: true, // Nombre del grado máximo
+                    id_nivel: true,     // ID del nivel asociado al grado máximo
+                    nivel: {            // Relación con el modelo Nivel
+                        select: {
+                            nombre_nivel: true, // Nombre del nivel
+                        },
+                    },
+                },
+            },
+        },
+    });
+};
