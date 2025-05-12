@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/HistorialConvocatorias.css';
 import { CalendarDays, FileWarning } from 'lucide-react';
+import Footer from './Footer';
 
 const HistorialConvocatorias = () => {
   const [convocatorias, setConvocatorias] = useState([]);
@@ -71,20 +72,7 @@ const HistorialConvocatorias = () => {
           ))
         )}
       </div>
-
-      <footer className="historial-footer">
-        <div className="historial-footer-info">
-          <p><strong>Contáctanos:</strong></p>
-          <p>olimpiadacientifica@min.edu.bo</p>
-          <p>Whatsapp: (+591)71530671 - (+591)78864958</p>
-          <p>Teléfonos: 4231765-4215387</p>
-          <p>Facultad de Ciencias y Tecnología (UMSS) - Calle Sucre y parque la Torre, Cochabamba</p>
-        </div>
-        <div className="historial-footer-logo">
-          <p><strong>Olimpiadas Científicas Escolares</strong></p>
-          <img src="/img/footer-icons.png" alt="iconos footer" className="historial-footer-icons" />
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { initialTutorData, validateTutorForm } from '../forms/tutorFormHandler';
 import { validateCompetidorForm } from '../forms/competidorFormHandler';
 import { submitTutorForm } from '../forms/tutorFormHandler';
@@ -43,6 +43,7 @@ export const useRegistroForm = () => {
     const [provincias, setProvincias] = useState([]);
     const [colegios, setColegios] = useState([]);
     const [errors, setErrors] = useState({});
+    const [areas, setAreas] = useState([]);
 
     // Fetch departamentos
     useEffect(() => {
@@ -50,6 +51,21 @@ export const useRegistroForm = () => {
             .then(res => setDepartamentos(res.data))
             .catch(err => console.error('Error cargando departamentos:', err));
     }, []);
+
+    useEffect(() => {
+        axios.get('http://localhost:7777/api/ver-areas')
+            .then(res => {
+                console.log('Áreas cargadas:', res.data);
+                setAreas(res.data);
+            })
+            .catch(err => {
+                console.error('Error cargando áreas:', err);
+                // Establecer un valor por defecto en caso de error
+                setAreas([]);
+            });
+    }, []);
+
+
 
     // Fetch provincias cuando cambia departamento
     useEffect(() => {
@@ -76,10 +92,38 @@ export const useRegistroForm = () => {
         }
     }, [formData.province]);
 
+
     const handleInputChange = (e) => {
         const { id, value } = e.target;
-        const setter = userType === 'competidor' ? setFormData : setTutorData;
-        setter(prev => ({ ...prev, [id]: value }));
+
+        // Manejo especial para el campo área
+        if (id === 'area') {
+            console.log(`Seleccionada área con valor: ${value}`);
+            if (value === "") {
+                // Si se selecciona la opción vacía
+                setTutorData(prev => ({
+                    ...prev,
+                    area: '',
+                    area_id: ''
+                }));
+            } else {
+                // Buscar el área seleccionada por ID
+                const selectedArea = areas.find(area => area.id.toString() === value);
+                console.log('Área seleccionada:', selectedArea);
+
+                if (selectedArea) {
+                    setTutorData(prev => ({
+                        ...prev,
+                        area: selectedArea.nombre,  // Guardar el nombre del área
+                        area_id: selectedArea.id    // Guardar el ID del área
+                    }));
+                }
+            }
+        } else {
+            // Manejo normal para otros campos
+            const setter = userType === 'competidor' ? setFormData : setTutorData;
+            setter(prev => ({ ...prev, [id]: value }));
+        }
     };
 
     const handleNameChange = (e) => {
@@ -132,6 +176,7 @@ export const useRegistroForm = () => {
         provincias,
         colegios,
         errors,
+        areas,
         handleInputChange,
         handleNameChange,
         handleIdChange,

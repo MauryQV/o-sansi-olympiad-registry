@@ -1,0 +1,114 @@
+.modal-tutores-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+  }
+  
+  .modal-tutores {
+    background-color: white;
+    border-radius: 12px;
+    width: 500px;
+    max-width: 90%;
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+  }
+  
+  .modal-tutores-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding-left: 35px;
+    padding-right: 35px;
+    margin-bottom: 8px;
+    background-color: #f8f8f8;
+  }
+  
+  .modal-tutores-header input {
+    flex: 1;
+    height: 40px;
+    border: none;
+    background: transparent;
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 15px;
+    outline: none;
+    color: #333;
+  }
+  
+  .modal-tutores-icono-buscar {
+    position: absolute;
+    left: 10px;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-tutores-boton-cerrar {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  .modal-tutores-subtitulo {
+    font-size: 13px;
+    color: #888;
+    margin: 10px 0;
+    padding-left: 4px;
+  }
+  
+  .modal-tutores-lista {
+    max-height: 230px;
+    overflow-y: auto;
+  }
+  
+  .modal-tutores-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  
+  .modal-tutores-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .modal-tutores-texto {
+    font-size: 14px;
+    color: #222;
+    flex: 1;
+    padding-right: 8px;
+  }
+  
+  .modal-tutores-icono-agregar {
+    color: #0a7cff;
+    display: flex;
+    align-items: center;
+  }
+  
+  .modal-tutores-vacio {
+    text-align: center;
+    color: #444;
+    font-size: 14px;
+    margin-top: 30px;
+  }
+  

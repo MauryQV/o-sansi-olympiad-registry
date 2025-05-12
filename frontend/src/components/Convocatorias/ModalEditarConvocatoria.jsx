@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/Convocatorias/ModalNuevaConvocatoria.css';
+import { obtenerConvocatoriaPorId } from '../../services/convocatoriaService';
+import { getAreas } from '../../services/areaService';
 
 const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => {
   const [formulario, setFormulario] = useState({
@@ -8,31 +10,69 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
     descripcion: '',
     inscripcionInicio: '',
     inscripcionFin: '',
+    pagoInicio: '',
+    pagoFin: '',
     competenciaInicio: '',
     competenciaFin: '',
     areas: [],
   });
 
   const [errores, setErrores] = useState({});
-
-  const areasDisponibles = [
-    'Matemática', 'Robótica', 'Astronomía y Astrofísica',
-    'Biología', 'Química', 'Física', 'Informática'
-  ];
+  const [areasDisponibles, setAreasDisponibles] = useState([]);
 
   useEffect(() => {
-    if (convocatoria) {
-      setFormulario({
-        ...convocatoria,
-        areas: convocatoria.areasSeleccionadas || []
-      });
+    const cargarAreas = async () => {
+      try {
+        const areas = await getAreas(); 
+        setAreasDisponibles(areas.map(area => area.nombre_area)); 
+      } catch (error) {
+        console.error('Error al cargar las áreas:', error);
+      }
+    };
+
+    cargarAreas();
+  }, []); 
+
+  useEffect(() => {
+    const cargarConvocatoria = async () => {
+      if (convocatoria?.id) {
+        try {
+          const datos = await obtenerConvocatoriaPorId(convocatoria.id);
+          
+          // Extract area names instead of IDs to match with areasDisponibles
+          const areasNombres = datos.Area_convocatoria?.map(area => area.nombre_area) || [];
+          
+          setFormulario({
+            nombre: datos.nombre_convocatoria || '',
+            estado: datos.id_estado_convocatoria || 'Borrador',
+            descripcion: datos.descripcion_convocatoria || '',
+            inscripcionInicio: datos.fecha_inicio?.split('T')[0] || '',
+            inscripcionFin: datos.fecha_fin?.split('T')[0] || '',
+            pagoInicio: datos.pago_inicio?.split('T')[0] || '',
+            pagoFin: datos.pago_fin?.split('T')[0] || '',
+            competenciaInicio: datos.competicion_inicio?.split('T')[0] || '',
+            competenciaFin: datos.competicion_fin?.split('T')[0] || '',
+            areas: areasNombres,
+          });
+        } catch (error) {
+          console.error('Error al cargar la convocatoria:', error);
+        }
+      }
+    };
+
+    if (visible) {
+      cargarConvocatoria();
     }
-  }, [convocatoria]);
+  }, [convocatoria, visible]);
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
     setFormulario({ ...formulario, [name]: value });
-    setErrores({ ...errores, [name]: '' });
+    
+    // Clear the specific error when a field is changed
+    if (errores[name]) {
+      setErrores({ ...errores, [name]: '' });
+    }
   };
 
   const manejarCheckbox = (area) => {
@@ -41,7 +81,11 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
       : [...formulario.areas, area];
 
     setFormulario({ ...formulario, areas: seleccionadas });
-    setErrores({ ...errores, areas: '' });
+    
+    // Clear the areas error if at least one area is selected
+    if (errores.areas && seleccionadas.length > 0) {
+      setErrores({ ...errores, areas: '' });
+    }
   };
 
   const validarFormulario = () => {
@@ -51,6 +95,8 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
     
     const fechaInicioInscripcion = formulario.inscripcionInicio ? new Date(formulario.inscripcionInicio) : null;
     const fechaFinInscripcion = formulario.inscripcionFin ? new Date(formulario.inscripcionFin) : null;
+    const fechaInicioPago = formulario.pagoInicio ? new Date(formulario.pagoInicio) : null;
+    const fechaFinPago = formulario.pagoFin ? new Date(formulario.pagoFin) : null;
     const fechaInicioCompetencia = formulario.competenciaInicio ? new Date(formulario.competenciaInicio) : null;
     const fechaFinCompetencia = formulario.competenciaFin ? new Date(formulario.competenciaFin) : null;
   
@@ -66,9 +112,10 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
       nuevosErrores.descripcion = 'Máximo 1000 caracteres.';
     }
   
+    // Only validate future dates for new convocatorias, not when editing existing ones
     if (!formulario.inscripcionInicio) {
       nuevosErrores.inscripcionInicio = 'Ingrese el inicio de inscripción.';
-    } else if (fechaInicioInscripcion < hoy) {
+    } else if (!convocatoria?.id && fechaInicioInscripcion < hoy) {
       nuevosErrores.inscripcionInicio = 'La fecha de inicio de inscripción debe ser mayor a la fecha de hoy.';
     }
   
@@ -78,10 +125,22 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
       nuevosErrores.inscripcionFin = 'La fecha fin de inscripción debe ser mayor a la fecha de inicio.';
     }
   
+    if (!formulario.pagoInicio) {
+      nuevosErrores.pagoInicio = 'Ingrese el inicio del periodo de pago.';
+    } else if (fechaInicioPago && fechaFinInscripcion && fechaInicioPago < fechaFinInscripcion) {
+      nuevosErrores.pagoInicio = 'La fecha de inicio de pago debe ser igual o posterior al fin de inscripción.';
+    }
+  
+    if (!formulario.pagoFin) {
+      nuevosErrores.pagoFin = 'Ingrese el fin del periodo de pago.';
+    } else if (fechaFinPago && fechaInicioPago && fechaFinPago <= fechaInicioPago) {
+      nuevosErrores.pagoFin = 'La fecha fin de pago debe ser posterior al inicio de pago.';
+    }
+  
     if (!formulario.competenciaInicio) {
       nuevosErrores.competenciaInicio = 'Ingrese el inicio de competencia.';
-    } else if (fechaInicioCompetencia && fechaFinInscripcion && fechaInicioCompetencia <= fechaFinInscripcion) {
-      nuevosErrores.competenciaInicio = 'La fecha inicio de competencia debe ser después del fin de inscripción.';
+    } else if (fechaInicioCompetencia && fechaFinPago && fechaInicioCompetencia < fechaFinPago) {
+      nuevosErrores.competenciaInicio = 'El inicio de competencia debe ser igual o posterior al fin del periodo de pago.';
     }
   
     if (!formulario.competenciaFin) {
@@ -97,7 +156,7 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
     setErrores(nuevosErrores);
     return Object.keys(nuevosErrores).length === 0;
   };
-
+  
   const manejarSubmit = (e) => {
     e.preventDefault();
     if (!validarFormulario()) return;
@@ -176,6 +235,31 @@ const ModalEditarConvocatoria = ({ visible, cerrar, convocatoria, guardar }) => 
                 className={errores.inscripcionFin ? 'input-error' : ''}
               />
               {errores.inscripcionFin && <span className="error-text">{errores.inscripcionFin}</span>}
+            </div>
+          </div>
+
+          <div className="input-row">
+            <div className="form-group">
+              <label>Fecha Inicio Pago *</label>
+              <input
+                type="date"
+                name="pagoInicio"
+                value={formulario.pagoInicio}
+                onChange={manejarCambio}
+                className={errores.pagoInicio ? 'input-error' : ''}
+              />
+              {errores.pagoInicio && <span className="error-text">{errores.pagoInicio}</span>}
+            </div>
+            <div className="form-group">
+              <label>Fecha Fin Pago *</label>
+              <input
+                type="date"
+                name="pagoFin"
+                value={formulario.pagoFin}
+                onChange={manejarCambio}
+                className={errores.pagoFin ? 'input-error' : ''}
+              />
+              {errores.pagoFin && <span className="error-text">{errores.pagoFin}</span>}
             </div>
           </div>
 

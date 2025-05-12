@@ -1,48 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDatosRegistroCompetidor } from '../../hooks/useDatosRegistroCompetidor';
 import '../../styles/InscripcionCompetidor/RegistroCompetidores.css';
 
 const RegistroCompetidores = () => {
   const navigate = useNavigate();
-
-  const [inscripcionesActivas, setInscripcionesActivas] = useState(0);
-  const [pagosPendientes, setPagosPendientes] = useState(0);
-  const [convocatoriasDisponibles, setConvocatoriasDisponibles] = useState(0);
-  const [inscripcionActiva, setInscripcionActiva] = useState(null);
-  const [convocatoriaActiva, setConvocatoriaActiva] = useState(null);
-  const [pagos, setPagos] = useState([]);
-
-  useEffect(() => {
-    // Datos ficticios simulando respuesta de la API
-    setInscripcionesActivas(1);
-    setPagosPendientes(1);
-    setConvocatoriasDisponibles(2);
-
-    setInscripcionActiva({
-      area: 'Matemática',
-      categoria: 'Quinto Nivel',
-      grado: '5º',
-      fecha: '01/03/2025',
-      estado: 'Validada'
-    });
-
-    setConvocatoriaActiva({
-      nombre: 'Olimpiada Científica Estudiantil 2025',
-      descripcion: 'Convocatoria Anual para las olimpiadas científicas a nivel departamental',
-      fechaInicio: '2025-03-01',
-      fechaFin: '2025-04-07'
-    });
-
-    setPagos([
-      {
-        boleta: 'BOL-2025-001',
-        area: 'Matemática',
-        monto: 'Bs. 15.00',
-        fecha: '01/04/2025',
-        estado: 'Pendiente'
-      }
-    ]);
-  }, []);
+  const {
+    inscripcionesActivas,
+    pagosPendientes,
+    convocatoriasDisponibles,
+    inscripcionActiva,
+    convocatoriaActiva,
+    pagos
+  } = useDatosRegistroCompetidor();
 
   const irAVistaPagos = () => {
     navigate('/pagos-competidor');
@@ -68,14 +38,14 @@ const RegistroCompetidores = () => {
       </div>
 
       <div className="contenedor-info-tarjetas">
-        <div className="tarjeta-inscripcion-activa">
+        <div className="tarjeta-inscripcion-activa posicion-con-estado">
           <h3 className="titulo-tarjeta">Mis Inscripciones</h3>
           {inscripcionActiva ? (
             <>
               <p><strong>{inscripcionActiva.area}</strong></p>
               <p>Categoría: {inscripcionActiva.categoria}, Grado: {inscripcionActiva.grado}</p>
               <p>Fecha: {inscripcionActiva.fecha}</p>
-              <span className={`estado-inscripcion ${inscripcionActiva.estado.toLowerCase()}`}>
+              <span className={`badge-estado validada`}>
                 {inscripcionActiva.estado}
               </span>
             </>
@@ -84,14 +54,16 @@ const RegistroCompetidores = () => {
           )}
         </div>
 
-        <div className="tarjeta-convocatoria-activa">
+        <div className="tarjeta-convocatoria-activa posicion-con-estado">
           <h3 className="titulo-tarjeta">Convocatorias Activas</h3>
           {convocatoriaActiva ? (
             <>
-              <p><strong>{convocatoriaActiva.nombre}</strong></p>
-              <p>{convocatoriaActiva.descripcion}</p>
-              <p>Inscripción {convocatoriaActiva.fechaInicio} - {convocatoriaActiva.fechaFin}</p>
-              <span className="estado-inscripcion en-inscripcion">En Inscripción</span>
+              <p><strong>{convocatoriaActiva.nombre_convocatoria}</strong></p>
+              <p>{convocatoriaActiva.descripcion_convocatoria}</p>
+              <p>
+                Inscripción {new Date(convocatoriaActiva.fecha_inicio).toLocaleDateString()} - {new Date(convocatoriaActiva.competicion_fin).toLocaleDateString()}
+            </p>
+              <span className="badge-estado en-inscripcion">En Inscripción</span>
             </>
           ) : (
             <p>No hay convocatorias activas.</p>
@@ -99,9 +71,9 @@ const RegistroCompetidores = () => {
         </div>
       </div>
 
-      <div className="seccion-tabla-pagos">
-        <h3 className="titulo-tabla-pagos">Mis Pagos</h3>
-        <table className="tabla-pagos">
+      <div className="tarjeta-pagos-box">
+         <h3 className="titulo-tabla-pagos">Mis Pagos</h3>
+          <table className="tabla-pagos">
           <thead>
             <tr>
               <th>BOLETA</th>
@@ -145,5 +117,3 @@ const RegistroCompetidores = () => {
 };
 
 export default RegistroCompetidores;
-
-

@@ -8,7 +8,8 @@ export const initialTutorData = {
     lastName: '',
     idNumber: '',
     email: '',
-    phone: ''
+    phone: '',
+    area_id: ''
 };
 
 // Validaciónes xd
@@ -30,7 +31,9 @@ export const validateTutorForm = (tutorData, setErrors) => {
     if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(tutorData.email)) {
         errors.email = 'Correo inválido.';
     }
-
+    if (!tutorData.area_id) {
+        errors.area = 'Debe seleccionar un área.';
+    }
     setErrors(errors);
     return Object.keys(errors).length === 0;
 };
@@ -62,12 +65,14 @@ export const submitTutorForm = async (tutorData, setTutorData, setErrors) => {
     if (!validateTutorForm(tutorData, setErrors)) return;
 
     try {
-        const response = await axios.post('http://localhost:7777/api/tutores/registro', {
+        const response = await axios.post('http://localhost:7777/api/registro-tutor', {
             nombre: tutorData.firstName,
             apellido: tutorData.lastName,
             carnet_identidad: tutorData.idNumber,
             correo_electronico: tutorData.email,
-            numero_celular: tutorData.phone
+            numero_celular: tutorData.phone,
+            area_id: tutorData.area_id
+
         });
 
         alert(`Tutor registrado exitosamente.\nCorreo: ${response.data.credenciales.correo_electronico}`);

@@ -1,16 +1,15 @@
-import express from 'express';
+import { Router } from 'express';
 import * as inscripcionController from '../controllers/inscripcionController.js';
-import { verificarToken } from '../middlewares/authMiddleware.js';
+import * as autentificacion from '../middlewares/authMiddleware.js';
 
-const router = express.Router();
+const router = Router();
 
-// Ruta para registrar una inscripción (requiere autenticación)
-router.post('/registrar', verificarToken, inscripcionController.registrarInscripcion);
+router.post('/inscripcion-tutor', autentificacion.authMiddleware, inscripcionController.registrarInscripcion);
 
-// Ruta para obtener información académica (áreas, categorías, grados)
-router.get('/info-academica', inscripcionController.obtenerInfoAcademica);
+router.patch('/inscripcion-tutor/aceptar/:id', autentificacion.authMiddleware, inscripcionController.aceptarInscripcionController);
 
-// Ruta para verificar si el periodo de inscripción está activo
-router.get('/periodo-activo', inscripcionController.verificarPeriodoInscripcion);
+router.patch('/inscripcion-tutor/rechazar/:id', autentificacion.authMiddleware, inscripcionController.rechazarInscripcionController);
 
-export default router; 
+
+
+export default router;

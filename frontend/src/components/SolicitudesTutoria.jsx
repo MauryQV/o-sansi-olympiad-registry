@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
+import { X, Check } from 'lucide-react';
 import '../styles/SolicitudesTutoria.css';
 
 const solicitudesIniciales = [
@@ -10,10 +11,20 @@ const solicitudesIniciales = [
   { id: 5, nombre: 'Pedro Guamán', area: 'Biología - Categoría 6S', grado: '6to de Secundaria', relacion: 'Profesor', estado: 'Rechazada' },
 ];
 
+const MOTIVOS_RECHAZO = {
+  error_envio: 'Solicitud enviada por error',
+  datos_incorrectos: 'El estudiante está con datos incorrectos',
+  tutor_equivocado: 'El estudiante eligió al tutor equivocado',
+  no_reconocido: 'No reconozco a este estudiante',
+  ya_asignado: 'Ya fue asignado por otro tutor',
+  no_autorizado: 'No autorizo su participación',
+  otro: 'Otro motivo',
+};
+
 const SolicitudesTutoria = () => {
   const [solicitudes, setSolicitudes] = useState(solicitudesIniciales);
 
-  const actualizarEstado = (id, nuevoEstado) => {
+  const actualizarEstado = (id, nuevoEstado, motivo = '') => {
     setSolicitudes(prev =>
       prev.map(s =>
         s.id === id ? { ...s, estado: nuevoEstado } : s
@@ -21,12 +32,65 @@ const SolicitudesTutoria = () => {
     );
 
     Swal.fire({
-        icon: nuevoEstado === 'Aceptada' ? 'success' : 'error',
-        title: `Solicitud ${nuevoEstado === 'Aceptada' ? 'aceptada' : 'rechazada'}`,
-        text: `Has ${nuevoEstado === 'Aceptada' ? 'validado' : 'rechazado'} la solicitud del competidor.`,
-        confirmButtonColor: nuevoEstado === 'Aceptada' ? '#3085d6' : '#d33',
-      });
-      
+      icon: nuevoEstado === 'Aceptada' ? 'success' : 'error',
+      title: `Solicitud ${nuevoEstado === 'Aceptada' ? 'aceptada' : 'rechazada'}`,
+      text: nuevoEstado === 'Aceptada'
+        ? 'Has validado la solicitud del competidor.'
+        : `Has rechazado la solicitud. Motivo: ${motivo}`,
+      confirmButtonColor: nuevoEstado === 'Aceptada' ? '#0284C7' : '#E4272A',
+    });
+  };
+
+  const aceptarSolicitud = (id) => {
+    Swal.fire({
+      title: '¿Aceptar solicitud?',
+      text: '¿Estás seguro de aceptar esta solicitud?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, aceptar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#0284C7',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        actualizarEstado(id, 'Aceptada');
+      }
+    });
+  };
+
+  const rechazarSolicitud = (id) => {
+    Swal.fire({
+      title: 'Motivo del rechazo',
+      input: 'select',
+      inputOptions: MOTIVOS_RECHAZO,
+      inputPlaceholder: 'Selecciona un motivo',
+      showCancelButton: true,
+      confirmButtonText: 'Rechazar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#E4272A',
+      inputValidator: (value) => {
+        if (!value) return 'Debes seleccionar un motivo.';
+      }
+    }).then(result => {
+      if (result.isConfirmed) {
+        const motivoKey = result.value;
+        if (motivoKey === 'otro') {
+          Swal.fire({
+            title: 'Especifica el motivo',
+            input: 'textarea',
+            inputPlaceholder: 'Describe el motivo...',
+            showCancelButton: true,
+            confirmButtonText: 'Enviar',
+            confirmButtonColor: '#E4272A',
+          }).then(res => {
+            if (res.isConfirmed) {
+              actualizarEstado(id, 'Rechazada', res.value);
+            }
+          });
+        } else {
+          actualizarEstado(id, 'Rechazada', MOTIVOS_RECHAZO[motivoKey]);
+        }
+      }
+    });
   };
 
   return (
@@ -66,8 +130,14 @@ const SolicitudesTutoria = () => {
                 <td>
                   {s.estado === 'Pendiente' && (
                     <>
-                      <button className="btn-rechazar" onClick={() => actualizarEstado(s.id, 'Rechazada')}>Rechazar</button>
-                      <button className="btn-aceptar" onClick={() => actualizarEstado(s.id, 'Aceptada')}>Aceptar</button>
+                      <button className="btn-rechazar" onClick={() => rechazarSolicitud(s.id)}>
+                        <X size={16} style={{ marginRight: '0.4rem' }} />
+                        Rechazar
+                      </button>
+                      <button className="btn-aceptar" onClick={() => aceptarSolicitud(s.id)}>
+                        <Check size={16} style={{ marginRight: '0.4rem' }} />
+                        Aceptar
+                      </button>
                     </>
                   )}
                 </td>
