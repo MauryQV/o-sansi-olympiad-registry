@@ -24,4 +24,8 @@ router.delete('/eliminar-convocatoria/:id', convocatoriaController.eliminarConvo
 
 router.get('/convocatoria-estados', convocatoriaController.obtenerEstadosConvocatoria);
 
+router.get('/convocatoria-numeros', convocatoriaController.obtenerNumerodeConvocatoriasActivas);
+
+router.get('/convocatoria-una-activa', convocatoriaController.obtenerUnaConvocatoriaActiva);
+
 export default router;

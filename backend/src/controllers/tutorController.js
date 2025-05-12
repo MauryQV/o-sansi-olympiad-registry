@@ -206,3 +206,23 @@ export const getSolicitudesPendientes = async (req, res) => {
         res.status(500).json({ error: error.message || 'Error al cargar solicitudes pendientes.' });
     }
 };
+
+export const obtenerTutoresFiltrados = async (req, res) => {
+    try {
+        const { id_area, nombre } = req.query; // Obtener parámetros de consulta
+        const tutores = await tutorService.buscarTutores(id_area, nombre);
+
+        // Formatear los datos para devolver el nombre completo, teléfono y correo
+        const resultado = tutores.map((tutor) => ({
+            id: tutor.id,
+            nombre_completo: `${tutor.usuario.nombre} ${tutor.usuario.apellido}`,
+            telefono: tutor.numero_celular,
+            correo: tutor.usuario.correo_electronico,
+        }));
+
+        res.status(200).json(resultado);
+    } catch (error) {
+        console.error('Error al obtener tutores filtrados:', error);
+        res.status(500).json({ error: 'Error al obtener tutores filtrados.' });
+    }
+};

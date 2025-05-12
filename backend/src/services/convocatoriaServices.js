@@ -232,3 +232,29 @@ export const eliminarConvocatoria = async (id) => {
 export const obtenerEstadosConvocatoria = async () => {
     return await prisma.estado_convocatoria.findMany();
 };
+
+export const obtenerNumerodeConvocatoriasActivas = async () => {
+    const convocatorias = await prisma.convocatoria.findMany({
+        where: {
+            id_estado_convocatoria: { in: [2, 3] },
+        },
+    });
+
+    return convocatorias.length;
+};
+
+export const obtenerUnaConvocatoriaActiva = async () => {
+    const convocatoria = await prisma.convocatoria.findFirst({
+        where: {
+            id_estado_convocatoria: 2,
+        },
+        select: {
+            nombre_convocatoria: true,
+            descripcion_convocatoria: true,
+            fecha_inicio: true,
+            competicion_fin: true,
+        },
+    });
+
+    return convocatoria;
+};

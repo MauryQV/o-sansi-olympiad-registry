@@ -1,68 +1,72 @@
-// src/components/Login.jsx
 import React, { useState } from "react";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
 import { validateLogin, handleUsuarioInputChange} from "../forms/usuarioFormHandler";
+import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 
-const Login = ({ setRol }) => {
+const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth(); 
   const [formData, setFormData] = useState({ correo: '', contraseña: '' });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
+  const rutasPorRolId = {
+    1: "/inicio-admin",
+    4: "/inicio-tutor",
+    2: "/inicio-competidor",
+    3: "/inicio-cajero",
+  };
+
   const handleChange = handleUsuarioInputChange(formData, setFormData);
-  //simula inicio sesion
 
-  const usuariosSimulados = [
-    { correo: "admin@gmail.com", contraseña: "12345678-A", rol: "admin" },
-    { correo: "tutor@gmail.com", contraseña: "87654321-T", rol: "tutor" },
-    { correo: "competidor@gmail.com", contraseña: "11223344", rol: "competidor" },
-    { correo: "cajero@gmail.com", contraseña: "55667788", rol: "cajero" },
-  ];
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errores = validateLogin(formData);
     setErrors(errores);
 
     if (Object.keys(errores).length === 0) {
-      const usuario = usuariosSimulados.find(
-        (u) =>
-          u.correo.toLowerCase() === formData.correo.toLowerCase() &&
-          u.contraseña === formData.contraseña
-      );
-
-      if (usuario) {
-        setRol(usuario.rol);
-        const rutasPorRol = {
-          admin: "/inicio-admin",
-          competidor: "/inicio-competidor",
-          tutor: "/inicio-tutor",
-          cajero: "/inicio-cajero",
+      try {
+        // Adaptar los datos según lo que espera el backend
+        const datosParaEnviar = {
+          correo_electronico: formData.correo,
+          password: formData.contraseña
         };
-        navigate(rutasPorRol[usuario.rol]);
-      } else {
+
+        console.log("Enviando datos:", JSON.stringify(datosParaEnviar));
+        
+        const response = await axios.post(
+          "http://localhost:7777/api/login", 
+          datosParaEnviar,
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        
+        console.log("respuesta:", response);
+        const { token, usuario } = response.data;
+
+        login(usuario, token); 
+
+        const destino = rutasPorRolId[usuario.rol_id];
+        if (destino) {
+          navigate(destino);
+        } else {
+          console.warn("rol:", usuario.rol_id);
+          navigate("/"); // fallback
+        }
+      } catch (error) {
+        console.error("Error completo:", error);
+        
         setErrors({
-          correo: "Credenciales incorrectas o usuario no encontrado.",
-          contraseña: "Verifique su correo y contraseña.",
+          correo: "Error al iniciar sesion",
+          contraseña: "credenciales incorrectas",
         });
       }
     }
-  };
-
-
-    // Redireccionar según el rols
-  const loginAs = (rol) => {
-    setRol(rol);
-  
-    const rutasPorRol = {
-      admin: "/inicio-admin",
-      competidor: "/inicio-competidor",
-      tutor: "/inicio-tutor",
-      cajero: "/inicio-cajero",
-    };
-  
-    navigate(rutasPorRol[rol] || "/"); // Si no hay rol, va al general pa
   };
 
   const togglePasswordVisibility = () => {
@@ -109,13 +113,6 @@ const Login = ({ setRol }) => {
         <a href="#" className="forgot-password">Olvidé mi contraseña</a>
         <button type="submit" className="login-btn login-submit">Iniciar sesión</button>
       </form>
-
-      <div className="login-button-group">
-        <button className="login-btn" onClick={() => loginAs("admin")}>Administrador</button>
-        <button className="login-btn" onClick={() => loginAs("competidor")}>Competidor</button>
-        <button className="login-btn" onClick={() => loginAs("cajero")}>Cajero</button>
-        <button className="login-btn" onClick={() => loginAs("tutor")}>Tutor</button>
-      </div>
 
       <p className="login-footer">Bienvenido a Oh! SANSI - Plataforma de olimpiadas</p>
     </div>

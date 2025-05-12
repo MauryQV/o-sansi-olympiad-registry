@@ -15,11 +15,10 @@ model Usuario {
   password           String
   rol_id             Int
   createdAt          DateTime       @default(now())
-  estado             Boolean        @default(true)
   competidor         Competidor?
-  Notificacion       Notificacion[]
   tutor              Tutor?
   role               Rol            @relation(fields: [rol_id], references: [id])
+  Notificacion       Notificacion[]
 }
 
 model Rol {
@@ -45,17 +44,18 @@ model Rol_permiso {
 }
 
 model Competidor {
-  id               String              @id @default(uuid())
-  usuario_id       String              @unique
+  id               String    @id @default(uuid())
+  usuario_id       String    @unique
   colegio_id       Int
   provincia_id     Int
-  carnet_identidad String              @unique
+  carnet_identidad String    @unique
   fecha_nacimiento DateTime
-  colegio          Colegio             @relation(fields: [colegio_id], references: [id])
-  provincia        Provincia           @relation(fields: [provincia_id], references: [id])
-  usuario          Usuario             @relation(fields: [usuario_id], references: [id])
-  Inscripcion      Inscripcion[]
-  Inscripciones    Inscripcion_tutor[]
+  colegio          Colegio   @relation(fields: [colegio_id], references: [id])
+  provincia        Provincia @relation(fields: [provincia_id], references: [id])
+  usuario          Usuario   @relation(fields: [usuario_id], references: [id])
+
+  Inscripciones Inscripcion_tutor[]
+  Inscripcion   Inscripcion[]
 }
 
 model Tutor {
@@ -115,8 +115,9 @@ model Area {
   costo             Decimal             @db.Decimal(10, 2)
   Area_convocatoria Area_convocatoria[]
   area_categoria    Categoria_area[]
-  Inscripcion       Inscripcion[]
-  Tutor             Tutor[]
+
+  Tutor       Tutor[]
+  Inscripcion Inscripcion[]
 }
 
 model Categoria {
@@ -173,12 +174,12 @@ model Inscripcion_tutor {
   tutor_id          String
   aprobado          Boolean         @default(false)
   fecha_aprobacion  DateTime?
-  motivo_rechazo_id Int?
-  competidorId      String?
-  Competidor        Competidor?     @relation(fields: [competidorId], references: [id])
+  motivo_rechazo_id Int? //campo opcional para el motivo de rechazo :v 
   inscripcion       Inscripcion     @relation(fields: [inscripcion_id], references: [id])
-  Motivo_rechazo    Motivo_rechazo? @relation(fields: [motivo_rechazo_id], references: [id])
   tutor             Tutor           @relation(fields: [tutor_id], references: [id])
+  Competidor        Competidor?     @relation(fields: [competidorId], references: [id])
+  competidorId      String?
+  MotivoRechazo     Motivo_rechazo? @relation(fields: [motivo_rechazo_id], references: [id])
 }
 
 model Metodo_pago {
@@ -198,15 +199,16 @@ model Inscripcion {
   competidor_id      String
   area_id            Int
   convocatoria_id    Int
-  fecha_inscripcion  DateTime            @default(now())
-  estado_inscripcion String              @default("pendiente")
   categoria_id       Int
-  area               Area                @relation(fields: [area_id], references: [id])
-  Categoria          Categoria           @relation(fields: [categoria_id], references: [id])
-  competidor         Competidor          @relation(fields: [competidor_id], references: [id])
-  convocatoria       Convocatoria        @relation(fields: [convocatoria_id], references: [id])
+  fecha_inscripcion  DateTime            @default(now())
+  estado_inscripcion String              @default("pendiente") // pendiente, aprobado, rechazado
   tutorInscripciones Inscripcion_tutor[]
   pagos              Pago[]
+
+  competidor   Competidor   @relation(fields: [competidor_id], references: [id])
+  area         Area         @relation(fields: [area_id], references: [id])
+  convocatoria Convocatoria @relation(fields: [convocatoria_id], references: [id])
+  categoria    Categoria    @relation(fields: [categoria_id], references: [id])
 }
 
 model Nivel {
@@ -218,7 +220,7 @@ model Nivel {
 model Notificacion {
   id        Int      @id @default(autoincrement())
   usuarioId String
-  tipo      String
+  tipo      String // ejemplo: "solicitud", "respuesta"
   mensaje   String
   leido     Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -226,7 +228,7 @@ model Notificacion {
 }
 
 model Motivo_rechazo {
-  id                Int                 @id @default(autoincrement())
-  mensaje           String
-  Inscripcion_tutor Inscripcion_tutor[]
+  id                 Int                 @id @default(autoincrement())
+  mensaje            String
+  inscripcionesTutor Inscripcion_tutor[]
 }

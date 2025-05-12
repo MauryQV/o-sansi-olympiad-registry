@@ -19,8 +19,11 @@
 }
 
 .reportes-minimal__btn-exportar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.5rem 1rem;
-  background-color: #007bff;
+  background-color: #0284C7;
   border: none;
   border-radius: 6px;
   color: white;
@@ -30,7 +33,7 @@
 }
 
 .reportes-minimal__btn-exportar:hover {
-  background-color: #005dc1;
+  background-color: #042547;
 }
 
 .reportes-minimal__filtros {
@@ -63,25 +66,42 @@
   font-size: 0.95rem;
 }
 
-.reportes-minimal__acciones button {
+.reportes-minimal__acciones {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.boton-con-icono {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.55rem 1.2rem;
-  margin-right: 0.5rem;
   border-radius: 6px;
   border: none;
   font-weight: bold;
-  background-color: #2563eb;
-  color: white;
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
-.reportes-minimal__acciones .secundario {
+.boton-filtrar {
+  background-color: #0284C7;
+  color: white;
+}
+
+.boton-filtrar:hover {
+  background-color: #026aa7;
+}
+
+.boton-restablecer {
   background-color: #e4e4e4;
   color: #333;
 }
 
-.reportes-minimal__acciones button:hover {
-  opacity: 0.9;
+.boton-restablecer:hover {
+  background-color: #ccc;
 }
 
 .reportes-minimal__tabla {
@@ -115,17 +135,17 @@
 }
 
 .estado--pendiente {
-  background-color: #1666e7;
+  background-color: #3B82F6;
   color: #ffffff;
 }
 
 .estado--completado {
-  background-color: #02810fee;
+  background-color: #22C55E;
   color: #ffffff;
 }
 
 .estado--cancelado {
-  background-color: #e63333;
+  background-color: #E4272A;
   color: #ffffff;
 }
 
@@ -138,8 +158,9 @@
 
 .reportes-minimal__paginacion {
   display: flex;
-  justify-content: center;
-  margin-top: 1.2rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-right: 1rem;
   gap: 0.4rem;
 }
 
@@ -154,6 +175,6 @@
 }
 
 .reportes-minimal__paginacion .activo {
-  background-color: #2563eb;
+  background-color: #010713;
   color: white;
 }

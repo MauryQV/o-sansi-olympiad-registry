@@ -112,6 +112,7 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
     <div className="modal-overlay">
       <div className="modal-convocatoria">
         <h3>Nueva Convocatoria</h3>
+        <p>Complete la información para crear una convocatoria</p>
         <form className="modal-form" onSubmit={manejarSubmit}>
           
           {/* Nombre */}

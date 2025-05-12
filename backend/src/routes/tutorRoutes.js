@@ -17,4 +17,9 @@ router.get('/disponibles', tutorController.obtenerTutoresDisponibles);
 
 router.get('/solicitudes', autentificacion.authMiddleware, tutorController.getSolicitudesPendientes);
 
+
+router.get('/tutor-areas', tutorController.obtenerTutoresFiltrados);
+
+
+
 export default router; 
