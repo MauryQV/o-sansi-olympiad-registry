@@ -62,11 +62,14 @@ const Navbar = () => {
       // Mantener también los otros listeners por si acaso se usan en otro lado
       socket.on('notificacion:resultadoSolicitud', (data) => {
         console.log('Notificación de resultado recibida por competidor:', data);
+
+        const esRechazo = data.mensaje?.toLowerCase().includes('rechazada');//esto
         
         setNotificacionesComp((prev) => [
           {
             id: Date.now(),
             mensaje: data.mensaje || 'Resultado de tu solicitud',
+            motivo: esRechazo ? data.motivoRechazo || 'Sin motivo especificado' : null,//esto
             fecha: new Date().toLocaleString()
           },
           ...prev,
@@ -132,17 +135,28 @@ const Navbar = () => {
   useEffect(() => {
     if (rol === 'competidor' && notificacionesComp.length === 0) {
       // Puedes comentar esto en producción, esto es solo para probar
-      /* 
-      setNotificacionesComp([
-        { 
-          id: Date.now(), 
-          mensaje: 'Bienvenido al sistema de competiciones',
-          fecha: new Date().toLocaleString()
-        }
-      ]);
+    
+          setNotificacionesComp([
+            /*
+      {
+        id: Date.now(),
+        mensaje: 'Tu solicitud fue aceptada',
+        motivo: null,
+        fecha: new Date().toLocaleString()
+      }
       */
-    }
-  }, [rol]);
+        {
+        id: Date.now(),
+        mensaje: 'Tu solicitud fue rechazada',
+        motivo: 'Falta de documentos obligatorios',
+        fecha: new Date().toLocaleString()
+      }
+        
+    ]);
+    
+  }
+    
+}, [rol]);
 
   const handleCerrarNotificacion = (id) => {
     setNotificacionesComp(prev => prev.filter(n => n.id !== id));
@@ -323,6 +337,9 @@ const Navbar = () => {
                   <div key={n.id} className="notificacion-item">
                     <div className="notif-header">
                       <p className="mensaje"><strong>{n.mensaje}</strong></p>
+                       {n.motivo && (
+                          <p className="motivo"><em>Motivo: {n.motivo}</em></p>
+                        )}
                       <small className="fecha">{n.fecha}</small>
                     </div>
                     <button className="cerrar-notif" onClick={() => handleCerrarNotificacion(n.id)}>
