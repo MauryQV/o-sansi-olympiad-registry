@@ -21,6 +21,7 @@ import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
 import Inicio from "./components/Inicio.jsx";
 import Areas from "./components/AreasInicio.jsx";
 import Acercade from "./components/AcercaDe.jsx";
+//improt InicioAdmin from "./components/incioAdmin.jsx";
 
 
 function App() {
