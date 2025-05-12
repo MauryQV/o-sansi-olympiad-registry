@@ -104,3 +104,23 @@ export const obtenerEstadosConvocatoria = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+export const obtenerNumerodeConvocatoriasActivas = async (req, res) => {
+    try {
+        const convocatorias_activas = await convocatoriaService.obtenerNumerodeConvocatoriasActivas();
+        res.json({ convocatorias_activas });
+    } catch (error) {
+        console.error('error al obtener el numero de convocatorias activas', error.message);
+        res.status(400).json({ error: error.message });
+    }
+}
+
+export const obtenerUnaConvocatoriaActiva = async (req, res) => {
+    try {
+        const convocatoria = await convocatoriaService.obtenerUnaConvocatoriaActiva();
+        res.json(convocatoria);
+    } catch (error) {
+        console.error('error al obtener la convocatoria activa', error.message);
+        res.status(400).json({ error: error.message });
+    }
+}

@@ -64,3 +64,16 @@ export const eliminarArea = async (req, res, next) => {
         next(error);
     }
 }
+
+export const obtenerCategoriasArea = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const categorias = await areaService.getCategoriasArea(id);
+        if (!categorias) {
+            return res.status(404).json({ message: 'No se encontraron categorias para esta area' });
+        }
+        res.status(200).json(categorias);
+    } catch (error) {
+        next(error);
+    }
+}

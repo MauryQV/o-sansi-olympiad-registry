@@ -156,3 +156,30 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
         estado: s.inscripcion.estado_inscripcion
     }));
 };
+
+
+export const buscarTutores = async (id_area, nombre) => {
+    return await prisma.tutor.findMany({
+        where: {
+            ...(id_area && { area_id: parseInt(id_area, 10) }), // Filtrar por área si se proporciona
+            ...(nombre && {
+                usuario: {
+                    OR: [
+                        { nombre: { contains: nombre, mode: 'insensitive' } },
+                        { apellido: { contains: nombre, mode: 'insensitive' } },
+                    ],
+                },
+            }), // filtrar por nombre y/o apellido
+        },
+        include: {
+            usuario: {
+                select: {
+                    id: true,
+                    nombre: true,
+                    apellido: true,
+                    correo_electronico: true,
+                },
+            },
+        },
+    });
+};
