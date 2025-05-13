@@ -4,6 +4,7 @@ CREATE TABLE "Usuario" (
     "correo_electronico" TEXT NOT NULL,
     "nombre" TEXT NOT NULL,
     "apellido" TEXT NOT NULL,
+    "estado" BOOLEAN NOT NULL DEFAULT true,
     "password" TEXT NOT NULL,
     "rol_id" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -137,7 +138,8 @@ CREATE TABLE "Pago" (
     "id" SERIAL NOT NULL,
     "inscripcion_id" INTEGER NOT NULL,
     "monto" DECIMAL(65,30) NOT NULL,
-    "estado" TEXT NOT NULL DEFAULT 'pendiente',
+    "estado" TEXT NOT NULL DEFAULT 'Pendiente',
+    "codigo_pago" TEXT NOT NULL,
     "fecha_pago" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "metodo_pago_id" INTEGER NOT NULL,
 
@@ -171,7 +173,6 @@ CREATE TABLE "Inscripcion_tutor" (
     "fecha_aprobacion" TIMESTAMP(3),
     "motivo_rechazo_id" INTEGER,
     "competidorId" TEXT,
-    "motivoRechazoId" INTEGER,
 
     CONSTRAINT "Inscripcion_tutor_pkey" PRIMARY KEY ("id")
 );
@@ -198,6 +199,7 @@ CREATE TABLE "Inscripcion" (
     "competidor_id" TEXT NOT NULL,
     "area_id" INTEGER NOT NULL,
     "convocatoria_id" INTEGER NOT NULL,
+    "categoria_id" INTEGER NOT NULL,
     "fecha_inscripcion" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "estado_inscripcion" TEXT NOT NULL DEFAULT 'pendiente',
 
@@ -225,11 +227,11 @@ CREATE TABLE "Notificacion" (
 );
 
 -- CreateTable
-CREATE TABLE "MotivoRechazo" (
+CREATE TABLE "Motivo_rechazo" (
     "id" SERIAL NOT NULL,
     "mensaje" TEXT NOT NULL,
 
-    CONSTRAINT "MotivoRechazo_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Motivo_rechazo_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -255,6 +257,9 @@ CREATE UNIQUE INDEX "Tutor_carnet_identidad_key" ON "Tutor"("carnet_identidad");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Tutor_numero_celular_key" ON "Tutor"("numero_celular");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Pago_codigo_pago_key" ON "Pago"("codigo_pago");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Metodo_pago_nombre_key" ON "Metodo_pago"("nombre");
@@ -332,7 +337,7 @@ ALTER TABLE "Inscripcion_tutor" ADD CONSTRAINT "Inscripcion_tutor_tutor_id_fkey"
 ALTER TABLE "Inscripcion_tutor" ADD CONSTRAINT "Inscripcion_tutor_competidorId_fkey" FOREIGN KEY ("competidorId") REFERENCES "Competidor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Inscripcion_tutor" ADD CONSTRAINT "Inscripcion_tutor_motivoRechazoId_fkey" FOREIGN KEY ("motivoRechazoId") REFERENCES "MotivoRechazo"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Inscripcion_tutor" ADD CONSTRAINT "Inscripcion_tutor_motivo_rechazo_id_fkey" FOREIGN KEY ("motivo_rechazo_id") REFERENCES "Motivo_rechazo"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Inscripcion" ADD CONSTRAINT "Inscripcion_competidor_id_fkey" FOREIGN KEY ("competidor_id") REFERENCES "Competidor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -342,6 +347,9 @@ ALTER TABLE "Inscripcion" ADD CONSTRAINT "Inscripcion_area_id_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "Inscripcion" ADD CONSTRAINT "Inscripcion_convocatoria_id_fkey" FOREIGN KEY ("convocatoria_id") REFERENCES "Convocatoria"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Inscripcion" ADD CONSTRAINT "Inscripcion_categoria_id_fkey" FOREIGN KEY ("categoria_id") REFERENCES "Categoria"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Notificacion" ADD CONSTRAINT "Notificacion_usuarioId_fkey" FOREIGN KEY ("usuarioId") REFERENCES "Usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -12,6 +12,7 @@ model Usuario {
   correo_electronico String         @unique
   nombre             String
   apellido           String
+  estado             Boolean        @default(true)
   password           String
   rol_id             Int
   createdAt          DateTime       @default(now())
@@ -144,8 +145,9 @@ model Grado {
 model Pago {
   id             Int         @id @default(autoincrement())
   inscripcion_id Int
-  monto          Decimal
-  estado         String      @default("pendiente")
+  monto          Decimal     @db.Decimal(10, 2)
+  estado         String      @default("Pendiente")
+  codigo_pago    String      @unique
   fecha_pago     DateTime    @default(now())
   metodo_pago_id Int
   inscripcion    Inscripcion @relation(fields: [inscripcion_id], references: [id])

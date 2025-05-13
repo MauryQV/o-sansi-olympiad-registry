@@ -14,10 +14,10 @@ export const registrarInscripcion = async (req, res, next) => {
       return res.status(404).json({ error: 'Competidor no encontrado para este usuario.' });
     }
 
-    // Obtener los datos del cuerpo de la solicitud
+    // datos de la inscripcion
     const { area_id, categoria_id, tutor_ids } = req.body;
 
-    // Llamar al servicio para crear la inscripción
+    // Llamar al servicio para crear la inscripcion
     const resultado = await inscripcionService.crearInscripcion({
       competidor_id: competidor.id, // Obtenido del usuario autenticado
       categoria_id,
