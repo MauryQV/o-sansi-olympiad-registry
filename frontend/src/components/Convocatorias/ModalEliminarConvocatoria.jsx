@@ -10,7 +10,7 @@ const ModalEliminarConvocatoria = ({ visible, cerrar, confirmar, convocatoria })
         <h3 className="modal-eliminar-titulo">¿Eliminar convocatoria?</h3>
         <p className="modal-eliminar-texto">
           Esta acción no se puede deshacer. Eliminará permanentemente la convocatoria
-          <strong> "{convocatoria.nombre}"</strong>.
+          <strong> "{convocatoria.nombre_convocatoria}"</strong>.
         </p>
 
         <div className="modal-eliminar-botones">
