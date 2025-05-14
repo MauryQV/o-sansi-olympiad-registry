@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2'; 
 import '../styles/InicioAdmin.css';
 
 const InicioAdmin = () => {
@@ -11,43 +12,41 @@ const InicioAdmin = () => {
   const [convocatoriasRecientes, setConvocatoriasRecientes] = useState([]);
   const [areas, setAreas] = useState([]);
 
+  const cargarAreas = async () => {
+    try {
+      const response = await fetch('http://localhost:7777/api/ver-areas'); 
+      if (!response.ok) {
+        throw new Error('Error al obtener las áreas');
+      }
+      const data = await response.json();
+      setAreas(data);
+      setEstadisticas(prevEstadisticas => ({
+      ...prevEstadisticas,
+      areas: data.length, 
+    }));
+    } catch (error) {
+      console.error('Error cargando áreas:', error);
+      Swal.fire('Error', 'No se pudieron cargar las áreas', 'error');
+    }
+  };
+  const cargarConvocatorias = async () => {
+    try {
+      const response = await fetch('http://localhost:7777/api/convocatorias'); 
+      if (!response.ok) {
+        throw new Error('Error al obtener las convocatorias');
+      }
+      const data = await response.json();
+      setConvocatoriasRecientes(data);
+    } catch (error) {
+      console.error('Error cargando convocatorias:', error);
+      Swal.fire('Error', 'No se pudieron cargar las convocatorias', 'error');
+    }
+  };
+  
+
   useEffect(() => {
-    // Simulación de datos para frontend sin backend
-    setTimeout(() => {
-      setEstadisticas({
-        areas: 7,
-        convocatorias: 1,
-        competidores: 5,
-        inscripciones: 5,
-      });
-
-      setConvocatoriasRecientes([
-        {
-          nombre: 'Olimpiada Científica Estudiantil 2025',
-          descripcion: 'Convocatoria anual para las olimpiadas científicas a nivel departamental.',
-          fecha_inicio: '2025-03-01',
-          fecha_fin: '2025-05-31',
-          estado: 'En inscripción'
-        },
-        {
-          nombre: 'Olimpiada Científica Estudiantil 2024',
-          descripcion: 'Convocatoria anual para las olimpiadas científicas a nivel departamental.',
-          fecha_inicio: '2024-03-01',
-          fecha_fin: '2024-05-31',
-          estado: 'Finalizado'
-        }
-      ]);
-
-      setAreas([
-        { nombre: 'Matemática', descripcion: 'Olimpiada de Matemática con énfasis en el razonamiento lógico y numérico.' },
-        { nombre: 'Robótica', descripcion: 'Competencia de diseño, construcción y programación de robots.' },
-        { nombre: 'Astronomía y Astrofísica', descripcion: 'Estudio de cuerpos celestes y fenómenos del universo observable.' },
-        { nombre: 'Biología', descripcion: 'Competencia sobre los principios fundamentales de la biología celular y molecular.' },
-        { nombre: 'Química', descripcion: 'Olimpiada centrada en principios químicos y solución de problemas experimentales.' },
-        { nombre: 'Física', descripcion: 'Competencia sobre los principios físicos, leyes del movimiento y termodinámica.' },
-        { nombre: 'Informática', descripcion: 'Desafíos de programación, algoritmos y estructuras de datos.' }
-      ]);
-    }, 500);
+    cargarAreas();
+    cargarConvocatorias();
   }, []);
 
   return (
@@ -66,12 +65,12 @@ const InicioAdmin = () => {
           <div className="admin-lista">
             {convocatoriasRecientes.map((c, i) => (
               <div key={i} className="convocatoria-item">
-                <strong>{c.nombre}</strong>
-                <p>{c.descripcion}</p>
-                <p>Inscripción: {c.fecha_inicio} - {c.fecha_fin}</p>
-                <di className="convocatoria-reciente-estado">
-                  <span className={`estado-tag ${c.estado.toLowerCase().replace(/\s+/g, '-')}`}>{c.estado}</span>
-                </di>
+                <strong>{c.nombre_convocatoria}</strong>
+                <p>{c.descripcion_convocatoria}</p>
+                <p>Inscripción: {c.fecha_inicio.split('T')[0]} - {c.fecha_fin.split('T')[0]}</p>
+                <div className="convocatoria-reciente-estado">
+                    <span className={`estado-tag ${c.estado.replace(/\s+/g, '-')}`}> {c.estado}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -82,8 +81,8 @@ const InicioAdmin = () => {
           <div className="admin-lista-scroll">
             {areas.map((a, i) => (
               <div key={i} className="area-item">
-                <strong>{a.nombre}</strong>
-                <p>{a.descripcion.slice(0, 60)}...</p>
+                <strong>{a.nombre_area}</strong>
+                <p>{a.descripcion_area.slice(0, 60)}...</p>
               </div>
             ))}
           </div>
