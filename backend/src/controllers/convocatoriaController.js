@@ -10,7 +10,7 @@ export const crearConvocatoriaController = async (req, res) => {
     }
 };
 
-export const asignarCategoria = async (req, res, next) => {
+/*export const asignarCategoria = async (req, res, next) => {
     try {
         const { convocatoriaId, categoriaId } = req.body;
         const result = await convocatoriaService.asignarCategoriaAConvocatoria(convocatoriaId, categoriaId);
@@ -18,7 +18,7 @@ export const asignarCategoria = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+}*/
 
 export const obtenerConvocatorias = async (req, res, next) => {
     try {
@@ -123,4 +123,19 @@ export const obtenerUnaConvocatoriaActiva = async (req, res) => {
         console.error('error al obtener la convocatoria activa', error.message);
         res.status(400).json({ error: error.message });
     }
+}
+
+export const visualizarConvocatoria = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const convocatoria = await convocatoriaService.visualizarConvocatoria(id);
+        if (!convocatoria) {
+            return res.status(404).json({ message: 'Convocatoria no encontrada' });
+        }
+        res.json(convocatoria);
+    } catch (error) {
+        console.error('error al visualizar la convocatoria', error.message);
+        res.status(400).json({ error: error.message });
+    }
+
 }

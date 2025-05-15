@@ -15,6 +15,7 @@ import inscripcionRoutes from './routes/inscripcionRoutes.js';
 import competidorRoutes from './routes/competidorRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import pagoRoutes from './routes/pagoRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
 // Inicializar Express
@@ -44,6 +45,7 @@ app.use('/api', tutorRoutes);
 app.use('/api', inscripcionRoutes);
 app.use('/api', locationRoutes);
 app.use('/api', competidorRoutes);
+app.use('/api/pagos', pagoRoutes);
 app.use('/api/usuarios', userRoutes);
 
 // Ruta de prueba

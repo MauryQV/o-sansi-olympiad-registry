@@ -1,4 +1,3 @@
-import supabase from "../config/supabaseClient.js";
 import jwt from "jsonwebtoken";
 import { validarToken } from '../utils/jwtUtils.js';
 import prisma from '../config/prismaClient.js';
@@ -8,6 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export const authMiddleware = async (req, res, next) => {
   try {
+
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -17,7 +17,7 @@ export const authMiddleware = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET);
 
-    // Agregamos el usuario decodificado al request
+
     req.user = {
       id: decoded.id,           // Asegúrate que el token tiene el ID del usuario
       rol: decoded.rol || null  // Puedes agregar más campos si querés
@@ -37,19 +37,17 @@ export const authMiddleware = async (req, res, next) => {
 export const verificarToken = (req, res, next) => {
   // Obtener el token del encabezado
   const token = req.headers.authorization;
-
+  //console.log('Token recibido:', token);//debuggggggggggggggggggggggggggggggg
   if (!token) {
-    return res.status(401).json({ error: 'Acceso denegado. No se proporcionó token de autenticación' });
+    return res.status(401).json({ error: 'Acceso denegado. No se proporciono token de autenticación' });
   }
 
-  // Validar el token
   const usuario = validarToken(token);
 
   if (!usuario) {
-    return res.status(401).json({ error: 'Token inválido o expirado' });
+    return res.status(401).json({ error: 'Token invalido o expirado' });
   }
 
-  // Guardar el usuario en la solicitud para uso posterior
   req.usuario = usuario;
   next();
 };
@@ -60,7 +58,7 @@ export const verificarToken = (req, res, next) => {
 export const verificarAdmin = async (req, res, next) => {
   try {
     const usuarioId = req.usuario.id;
-    
+
     // Obtener el rol del usuario
     const usuario = await prisma.usuario.findUnique({
       where: { id: usuarioId },

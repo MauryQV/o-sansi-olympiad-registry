@@ -7,7 +7,7 @@ import TablaArea from "./components/Areas/TablaArea.jsx";
 import RegistroUsuario from "./components/RegistroUsuario.jsx";
 import Pagos from "./components/PagosCompetidor/Pagos.jsx";
 import DetallePago from "./components/PagosCompetidor/DetallePago.jsx";
-import AdminGestionUsuario from './components/AdminGestionUsuarios/AdminGestionUsuario.jsx';
+import AdminGestionUsuario from "./components/AdminGestionUsuarios/AdminGestionUsuario.jsx";
 import RegistroCompetidores from "./components/InscripcionCompetidor/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/InscripcionCompetidor/FormularioInscripcion.jsx";
 import Reportes from "./components/reportes/Reportes.jsx";
@@ -17,11 +17,11 @@ import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
 import InicioTutor from "./components/InicioTutor.jsx";
 import InicioCajero from "./components/InicioCajero.jsx";
 import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
+import { GestionUsuarios } from "./components/admin";
 //import GestionUsuarios from "./components/admin/GestionUsuarios.jsx";
 import Inicio from "./components/Inicio.jsx";
 import Areas from "./components/AreasInicio.jsx";
 import Acercade from "./components/AcercaDe.jsx";
-
 
 function App() {
   const [rol, setRol] = useState(() => localStorage.getItem("rol"));
