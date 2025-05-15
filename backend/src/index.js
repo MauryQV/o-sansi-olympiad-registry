@@ -16,6 +16,7 @@ import competidorRoutes from './routes/competidorRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import pagoRoutes from './routes/pagoRoutes.js';
+import reportesRoutes from './routes/reportesRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
 // Inicializar Express
@@ -47,6 +48,7 @@ app.use('/api', locationRoutes);
 app.use('/api', competidorRoutes);
 app.use('/api/pagos', pagoRoutes);
 app.use('/api/usuarios', userRoutes);
+app.use('/api/reportes', reportesRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
