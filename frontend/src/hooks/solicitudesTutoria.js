@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react';
-import { obtenerSolicitudesPendientes } from '../services/solicitudTutor';
+import { obtenerSolicitudesPendientes, obtenerMotivosRechazo } from '../services/solicitudTutor';
 
 export const useSolicitudesTutoria = () => {
     const [solicitudes, setSolicitudes] = useState([]);
+    const [motivosRechazo, setMotivosRechazo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const cargarSolicitudes = async () => {
+    const cargarDatos = async () => {
         try {
             setLoading(true);
-            const data = await obtenerSolicitudesPendientes();
+            const [solicitudesData, motivosData] = await Promise.all([
+                obtenerSolicitudesPendientes(),
+                obtenerMotivosRechazo()
+            ]);
 
-            // Adaptamos estructura para el frontend
-            const adaptadas = data.map((s) => ({
+            const adaptadas = solicitudesData.map((s) => ({
                 id: s.solicitud_id,
                 nombre: s.nombre_completo,
                 area: `${s.area_nombre} - ${s.categoria_nombre}`,
@@ -22,8 +25,9 @@ export const useSolicitudesTutoria = () => {
             }));
 
             setSolicitudes(adaptadas);
+            setMotivosRechazo(motivosData);
         } catch (err) {
-            console.error('Error cargando solicitudes:', err);
+            console.error('Error cargando datos:', err);
             setError(err.message || 'Error inesperado');
         } finally {
             setLoading(false);
@@ -31,8 +35,8 @@ export const useSolicitudesTutoria = () => {
     };
 
     useEffect(() => {
-        cargarSolicitudes();
+        cargarDatos();
     }, []);
 
-    return { solicitudes, setSolicitudes, loading, error };
+    return { solicitudes, setSolicitudes, motivosRechazo, loading, error };
 };

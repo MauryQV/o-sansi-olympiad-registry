@@ -18,6 +18,7 @@ router.patch('/inscripcion-tutor/aceptar/:id', autentificacion.verificarToken, e
 //rechazar inscripcion
 router.patch('/inscripcion-tutor/rechazar/:id', autentificacion.verificarToken, esTutor, inscripcionController.rechazarInscripcionController);
 
-
+//obtener motivos de rechazo
+router.get('/inscripcion-tutor/motivos-rechazo', inscripcionController.obtenerMotivosRechazoController);
 
 export default router;

@@ -83,3 +83,14 @@ export const rechazarInscripcionController = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+
+export const obtenerMotivosRechazoController = async (req, res) => {
+  try {
+    const motivos = await inscripcionService.obtenerMotivosRechazo();
+    res.status(200).json(motivos);
+  } catch (error) {
+    console.error('Error al obtener motivos de rechazo:', error.message);
+    res.status(400).json({ error: error.message });
+  }
+};

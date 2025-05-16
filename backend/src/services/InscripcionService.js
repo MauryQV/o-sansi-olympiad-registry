@@ -222,3 +222,13 @@ export const rechazarInscripcion = async ({ inscripcion_id, tutorId, motivo_rech
 
     return { mensaje: 'Solicitud rechazada con motivo.' };
 };
+
+export const obtenerMotivosRechazo = async () => {
+    try {
+        const motivos = await prisma.motivo_rechazo.findMany();
+        return motivos;
+    } catch (error) {
+        console.error('Error al obtener motivos de rechazo:', error);
+        throw new Error('Error al obtener motivos de rechazo.');
+    }
+};
