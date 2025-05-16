@@ -81,3 +81,14 @@ export const registrarInscripcion = async ({ area_id, categoria_id, tutor_ids })
         throw error;
     }
 };
+
+
+export const obtenerGrados = async (id) => {
+    try {
+        const response = await api.get(`/ver-grados-categoria/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener grados:', error);
+        throw error;
+    }
+};
