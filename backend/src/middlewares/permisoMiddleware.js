@@ -1,5 +1,40 @@
 import prisma from "../config/prismaClient.js";
 
+
+export const esCajero = (req, res, next) => {
+
+    if (!req.usuario || !req.usuario.rol_id) {
+        return res.status(401).json({
+            error: 'token invalido'
+        });
+    }
+
+    //console.log('Rol del usuario:', req.usuario.rol_id); // Debugging
+    if (req.usuario.rol_id !== 3) { // id 3 rol de cajero
+        return res.status(403).json({
+            error: 'Acceso denegado'
+        });
+    }
+
+    next();
+};
+
+export const esTutor = (req, res, next) => {
+    if (!req.usuario || !req.usuario.rol_id) {
+        return res.status(401).json({
+            error: 'token invalido 123'
+        });
+    }
+    //console.log('req.usuario', req.usuario.rol_id);
+    if (req.usuario.rol_id !== 4) {
+        return res.status(403).json({
+            error: 'Acceso denegado, usted debe ser un tutor'
+        });
+    }
+
+    next();
+}
+
 export const requirePermiso = (nombrePermiso) => {
     return async (req, res, next) => {
         if (!req.usuario || !req.usuario.rol_id) {
@@ -30,18 +65,3 @@ export const requirePermiso = (nombrePermiso) => {
         }
     };
 };
-
-
-export const esCajero = (req, res, next) => {
-
-    if (!req.usuario || !req.usuario.rol_id) {
-        return res.status(401).json({ error: 'token invalido' });
-    }
-
-    console.log('Rol del usuario:', req.usuario.rol_id); // Debugging
-    if (req.usuario.rol_id !== 3) { // id 2 rol de cajero
-        return res.status(403).json({ error: 'Acceso denegado' });
-    }
-
-    next();
-}

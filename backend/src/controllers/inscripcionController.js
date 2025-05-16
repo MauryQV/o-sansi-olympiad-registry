@@ -36,7 +36,7 @@ export const registrarInscripcion = async (req, res, next) => {
 export const aceptarInscripcionController = async (req, res) => {
   try {
     // obtener el usuario autenticado
-    const usuarioId = req.user.id;
+    const usuarioId = req.usuario.id;
 
     // buscar el tutor asociado al usuario
     const tutor = await prisma.tutor.findUnique({
@@ -61,7 +61,7 @@ export const aceptarInscripcionController = async (req, res) => {
 export const rechazarInscripcionController = async (req, res) => {
   try {
     // Obtener el usuario autenticado
-    const usuarioId = req.user.id;
+    const usuarioId = req.usuario.id;
 
     // Buscar el tutor asociado al usuario
     const tutor = await prisma.tutor.findUnique({

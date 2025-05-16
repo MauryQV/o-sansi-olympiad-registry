@@ -124,6 +124,7 @@ const validarInscripcionDuplicada = async (competidor_id, convocatoria_id, area_
 
 
 export const aceptarInscripcion = async ({ inscripcion_id, tutorId }) => {
+    // console.log('inscripcion_id', inscripcion_id);
     const inscripcionTutor = await prisma.inscripcion_tutor.findFirst({
         where: { inscripcion_id, tutor_id: tutorId },
         include: { inscripcion: true }
