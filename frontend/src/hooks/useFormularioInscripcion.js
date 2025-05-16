@@ -15,18 +15,19 @@ export const useFormularioInscripcion = () => {
   const [areasDisponibles, setAreasDisponibles] = useState([]);
   const [categoriasPorArea, setCategoriasPorArea] = useState({});
   const [categoriasDisponibles, setCategoriasDisponibles] = useState([]);
-  const [gradosDisponibles, setGradosDisponibles] = useState([]);
   const [nivelesDisponibles, setNivelesDisponibles] = useState([]);
   const [tutoresDisponibles, setTutoresDisponibles] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [resultados, setResultados] = useState([]);
+  const [gradosDisponibles, setGradosDisponibles] = useState([]);
+  const [cargandoGrados, setCargandoGrados] = useState(false);
+
 
   const validarFormulario = () => {
     const nuevos = {};
     if (!area) nuevos.area = true;
     if (!categoria) nuevos.categoria = true;
-    //if (!grado) nuevos.grado = true;
-    //if (!nivel) nuevos.nivel = true;
+    if (!grado) nuevos.grado = true;
     if (tutores.length === 0) nuevos.tutores = true;
     setErrores(nuevos);
     return Object.keys(nuevos).length === 0;
@@ -76,14 +77,34 @@ export const useFormularioInscripcion = () => {
 
 
   useEffect(() => {
+    const cargarGrados = async () => {
+      if (categoria) {
+        setCargandoGrados(true);
+        try {
+          const data = await competidorInscripcion.obtenerGrados(categoria);
 
-    setGradosDisponibles(['1°', '2°', '3°', '4°', '5°', '6°']);
+          // Asegurarse que sea array
+          if (data && typeof data.rango === 'string') {
+            setGradosDisponibles([data.rango]);
+          } else {
+            setGradosDisponibles([]);
+          }
 
-    setNivelesDisponibles(['Primaria', 'Secundaria']);
+          setGrado('');
+        } catch (error) {
+          console.error('Error al cargar grados para la categoría:', error);
+          setGradosDisponibles([]);
+        } finally {
+          setCargandoGrados(false);
+        }
+      } else {
+        setGradosDisponibles([]);
+      }
+    };
 
 
-
-  }, []);
+    cargarGrados();
+  }, [categoria]);
 
   useEffect(() => {
     const cargarTutores = async () => {

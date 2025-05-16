@@ -123,7 +123,7 @@ export const validarPago = async (pagoId) => {
     }
 
     if (pago.estado !== 'Pendiente') {
-        throw new Error('El pago ya esta validado o rechazado');
+        throw new Error('El pago ya esta validado');
     }
     //falta agregar la logica
     return await prisma.pago.update({
@@ -134,6 +134,8 @@ export const validarPago = async (pagoId) => {
             estado: 'Validado'
         }
     });
+
+    
 }
 
 export const buscarPagos = async ({ tipo, valor }) => {

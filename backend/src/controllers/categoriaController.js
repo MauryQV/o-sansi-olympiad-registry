@@ -42,30 +42,21 @@ export const obtenerGradosPorCategoria = async (req, res, next) => {
         const { id } = req.params;
         const grados = await categoriaService.obtenerGradosCategorias(id);
 
-        // Mapeo para reasignar los valores de los grados
-        const formatearGrado = (grado) => {
-            const equivalencias = {
-                "Primero": "1º",
-                "Segundo": "2º",
-                "Tercero": "3º",
-                "Cuarto": "4º",
-                "Quinto": "5º",
-                "Sexto": "6º",
-            };
+        if (!grados || !grados.grado_min || !grados.grado_max) {
+            return res.status(404).json({ error: 'Grados no encontrados para esta categoría' });
+        }
 
-            return {
-                nombre_grado: equivalencias[grado.nombre_grado] || grado.nombre_grado, // Reasignar si existe en equivalencias
-                nivel: grado.nivel.nombre_nivel, // Mantener el nombre del nivel
-            };
-        };
+        const gradoMinStr = `${grados.grado_min.nombre_grado} de ${grados.grado_min.nivel.nombre_nivel}`.toUpperCase();
+        const gradoMaxStr = `${grados.grado_max.nombre_grado} de ${grados.grado_max.nivel.nombre_nivel}`.toUpperCase();
 
-        const respuestaFormateada = {
-            nombre_categoria: grados.nombre_categoria,
-            grado_min: formatearGrado(grados.grado_min),
-            grado_max: formatearGrado(grados.grado_max),
-        };
+        const mismoGrado = (
+            grados.grado_min.nombre_grado === grados.grado_max.nombre_grado &&
+            grados.grado_min.id_nivel === grados.grado_max.id_nivel
+        );
 
-        res.status(200).json(respuestaFormateada);
+        const rango = mismoGrado ? gradoMinStr : `${gradoMinStr} - ${gradoMaxStr}`;
+
+        res.status(200).json({ rango });
     } catch (error) {
         next(error);
     }
