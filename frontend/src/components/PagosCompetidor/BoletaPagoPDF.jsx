@@ -41,9 +41,9 @@ const BoletaPagoPDF = ({
             </View>
           </View>
 
-          <Text style={styles.title}>BOLETA DE PAGO</Text>
+          <Text style={styles.titulo}>BOLETA DE PAGO</Text>
 
-          <View style={styles.infoTableRight}>
+          <View style={styles.infoTablaDer}>
             <View style={styles.infoRow}>
               <Text style={styles.label}>Nro. Control:</Text>
               <Text>{control}</Text>
