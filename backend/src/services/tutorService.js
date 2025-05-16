@@ -125,9 +125,9 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
             aprobado: false
         },
         select: {
-            id: true,
             inscripcion: {
                 select: {
+                    id: true,
                     fecha_inscripcion: true,
                     estado_inscripcion: true,
                     competidor: {
@@ -166,7 +166,7 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
     });
 
     return solicitudes.map((s) => ({
-        solicitud_id: s.id,
+        solicitud_id: s.inscripcion.id,
         nombre_completo: `${s.inscripcion.competidor.usuario.nombre} ${s.inscripcion.competidor.usuario.apellido}`,
         area_nombre: s.inscripcion.area.nombre_area,
         categoria_nombre: s.inscripcion.categoria.nombre_categoria,
@@ -176,6 +176,7 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
         estado: s.inscripcion.estado_inscripcion
     }));
 };
+
 
 
 

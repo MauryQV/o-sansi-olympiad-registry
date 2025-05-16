@@ -3,6 +3,8 @@ import Swal from 'sweetalert2';
 import { X, Check } from 'lucide-react';
 import '../styles/SolicitudesTutoria.css';
 import { useSolicitudesTutoria } from '../hooks/solicitudesTutoria';
+import { aceptarSolicitudTutor } from '../services/solicitudTutor';
+
 
 const SolicitudesTutoria = () => {
   const { solicitudes, setSolicitudes, motivosRechazo, loading, error } = useSolicitudesTutoria();
@@ -35,6 +37,7 @@ const SolicitudesTutoria = () => {
       confirmButtonColor: '#0284C7',
     }).then((result) => {
       if (result.isConfirmed) {
+        aceptarSolicitudTutor(id); // 👈 Aquí se llama tu servicio real
         actualizarEstado(id, 'Aceptada');
       }
     });
@@ -113,6 +116,7 @@ const SolicitudesTutoria = () => {
             <tbody>
               {solicitudes.map((s) => (
                 <tr key={s.id}>
+                  {console.log(s.id)}
                   <td>{s.nombre}</td>
                   <td>
                     {s.area}
