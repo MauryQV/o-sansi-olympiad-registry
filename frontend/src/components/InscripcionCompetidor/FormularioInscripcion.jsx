@@ -5,8 +5,8 @@ import { useFormularioInscripcion } from '../../hooks/useFormularioInscripcion';
 import TutoresTable from './TutoresTable';
 import ModalTutores from './ModalTutores';
 
-
 const FormularioInscripcion = () => {
+  // Usamos el custom hook con toda la lógica del formulario
   const {
     area, 
     categoria, 
@@ -15,15 +15,21 @@ const FormularioInscripcion = () => {
     tutores,
     nuevoTutor, 
     errores,
+    mostrarModal,
     areasDisponibles,
     categoriasDisponibles, 
     gradosDisponibles, 
     nivelesDisponibles,
-    setArea, setCategoria, setGrado, setNivel,
-    agregarTutor, eliminarTutor, manejarEnvio, 
+    cargandoGrados,
+    setArea, 
+    setCategoria, 
+    setGrado, 
+    setNivel,
+    setMostrarModal,
+    agregarTutor, 
+    eliminarTutor, 
+    manejarEnvio
   } = useFormularioInscripcion();
-
-  const [mostrarModal, setMostrarModal] = useState(false);
 
   return (
     <div className="forminsc-contenedor">
@@ -37,51 +43,71 @@ const FormularioInscripcion = () => {
         <div className="forminsc-fila">
           <div className="forminsc-campo">
             <label>Área *</label>
-            <select value={area} onChange={(e) => setArea(e.target.value)} className={errores.area ? 'forminsc-input-error' : ''}>
-        <option value="">Seleccione un área</option>
-     {areasDisponibles.map((a) => (
-     <option key={a.id} value={a.id}>{a.nombre_area}</option>
-      ))}
-        </select>
+            <select 
+              value={area} 
+              onChange={(e) => setArea(e.target.value)} 
+              className={errores.area ? 'forminsc-input-error' : ''}
+            >
+              <option value="">Seleccione un área</option>
+              {areasDisponibles.map((a) => (
+                <option key={a.id} value={a.id}>{a.nombre_area}</option>
+              ))}
+            </select>
+            {errores.area && <span className="forminsc-texto-error">Este campo es obligatorio</span>}
           </div>
 
           <div className="forminsc-campo">
             <label>Categoría *</label>
-            <select value={categoria} onChange={(e) => setCategoria(e.target.value)} disabled={categoriasDisponibles.length === 0} className={errores.categoria ? 'forminsc-input-error' : ''}>
-            <option value="">Seleccione una categoría</option>
-             {categoriasDisponibles.map((c) => (
-            <option key={c.id} value={c.id}>{c.nombre}</option>
-         ))}
-         </select>
-
+            <select 
+              value={categoria} 
+              onChange={(e) => setCategoria(e.target.value)} 
+              disabled={categoriasDisponibles.length === 0} 
+              className={errores.categoria ? 'forminsc-input-error' : ''}
+            >
+              <option value="">Seleccione una categoría</option>
+              {categoriasDisponibles.map((c) => (
+                <option key={c.id} value={c.id}>{c.nombre}</option>
+              ))}
+            </select>
+            {errores.categoria && <span className="forminsc-texto-error">Este campo es obligatorio</span>}
           </div>
         </div>
 
         <div className="forminsc-fila">
           <div className="forminsc-campo">
-            <label>Grado *</label>
-            <select value={grado} onChange={(e) => setGrado(e.target.value)} className={errores.grado ? 'forminsc-input-error' : ''}>
-              <option value="">Seleccione su grado</option>
-              {gradosDisponibles.map((g, i) => (
-                <option key={i} value={g}>{g}</option>
-              ))}
-            </select>
+            <label>Grados</label>
+            <select 
+  value={grado} 
+  onChange={(e) => setGrado(e.target.value)} 
+  className={errores.grado ? 'forminsc-input-error' : ''}
+  disabled={gradosDisponibles.length === 0 || cargandoGrados}
+>
+  <option value="">
+    {cargandoGrados ? 'Cargando grados...' : 'Seleccione su grado'}
+  </option>
+  {gradosDisponibles.map((g, i) => (
+    <option key={i} value={g}>{g}</option>
+  ))}
+</select>
+            {errores.grado && <span className="forminsc-texto-error">Este campo es obligatorio</span>}
           </div>
 
           <div className="forminsc-campo">
-            <label>Nivel Educativo *</label>
-            <select value={nivel} onChange={(e) => setNivel(e.target.value)} className={errores.nivel ? 'forminsc-input-error' : ''}>
+            <label>Nivel Educativo</label>
+            <select 
+              value={nivel} 
+              onChange={(e) => setNivel(e.target.value)} 
+              className={errores.nivel ? 'forminsc-input-error' : ''}
+            >
               <option value="">Seleccione un nivel</option>
               {nivelesDisponibles.map((n, i) => (
                 <option key={i} value={n}>{n}</option>
               ))}
             </select>
+            {errores.nivel && <span className="forminsc-texto-error">Este campo es obligatorio</span>}
           </div>
         </div>
       </section>
-
-
-
 
       <section className="forminsc-seccion">
         <h2 className="forminsc-seccion-titulo">Tutores</h2>
@@ -100,7 +126,7 @@ const FormularioInscripcion = () => {
             <span className="forminsc-icono-lupa"><Search size={18} /></span>
           </div>
 
-          <button className="forminsc-boton-anadir" onClick={agregarTutor}>+ Añadir</button>
+          <button className="forminsc-boton-anadir" onClick={() => setMostrarModal(true)}>+ Añadir</button>
         </div>
 
         {errores.tutores && (
@@ -112,12 +138,12 @@ const FormularioInscripcion = () => {
         <TutoresTable tutores={tutores} onDelete={eliminarTutor} />
 
         {mostrarModal && (
-  <ModalTutores
-    areaSeleccionada={area}
-    onClose={() => setMostrarModal(false)}
-    onSelect={agregarTutor} // ← usa directamente la función del hook
-  />
-)}
+          <ModalTutores
+            areaSeleccionada={area}
+            onClose={() => setMostrarModal(false)}
+            onSelect={agregarTutor}
+          />
+        )}
       </section>
 
       <div className="forminsc-finalizar-wrapper alineado-derecha">

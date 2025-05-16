@@ -8,14 +8,7 @@
   display: inline-block;
 }
 
-/* Estados normalizados */
-.estado-badge.borrador {
-  background-color: #17a2b8;
-  color: white;
-}
-
-.estado-badge.en-inscripcion,
-.estado-badge.en-inscripción {
+.estado-badge.en-inscripcion {
   background-color: #007bff;
   color: white;
 }
@@ -25,29 +18,17 @@
   color: white;
 }
 
-.estado-badge.finalizada {
-  background-color: #d3d3d3;
-  color: #333;
-}
-
-/* Versiones en mayúsculas */
-.estado-badge.BORRADOR {
-  background-color: #17a2b8;
+.estado-badge.finalizado {
+  background-color: #10b981;
   color: white;
 }
 
-.estado-badge.EN-INSCRIPCION,
-.estado-badge.EN-INSCRIPCIÓN {
-  background-color: #007bff;
+.estado-badge.borrador {
+  background-color: #6c757d;
   color: white;
 }
 
-.estado-badge.EN-COMPETENCIA {
-  background-color: orange;
-  color: white;
-}
-
-.estado-badge.FINALIZADA {
-  background-color: #d3d3d3;
-  color: #333;
+.estado-badge.en-pagos {
+  background-color: #f59e0b;
+  color: black;
 }
