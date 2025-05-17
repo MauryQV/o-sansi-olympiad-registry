@@ -25,9 +25,9 @@ const DetallePago = () => {
       nombreCompetidor: "Luis Flores",
       ci: "9389739",
       area: "Matemática",
-      fechaEmision: "2025-03-01",
+      fechaEmision: "2025-04-01",
       estado: "Pendiente",
-      monto: 15.00
+      monto: 15,
     };
 
     setTimeout(() => {
@@ -40,6 +40,11 @@ const DetallePago = () => {
   if (!detallePago) return <p style={{ padding: '2rem', color: 'red' }}>No se encontraron detalles para esta boleta.</p>;
 
   const { nombreCompetidor, ci, area, fechaEmision, estado, monto } = detallePago;
+  const horaActual = new Date().toLocaleTimeString('es-BO', {
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+});
 
   return (
     <div className="detallepago-container">
@@ -80,6 +85,7 @@ const DetallePago = () => {
                 ci={ci}
                 area={area}
                 fechaEmision={fechaEmision}
+                horaEmision={horaActual}
                 estado={estado}
                 monto={monto}
               />

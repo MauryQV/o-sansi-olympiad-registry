@@ -124,6 +124,29 @@ export const useRegistroForm = () => {
             const setter = userType === 'competidor' ? setFormData : setTutorData;
             setter(prev => ({ ...prev, [id]: value }));
         }
+
+            // Validar edad en tiempo real si la fecha de nacimineto esta detro del rango del sistemas no > a 19 años y no < a 8 años
+            if (userType === 'competidor' && id === 'birthDate') {
+            const birthDate = new Date(value);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            if (age < 8 || age > 19) {
+                setErrors(prev => ({
+                ...prev,
+                birthDate: 'Usted no se encuentra dentro del rango de edades permitido en el sistema.'
+                }));
+            } else {
+                setErrors(prev => {
+                const { birthDate, ...rest } = prev;
+                return rest;
+                });
+            }       
+        }
     };
 
     const handleNameChange = (e) => {

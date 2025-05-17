@@ -182,6 +182,8 @@ export const actualizarConvocatoria = async (id, data) => {
         id_estado_convocatoria,
         fecha_inicio,
         fecha_fin,
+        pago_inicio, 
+        pago_fin,
         competicion_inicio,
         competicion_fin,
         areaIds
@@ -192,6 +194,8 @@ export const actualizarConvocatoria = async (id, data) => {
     if (descripcion_convocatoria) updateData.descripcion_convocatoria = descripcion_convocatoria;
     if (fecha_inicio) updateData.fecha_inicio = new Date(fecha_inicio);
     if (fecha_fin) updateData.fecha_fin = new Date(fecha_fin);
+    if (pago_inicio) updateData.pago_inicio = new Date(pago_inicio);
+    if (pago_fin) updateData.pago_fin = new Date(pago_fin);
     if (competicion_inicio) updateData.competicion_inicio = new Date(competicion_inicio);
     if (competicion_fin) updateData.competicion_fin = new Date(competicion_fin);
     if (id_estado_convocatoria) updateData.id_estado_convocatoria = id_estado_convocatoria;

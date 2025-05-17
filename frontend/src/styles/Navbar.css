@@ -163,35 +163,41 @@ h3{
   }
   
   
-  .btn-login{
-    background-color: #fff;
-    height: 30px;
-    text-decoration: none;
-    padding-top: 4px;
-    padding-left: 25px;
-    padding-right: 25px;
-    cursor: pointer;
-    color: #000;
-    font-weight: normal;
-    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.6); /* sombra fuerte */
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-  }
-  .btn-registrarse {
-    height: 30px;
-    background-color: #0284C7;
-    text-decoration: none;
-    padding-top: 4px;
-    padding-left: 30px;
-    padding-right: 30px;
-    cursor: pointer;
-    color: white;
-    font-weight: normal;
-    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.6); /* sombra fuerte */
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+ .btn-login {
+  background-color: #fff;
+  height: 30px;
+  padding: 0 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap; 
+  cursor: pointer;
+  color: #000;
+  font-weight: normal;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.btn-registrarse {
+  background-color: #0284C7;
+  color: white;
+  height: 30px;
+  padding: 0 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  font-weight: normal;
+  text-decoration: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
-  }
   
-/*cmapanita notificacion*/
+/*campanita notificacion*/
 .campana-notificacion {
   position: relative;
   margin-right: 1rem;

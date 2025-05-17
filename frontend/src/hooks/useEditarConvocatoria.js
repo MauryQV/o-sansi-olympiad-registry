@@ -5,6 +5,7 @@ import { getAreas } from '../services/areaService';
 import { getEstadosConvocatoria } from '../services/estadoService';
 import { validarFormulario } from '../forms/validacionFormularioEditarConvocatoria';
 
+
 export const useEditarConvocatoria = ({ visible, convocatoriaId, recargarConvocatorias, cerrar }) => {
     const [formulario, setFormulario] = useState({
         nombre: '',
@@ -83,11 +84,49 @@ export const useEditarConvocatoria = ({ visible, convocatoriaId, recargarConvoca
         }
     };
 
+    const validarFechasEnTiempoReal = (form) => {
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        const err = {};
+
+        const parse = (f) => f ? new Date(f) : null;
+
+        const fi = parse(form.inscripcionInicio);
+        const ff = parse(form.inscripcionFin);
+        const pi = parse(form.pagoInicio);
+        const pf = parse(form.pagoFin);
+        const ci = parse(form.competenciaInicio);
+        const cf = parse(form.competenciaFin);
+
+        if (fi && fi < hoy) err.inscripcionInicio = 'Debe ser igual o posterior a hoy.';
+        if (fi && ff && ff <= fi) err.inscripcionFin = 'Debe ser después de la fecha de inicio.';
+        if (ff && pi && pi <= ff) err.pagoInicio = 'El inicio de pago debe ser después de inscripción.';
+        if (pi && pf && pf <= pi) err.pagoFin = 'Debe ser posterior al inicio de pago.';
+        if (pf && ci && ci <= pf) err.competenciaInicio = 'Inicio de competencia debe ser después de pago.';
+        if (ci && cf && cf <= ci) err.competenciaFin = 'Debe ser después del inicio de competencia.';
+
+        return err;
+    };
+
+
     const manejarCambio = (e) => {
         const { name, value } = e.target;
-        setFormulario(prev => ({ ...prev, [name]: value }));
-        setErrores(prev => ({ ...prev, [name]: '' }));
+        const actualizado = { ...formulario, [name]: value };
+        setFormulario(actualizado);
+
+        const nuevosErrores = { ...errores, [name]: '' };
+
+        if (name === 'nombre' && value.length > 100) {
+            nuevosErrores.nombre = 'Máximo 100 caracteres.';
+        }
+        if (name === 'descripcion' && value.length > 1000) {
+            nuevosErrores.descripcion = 'Máximo 1000 caracteres.';
+        }
+
+        const erroresFechas = validarFechasEnTiempoReal(actualizado);
+        setErrores({ ...nuevosErrores, ...erroresFechas });
     };
+
 
     const manejarCheckbox = (idArea) => {
         const seleccionadas = formulario.areasSeleccionadas.includes(idArea)
