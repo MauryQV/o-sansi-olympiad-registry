@@ -12,6 +12,11 @@ export const crearConvocatoria = async (convocatoria) => {
     return response.data;
 };
 
+export const visualizarConvocatoria = async (id) => {
+    const response = await axios.get(`${API_BASE_URL}/visualizar-convocatoria/${id}`);
+    return response.data;
+};
+
 export const actualizarConvocatoria = async (id, data) => {
     const response = await axios.patch(`${API_BASE_URL}/actualizar-convocatoria/${id}`, data);
     return response.data;
@@ -24,6 +29,6 @@ export const eliminarConvocatoria = async (id) => {
 
 export const obtenerConvocatoriaPorId = async (id) => {
     const response = await axios.get(`${API_BASE_URL}/convocatoria/${id}`);
+    //console.log(' modulo de service, datos enviados del backend:', response.data);
     return response.data;
 };
-

@@ -7,17 +7,13 @@ const api = axios.create({
     timeout: API_TIMEOUT
 });
 
-
 export const getAreas = async () => {
-    const response = await api.get(`${API_BASE_URL}/ver-areas`);
+    const response = await api.get(`/ver-areas`); // Usar la baseURL configurada en `api`
     return response.data;
-
 };
 
-
-
 export const crearArea = async ({ nombre, descripcion, costo }) => {
-    const response = await api.post(`${API_BASE_URL}/crear-area`, {
+    const response = await api.post(`/crear-area`, {
         nombre_area: nombre,
         descripcion_area: descripcion,
         costo
@@ -26,12 +22,12 @@ export const crearArea = async ({ nombre, descripcion, costo }) => {
 };
 
 export const eliminarArea = async (id) => {
-    const response = await api.delete(`${API_BASE_URL}/eliminar-area/${id}`);
+    const response = await api.delete(`/eliminar-area/${id}`);
     return response.data;
-}
+};
 
 export const actualizarArea = async (id, { nombre, descripcion, costo }) => {
-    const response = await api.patch(`${API_BASE_URL}/actualizar-area/${id}`, {
+    const response = await api.patch(`/actualizar-area/${id}`, {
         nombre_area: nombre,
         descripcion_area: descripcion,
         costo
@@ -40,6 +36,6 @@ export const actualizarArea = async (id, { nombre, descripcion, costo }) => {
 };
 
 export const getAreaById = async (id) => {
-    const response = await api.get(`${API_BASE_URL}/ver-area/${id}`);
+    const response = await api.get(`/ver-area/${id}`);
     return response.data;
-}
+};

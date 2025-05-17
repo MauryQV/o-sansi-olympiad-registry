@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/crear-convocatoria', convocatoriaController.crearConvocatoriaController);
 
-router.post('/asignar-categoria', convocatoriaController.asignarCategoria);
+//router.post('/asignar-categoria', convocatoriaController.asignarCategoria);
 
 router.get('/convocatorias', convocatoriaController.obtenerConvocatorias);
 
@@ -27,5 +27,7 @@ router.get('/convocatoria-estados', convocatoriaController.obtenerEstadosConvoca
 router.get('/convocatoria-numeros', convocatoriaController.obtenerNumerodeConvocatoriasActivas);
 
 router.get('/convocatoria-una-activa', convocatoriaController.obtenerUnaConvocatoriaActiva);
+
+router.get('/visualizar-convocatoria/:id', convocatoriaController.visualizarConvocatoria);
 
 export default router;

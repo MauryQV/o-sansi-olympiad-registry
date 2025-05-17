@@ -116,7 +116,7 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
     });
 
     if (!tutor) {
-        throw new Error('No se encontró el tutor.');
+        throw new Error('Este usuario no tiene perfil de tutor.');
     }
 
     const solicitudes = await prisma.inscripcion_tutor.findMany({
@@ -124,16 +124,38 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
             tutor_id: tutor.id,
             aprobado: false
         },
-        include: {
+        select: {
+            id: true,
             inscripcion: {
-                include: {
+                select: {
+                    fecha_inscripcion: true,
+                    estado_inscripcion: true,
                     competidor: {
-                        include: {
-                            usuario: true,
-                            colegio: true,
-                            provincia: {
-                                include: {
-                                    departamento: true
+                        select: {
+                            usuario: {
+                                select: {
+                                    nombre: true,
+                                    apellido: true
+                                }
+                            }
+                        }
+                    },
+                    area: {
+                        select: {
+                            nombre_area: true
+                        }
+                    },
+                    categoria: {
+                        select: {
+                            nombre_categoria: true,
+                            grado_min: {
+                                select: {
+                                    nombre_grado: true,
+                                    nivel: {
+                                        select: {
+                                            nombre_nivel: true
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -144,18 +166,17 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
     });
 
     return solicitudes.map((s) => ({
-        id: s.id,
-        competidor: {
-            nombre: s.inscripcion.competidor.usuario.nombre,
-            apellido: s.inscripcion.competidor.usuario.apellido,
-            colegio: s.inscripcion.competidor.colegio.nombre_colegio,
-            provincia: s.inscripcion.competidor.provincia.nombre_provincia,
-            departamento: s.inscripcion.competidor.provincia.departamento.nombre_departamento
-        },
-        fecha_inscripcion: s.inscripcion.fecha_inscripcion,
+        solicitud_id: s.id,
+        nombre_completo: `${s.inscripcion.competidor.usuario.nombre} ${s.inscripcion.competidor.usuario.apellido}`,
+        area_nombre: s.inscripcion.area.nombre_area,
+        categoria_nombre: s.inscripcion.categoria.nombre_categoria,
+        grado: s.inscripcion.categoria.grado_min.nombre_grado,
+        nivel: s.inscripcion.categoria.grado_min.nivel.nombre_nivel,
+        rol: 'Tutor',
         estado: s.inscripcion.estado_inscripcion
     }));
 };
+
 
 
 export const buscarTutores = async (id_area, nombre) => {

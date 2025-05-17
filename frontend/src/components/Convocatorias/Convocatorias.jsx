@@ -6,8 +6,9 @@ import ModalNuevaConvocatoria from './ModalNuevaConvocatoria';
 import ModalVisualizarConvocatoria from './ModalVisualizarConvocatoria';
 import ModalEditarConvocatoria from './ModalEditarConvocatoria';
 import ModalEliminarConvocatoria from './ModalEliminarConvocatoria';
-import { obtenerConvocatorias } from '../../services/convocatoriaService';
+import { obtenerConvocatorias, visualizarConvocatoria } from '../../services/convocatoriaService';
 import { obtenerConvocatoriaPorId } from '../../services/convocatoriaService';
+import { useEliminarConvocatoria } from '../../hooks/useEliminarConvocatoria';
 import '../../styles/Convocatorias/Convocatorias.css';
 
 const Convocatorias = () => {
@@ -20,6 +21,9 @@ const Convocatorias = () => {
   const [convocatoriaEditando, setConvocatoriaEditando] = useState(null);
   const [mostrarEliminar, setMostrarEliminar] = useState(false);
   const [convocatoriaAEliminar, setConvocatoriaAEliminar] = useState(null);
+  
+  // Hook para eliminar convocatorias
+  const { cargando, ejecutarEliminacion } = useEliminarConvocatoria();
 
   const cargarConvocatorias = async () => {
     try {
@@ -32,21 +36,21 @@ const Convocatorias = () => {
   };
 
   const handleVer = async (convocatoria) => {
-  try {
-    const convocatoriaCompleta = await obtenerConvocatoriaPorId(convocatoria.id); // Asegúrate de usar el servicio actualizado
-    setConvocatoriaSeleccionada({
-      ...convocatoriaCompleta,
-      categorias: convocatoriaCompleta.Categoria_convocatoria?.map(c => c.categoria) || [],
-      areasSeleccionadas: convocatoriaCompleta.Area_convocatoria?.map(a => a.area.nombre_area) || [],
-    });
-    setMostrarVisual(true);
-  } catch (error) {
-    console.error('Error al cargar la convocatoria:', error);
-  }
-};
+    try {
+      const convocatoriaCompleta = await visualizarConvocatoria(convocatoria.id);
+      setConvocatoriaSeleccionada({
+        ...convocatoriaCompleta,
+        categorias: convocatoriaCompleta.Categoria_convocatoria?.map(c => c.categoria) || [],
+        areasSeleccionadas: convocatoriaCompleta.Area_convocatoria?.map(a => a.area.nombre_area) || [],
+      });
+      setMostrarVisual(true);
+    } catch (error) {
+      console.error('Error al cargar la convocatoria:', error);
+    }
+  };
 
-  const handleEditar = async (convocatoria) => {
-    if (convocatoria.estado === 'FINALIZADA') {
+  const handleEditar = (convocatoria) => {
+    if (convocatoria.estado.nombre === 'FINALIZADA') {
       Swal.fire({
         icon: 'warning',
         title: 'No se puede editar',
@@ -54,18 +58,13 @@ const Convocatorias = () => {
       });
       return;
     }
-    try {
-      const convocatoriaCompleta = await obtenerConvocatoriaPorId(convocatoria.id);
-      setConvocatoriaEditando(convocatoriaCompleta);
-      setMostrarEditar(true);
-    } catch (error) {
-      Swal.fire('Error', 'No se pudo cargar la convocatoria', 'error');
-    }
+    setConvocatoriaEditando(convocatoria.id);
+    setMostrarEditar(true);
   };
 
-
   const handleEliminar = (convocatoria) => {
-    if (convocatoria.estado !== 'BORRADOR') {
+   //debugg lptm console.log('Convocatoria a eliminar:', convocatoria.estado);
+    if (convocatoria.estado !== 'Borrador') {
       Swal.fire({
         icon: 'error',
         title: 'No se puede eliminar',
@@ -75,6 +74,20 @@ const Convocatorias = () => {
     }
     setConvocatoriaAEliminar(convocatoria);
     setMostrarEliminar(true);
+  };
+  
+  // Función para confirmar la eliminación de una convocatoria
+  const confirmarEliminacion = async () => {
+    if (!convocatoriaAEliminar) return;
+    
+    const eliminacionExitosa = await ejecutarEliminacion(convocatoriaAEliminar.id);
+    
+    if (eliminacionExitosa) {
+      // Cerrar el modal
+      setMostrarEliminar(false);
+      // Actualizar la lista de convocatorias
+      cargarConvocatorias();
+    }
   };
 
   useEffect(() => {
@@ -133,21 +146,21 @@ const Convocatorias = () => {
         />
       )}
 
-      {mostrarEditar && (
+      {mostrarEditar && convocatoriaEditando && (
         <ModalEditarConvocatoria
           visible={mostrarEditar}
-          convocatoria={convocatoriaEditando}
+          convocatoriaId={convocatoriaEditando}
           cerrar={() => setMostrarEditar(false)}
           recargarConvocatorias={cargarConvocatorias}
         />
       )}
 
-      {mostrarEliminar && (
+      {mostrarEliminar && convocatoriaAEliminar && (
         <ModalEliminarConvocatoria
           visible={mostrarEliminar}
           convocatoria={convocatoriaAEliminar}
           cerrar={() => setMostrarEliminar(false)}
-          recargarConvocatorias={cargarConvocatorias}
+          confirmar={confirmarEliminacion}
         />
       )}
     </div>

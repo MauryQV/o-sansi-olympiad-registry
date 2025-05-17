@@ -193,19 +193,19 @@ export const obtenerTutorPorId = async (req, res, next) => {
 };
 */
 
-
 export const getSolicitudesPendientes = async (req, res) => {
     try {
         const usuarioId = req.user.id;
-
         const solicitudes = await tutorService.obtenerSolicitudesPendientes(usuarioId);
-
         res.status(200).json(solicitudes);
     } catch (error) {
         console.error('Error al obtener solicitudes pendientes:', error);
-        res.status(500).json({ error: error.message || 'Error al cargar solicitudes pendientes.' });
+        res.status(500).json({
+            error: error.message || 'Error al cargar solicitudes pendientes.'
+        });
     }
 };
+
 
 export const obtenerTutoresFiltrados = async (req, res) => {
     try {

@@ -44,6 +44,8 @@ const crearConvocatoria = async (data) => {
 };
 
 export const asignarAreaAConvocatoria = async (convocatoriaId, areaId) => {
+    console.log(`🛠 Asignando área ${areaId} a convocatoria ${convocatoriaId}`);
+
     const asignacionExistente = await prisma.area_convocatoria.findFirst({
         where: {
             convocatoria_id: convocatoriaId,
@@ -52,7 +54,8 @@ export const asignarAreaAConvocatoria = async (convocatoriaId, areaId) => {
     });
 
     if (asignacionExistente) {
-        throw new Error('Esta área ya está asignada a la convocatoria');
+        console.warn('Ya existe esta asignación.');
+        return; // No continuar
     }
 
     return await prisma.area_convocatoria.create({
@@ -104,37 +107,52 @@ export const crearConvocatoriaConRelaciones = async (data) => {
 };
 
 
-export const asignarCategoriaAConvocatoria = async (convocatoriaId, categoriaId) => {
+/*export const asignarCategoriaAConvocatoria = async (convocatoriaId, categoriaId) => {
     return await prisma.categoria_convocatoria.create({
         data: { convocatoria_id: convocatoriaId, categoria_id: categoriaId }
     });
-}
+}*/
 
 export const obtenerConvocatorias = async () => {
     const convocatorias = await prisma.convocatoria.findMany({
         include: {
-            estado_convocatoria: true, // Incluye la relación con estado_convocatoria
+            estado_convocatoria: true,
             _count: {
                 select: {
-                    Area_convocatoria: true, // Cuenta las áreas asociadas
+                    Area_convocatoria: true,
                 },
             },
         },
     });
 
-    // Mapear los resultados para incluir "estado" y el número de áreas asociadas
+    const estadoMapeado = {
+        'EN INSCRIPCIONES': 'En inscripcion',
+        'EN COMPETENCIA': 'En competencia',
+        'FINALIZADO': 'Finalizado',
+        'BORRADOR': 'Borrador',
+        'EN PAGOS': 'En pagos'
+    };
+
     return convocatorias.map(({ id_estado_convocatoria, estado_convocatoria, _count, ...convocatoria }) => ({
         ...convocatoria,
-        estado: estado_convocatoria.nombre, // Agregar el nombre del estado como "estado"
-        numero_areas: _count.Area_convocatoria, // Agregar el número de áreas asociadas
+        estado: estadoMapeado[estado_convocatoria.nombre] || estado_convocatoria.nombre,
+        numero_areas: _count.Area_convocatoria
     }));
 };
+
 //pasar un id y devolver la convocatoria con ese id
 export const obtenerConvocatoriaPorId = async (id) => {
     return await prisma.convocatoria.findUnique({
         where: { id },
+        include: {
+            Area_convocatoria: {
+                select: {
+                    area_id: true // Incluir solo los IDs de las áreas asociadas
+                }
+            }
+        }
     });
-}
+};
 
 export const obtenerConvocatoriaPorEstados = async (estado) => {
     return await prisma.convocatoria.findMany({
@@ -164,6 +182,8 @@ export const actualizarConvocatoria = async (id, data) => {
         id_estado_convocatoria,
         fecha_inicio,
         fecha_fin,
+        pago_inicio, 
+        pago_fin,
         competicion_inicio,
         competicion_fin,
         areaIds
@@ -174,6 +194,8 @@ export const actualizarConvocatoria = async (id, data) => {
     if (descripcion_convocatoria) updateData.descripcion_convocatoria = descripcion_convocatoria;
     if (fecha_inicio) updateData.fecha_inicio = new Date(fecha_inicio);
     if (fecha_fin) updateData.fecha_fin = new Date(fecha_fin);
+    if (pago_inicio) updateData.pago_inicio = new Date(pago_inicio);
+    if (pago_fin) updateData.pago_fin = new Date(pago_fin);
     if (competicion_inicio) updateData.competicion_inicio = new Date(competicion_inicio);
     if (competicion_fin) updateData.competicion_fin = new Date(competicion_fin);
     if (id_estado_convocatoria) updateData.id_estado_convocatoria = id_estado_convocatoria;
@@ -258,3 +280,46 @@ export const obtenerUnaConvocatoriaActiva = async () => {
 
     return convocatoria;
 };
+
+export const visualizarConvocatoria = async (id) => {
+    const convocatoria = await prisma.convocatoria.findUnique({
+        where: { id: parseInt(id) },
+        include: {
+            estado_convocatoria: true,
+            Area_convocatoria: {
+                include: { area: true }
+            }
+        }
+    });
+
+    if (!convocatoria) {
+        throw new Error('Convocatoria no encontrada');
+    }
+
+    // Mapeo de nombres de estado para mostrar en la interfaz
+    const estadoMapeado = {
+        'EN INSCRIPCIONES': 'En inscripcion',
+        'EN COMPETENCIA': 'En competencia',
+        'FINALIZADO': 'Finalizado',
+        'BORRADOR': 'Borrador',
+        'EN PAGOS': 'En pagos'
+    };
+
+    // Transformar la respuesta para simplificarla
+    const respuestaSimplificada = {
+        id: convocatoria.id,
+        nombre_convocatoria: convocatoria.nombre_convocatoria,
+        fecha_inicio: convocatoria.fecha_inicio,
+        fecha_fin: convocatoria.fecha_fin,
+        pago_inicio: convocatoria.pago_inicio,
+        pago_fin: convocatoria.pago_fin,
+        competicion_inicio: convocatoria.competicion_inicio,
+        competicion_fin: convocatoria.competicion_fin,
+        descripcion_convocatoria: convocatoria.descripcion_convocatoria,
+        estado: estadoMapeado[convocatoria.estado_convocatoria.nombre] || convocatoria.estado_convocatoria.nombre, // Estado mapeado
+        areas: convocatoria.Area_convocatoria.map(ac => ac.area.nombre_area) // Solo los nombres de las áreas
+    };
+
+    return respuestaSimplificada;
+}
+
