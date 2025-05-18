@@ -1,34 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../../styles/Areas/ModalNuevaArea.css';
 import { useAreaForm } from '../../hooks/useAreaForm';
 //no tocar
-import { crearArea, actualizarArea, getAreas } from '../../services/areaService'; 
+import { crearArea, actualizarArea } from '../../services/areaService'; 
 
 const ModalNuevaArea = ({ mostrar, cerrar, onCreacionExitosa, areaAEditar }) => {
-  const [areasExistentes, setAreasExistentes] = useState([]);
   const {
     nombre, descripcion, costo,
     errores, validar, getData,
     onNombre, onDescripcion, onCosto,
     soloLetras, bloquearTexto
-  } = useAreaForm(mostrar, areaAEditar, areasExistentes);
+  } = useAreaForm(mostrar, areaAEditar);
 
   const [cargando, setCargando] = useState(false);
-
-  useEffect(() => {
-    const cargarAreas = async () => {
-      if (mostrar) {
-        try {
-          const data = await getAreas();
-          setAreasExistentes(data || []);
-        } catch (error) {
-          console.error("Error al cargar áreas existentes:", error);
-          setAreasExistentes([]);
-        }
-      }
-    };
-    cargarAreas();
-  }, [mostrar]);
 
   if (!mostrar) return null;
 
@@ -38,23 +22,22 @@ const ModalNuevaArea = ({ mostrar, cerrar, onCreacionExitosa, areaAEditar }) => 
   
     try {
       setCargando(true);
-      const datosArea = getData();
+      const nuevaArea = getData();
   
       let respuesta;
       if (areaAEditar) {
         // Actualizar área existente
-        respuesta = await actualizarArea(areaAEditar.id, datosArea);
+        respuesta = await actualizarArea(areaAEditar.id, nuevaArea);
       } else {
         // Crear nueva área
-        respuesta = await crearArea(datosArea);
+        respuesta = await crearArea(nuevaArea);
       }
   
       if (onCreacionExitosa) onCreacionExitosa(respuesta);
       cerrar();
-      window.location.reload(); 
     } catch (error) {
       console.error('Error guardando el área:', error);
-      alert(error.message || 'Error al guardar el área. Verifica los datos o intenta más tarde.');
+      alert('Error al guardar el área. Verifica los datos o intenta más tarde.');
     } finally {
       setCargando(false);
     }
@@ -131,3 +114,4 @@ const ModalNuevaArea = ({ mostrar, cerrar, onCreacionExitosa, areaAEditar }) => 
 };
 
 export default ModalNuevaArea;
+//no tocar
