@@ -177,7 +177,67 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
     }));
 };
 
+export const obtenerInscripcionesCompetidores = async (tutorUsuarioId) => {
+    const tutor = await prisma.tutor.findUnique({
+        where: { usuario_id: tutorUsuarioId }
+    });
 
+    if (!tutor) {
+        throw new Error('Este usuario no tiene perfil de tutor.');
+    }
+
+    // Obtener todas las inscripciones donde este tutor está asignado
+    const inscripciones = await prisma.inscripcion_tutor.findMany({
+        where: {
+            tutor_id: tutor.id,
+        },
+        include: {
+            inscripcion: {
+                include: {
+                    competidor: {
+                        include: {
+                            usuario: true,
+                            colegio: true
+                        }
+                    },
+                    area: true,
+                    categoria: {
+                        include: {
+                            grado_min: {
+                                include: {
+                                    nivel: true
+                                }
+                            }
+                        }
+                    },
+                    convocatoria: true
+                }
+            }
+        }
+    });
+
+    // Formatear la respuesta para el frontend
+    return inscripciones.map(inscripcionTutor => {
+        const inscripcion = inscripcionTutor.inscripcion;
+        const competidor = inscripcion.competidor;
+        
+        return {
+            id: inscripcion.id,
+            estudiante: `${competidor.usuario.nombre} ${competidor.usuario.apellido}`,
+            area: inscripcion.area.nombre_area,
+            categoria: inscripcion.categoria.nombre_categoria,
+            grado: inscripcion.categoria.grado_min.nombre_grado,
+            nivel: inscripcion.categoria.grado_min.nivel.nombre_nivel,
+            colegio: competidor.colegio.nombre_colegio,
+            email: competidor.usuario.correo_electronico,
+            ci: competidor.carnet_identidad,
+            fecha_inscripcion: inscripcion.fecha_inscripcion,
+            estado: inscripcion.estado_inscripcion,
+            aprobado: inscripcionTutor.aprobado,
+            fecha_aprobacion: inscripcionTutor.fecha_aprobacion
+        };
+    });
+};
 
 export const buscarTutores = async (id_area, nombre) => {
     return await prisma.tutor.findMany({

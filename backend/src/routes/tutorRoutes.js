@@ -20,6 +20,8 @@ router.get('/solicitudes', autentificacion.authMiddleware, tutorController.getSo
 
 router.get('/tutor-areas', tutorController.obtenerTutoresFiltrados);
 
+// Ruta para obtener las inscripciones de los competidores asignados a un tutor
+router.get('/mis-competidores', autentificacion.authMiddleware, tutorController.obtenerCompetidoresAsignados);
 
 
 export default router; 
