@@ -45,7 +45,7 @@ app.use('/api', categoriaRoutes);
 app.use('/api', tutorRoutes);
 app.use('/api', inscripcionRoutes);
 app.use('/api', locationRoutes);
-app.use('/api', competidorRoutes);
+app.use('/api/competidor', competidorRoutes);
 app.use('/api/pagos', pagoRoutes);
 app.use('/api/usuarios', userRoutes);
 app.use('/api/reportes', reportesRoutes);

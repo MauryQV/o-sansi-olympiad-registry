@@ -10,6 +10,7 @@ import DetallePago from "./components/PagosCompetidor/DetallePago.jsx";
 import AdminGestionUsuario from "./components/AdminGestionUsuarios/AdminGestionUsuario.jsx";
 import RegistroCompetidores from "./components/InscripcionCompetidor/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/InscripcionCompetidor/FormularioInscripcion.jsx";
+import MisInscripciones from "./components/InscripcionCompetidor/MisInscripciones.jsx";
 import Reportes from "./components/reportes/Reportes.jsx";
 import HistorialConvocatorias from "./components/HistorialConvocatorias.jsx";
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
@@ -61,6 +62,7 @@ function App() {
             path="/inscripcion/:convocatoriaId"
             element={<FormularioInscripcion />}
           />
+          <Route path="/mis-inscripciones" element={<MisInscripciones />} />
           <Route path="/pagos-competidor" element={<Pagos />} />
           <Route path="/pagos/detalle/:boleta" element={<DetallePago />} />
           <Route
@@ -81,7 +83,6 @@ function App() {
             path="/inicio-cajero"
             element={<InicioCajero setRol={setRol} />}
           />
-          
         </Routes>
       </div>
     </Router>

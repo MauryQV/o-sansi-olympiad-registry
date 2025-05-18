@@ -323,6 +323,11 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/mis-inscripciones" className="menu-item">
+                    Mis Inscripciones
+                  </Link>
+                </li>
+                <li>
                   <Link to="/pagos-competidor" className="menu-item">
                     Pagos
                   </Link>
