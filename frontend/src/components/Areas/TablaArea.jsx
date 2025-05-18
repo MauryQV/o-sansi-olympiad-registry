@@ -5,10 +5,13 @@ import ModalConfirmacionEliminar from './ModalConfirmacionEliminar';
 import ModalConfirmacionEliminarCategoria from './ModalConfirmacionEliminarCategoria';
 import ModalNuevaCategoria from './ModalNuevaCategoria';
 import '../../styles/Areas/TablaArea.css';
-import { eliminarArea } from '../../services/areaService';
+import { eliminarArea, getAreas } from '../../services/areaService';
+import { crearCategoria, actualizarCategoria as actualizarCategoriaAPI, eliminarCategoriaYRelaciones } from '../../services/categoriaService';
 
 const TablaArea = () => {
   const [areas, setAreas] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [relaciones, setRelaciones] = useState([]);
   const [mostrarModalArea, setMostrarModalArea] = useState(false);
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [areaAEliminar, setAreaAEliminar] = useState(null);
@@ -22,33 +25,38 @@ const TablaArea = () => {
   const [areaDeCategoria, setAreaDeCategoria] = useState(null);
   const [toastMensaje, setToastMensaje] = useState(null);
   const [modalKey, setModalKey] = useState(Date.now());
+  const [grados, setGrados] = useState([]);
+  const [areaParaCategoria, setAreaParaCategoria] = useState(null);
+  const [categoriaParaEditar, setCategoriaParaEditar] = useState(null);
+  const [categoriaIdAEliminar, setCategoriaIdAEliminar] = useState(null);
 
-  // 🧠 Hook para obtener las áreas desde el backend
   useEffect(() => {
-    const obtenerAreas = async () => {
+    const fetchData = async () => {
       try {
-        const respuesta = await fetch('http://localhost:7777/api/ver-areas');
-        if (!respuesta.ok) {
-          throw new Error('Error al obtener las áreas');
-        }
-        const datos = await respuesta.json();
-        setAreas(
-          datos.map(area => ({
-            ...area,
-            nombre: area.nombre_area, // ✅ mapeo frontend-friendly
-            descripcion: area.descripcion_area,
-            categorias: area.categorias || [] // si no vienen desde el back
-          }))
-        );
-        
+        const dataAreas = await getAreas();
+        setAreas(dataAreas || []);
+
+        const resCategorias = await fetch('http://localhost:7777/api/ver-categorias');
+        const dataCategorias = await resCategorias.json();
+        setCategorias(dataCategorias || []);
+
+        const resRelaciones = await fetch('http://localhost:7777/api/ver-categorias-areas');
+        const dataRelaciones = await resRelaciones.json();
+        setRelaciones(dataRelaciones || []);
+
+        const resGrados = await fetch('http://localhost:7777/api/ver-grados');
+        const dataGrados = await resGrados.json();
+        setGrados(dataGrados || []);
+
       } catch (error) {
-        console.error('Error al obtener las áreas:', error);
-        setToastMensaje('Error al cargar las áreas');
-        setTimeout(() => setToastMensaje(null), 2500);
+        console.error("Error al cargar datos iniciales:", error);
+        setAreas([]);
+        setCategorias([]);
+        setRelaciones([]);
+        setGrados([]);
       }
     };
-
-    obtenerAreas();
+    fetchData();
   }, []);
 
   const mostrarToast = (mensaje) => {
@@ -71,44 +79,112 @@ const TablaArea = () => {
     setMostrarModalArea(false);
   };
 
-  const agregarCategoria = (nuevaCategoria) => {
-    const nuevasAreas = areas.map(area => {
-      if (area.nombre === nuevaCategoria.area) {
-        return {
-          ...area,
-          categorias: [...(area.categorias || []), nuevaCategoria]
-        };
-      }
-      return area;
-    });
-    setAreas(nuevasAreas);
+  const agregarCategoria = async (nuevaCategoria) => {
+    console.log('Valor recibido de área:', nuevaCategoria.area);
+    console.log('Áreas disponibles:', areas.map(a => a.nombre));
+    const areaSeleccionada = areas.find(area => String(area.id) === String(nuevaCategoria.area));
+    if (!areaSeleccionada) {
+      mostrarToast('❌ Área no encontrada');
+      setMostrarModalCategoria(false);
+      return;
+    }
+    const gradosTodos = [...(nuevaCategoria.gradosPrimaria || []), ...(nuevaCategoria.gradosSecundaria || [])];
+    if (!gradosTodos.length) {
+      mostrarToast('❌ Debe seleccionar al menos un grado');
+      setMostrarModalCategoria(false);
+      return;
+    }
+    if (!nuevaCategoria.nombre || !nuevaCategoria.descripcion) {
+      mostrarToast('❌ Complete todos los campos requeridos');
+      setMostrarModalCategoria(false);
+      return;
+    }
+    try {
+      const categoriaConAreaId = { ...nuevaCategoria, areaId: areaSeleccionada.id };
+      const categoriaCreada = await crearCategoria(categoriaConAreaId);
+      const nuevasAreas = areas.map(area => {
+        if (area.id === areaSeleccionada.id) {
+          return {
+            ...area,
+            categorias: [...(area.categorias || []), categoriaCreada]
+          };
+        }
+        return area;
+      });
+      setAreas(nuevasAreas);
+      mostrarToast(`Categoría "${categoriaCreada.nombre}" creada correctamente`);
+      setMostrarModalCategoria(false);
+      window.location.reload();
+    } catch (error) {
+      mostrarToast('❌ Error al crear la categoría. Verifique los datos.');
+      setMostrarModalCategoria(false);
+    }
   };
 
-  const actualizarCategoria = (categoriaActualizada) => {
-    const nuevasAreas = areas.map(area => {
-      if (area.nombre === categoriaActualizada.area) {
-        const nuevasCategorias = area.categorias.map(cat =>
-          cat.nombre === categoriaEditando.nombre ? categoriaActualizada : cat
+  const actualizarCategoria = async (categoriaActualizada) => {
+    try {
+      if (!categoriaParaEditar || !categoriaParaEditar.id) {
+        mostrarToast('❌ Error: No se puede actualizar la categoría. ID no disponible.');
+        return;
+      }
+
+      const categoriaActualizadaAPI = await actualizarCategoriaAPI(categoriaParaEditar.id, categoriaActualizada);
+      
+      // Actualizar el estado local
+      const nuevasAreas = areas.map(area => {
+        const categoriaEnArea = relaciones.find(rel => 
+          rel.categoria_id === categoriaParaEditar.id && 
+          rel.area_id === area.id
         );
-        return { ...area, categorias: nuevasCategorias };
-      }
-      return area;
-    });
-    setAreas(nuevasAreas);
-    setCategoriaEditando(null);
+
+        if (categoriaEnArea) {
+          const nuevasCategorias = categorias.map(cat =>
+            cat.id === categoriaParaEditar.id ? categoriaActualizadaAPI : cat
+          );
+          return { ...area, categorias: nuevasCategorias };
+        }
+        return area;
+      });
+      
+      const nuevasCategorias = categorias.map(cat =>
+        cat.id === categoriaParaEditar.id ? categoriaActualizadaAPI : cat
+      );
+      
+      setAreas(nuevasAreas);
+      setCategorias(nuevasCategorias);
+      setCategoriaEditando(null);
+      setCategoriaParaEditar(null);
+      setMostrarModalCategoria(false);
+      mostrarToast('✅ Categoría actualizada correctamente');
+      
+      window.location.reload();
+    } catch (error) {
+      console.error('Error al actualizar la categoría:', error);
+      mostrarToast('❌ Error al actualizar la categoría. Verifique los datos.');
+    }
   };
 
-  const eliminarCategoria = () => {
-    const nuevasAreas = areas.map(area => {
-      if (area.nombre === areaDeCategoria) {
-        const filtradas = area.categorias.filter(cat => cat.nombre !== categoriaAEliminar);
-        return { ...area, categorias: filtradas };
-      }
-      return area;
-    });
-    setAreas(nuevasAreas);
-    setMostrarConfirmacionCategoria(false);
-    mostrarToast(`Categoría "${categoriaAEliminar}" eliminada correctamente`);
+  const handleConfirmarEliminarCategoria = async () => {
+    if (!categoriaIdAEliminar) {
+      mostrarToast('❌ Error: ID de categoría no disponible.');
+      setMostrarConfirmacionCategoria(false);
+      return;
+    }
+    try {
+      await eliminarCategoriaYRelaciones(categoriaIdAEliminar);
+      
+      setCategorias(prevCategorias => prevCategorias.filter(cat => cat.id !== categoriaIdAEliminar));
+      setRelaciones(prevRelaciones => prevRelaciones.filter(rel => rel.categoria_id !== categoriaIdAEliminar));
+      
+      mostrarToast(`Categoría "${categoriaAEliminar}" eliminada correctamente`);
+    } catch (error) {
+      console.error('Error eliminando categoría:', error);
+      mostrarToast(error.message || '❌ Error al eliminar la categoría.');
+    } finally {
+      setMostrarConfirmacionCategoria(false);
+      setCategoriaIdAEliminar(null);
+      setAreaDeCategoria(null);
+    }
   };
 
   const editarArea = (index) => {
@@ -130,7 +206,7 @@ const TablaArea = () => {
       await eliminarArea(areaAEliminar.id); 
       setAreas(prev => prev.filter((_, i) => i !== indexAEliminar)); 
       setMostrarConfirmacion(false);
-      mostrarToast(`Área "${areaAEliminar.nombre}" eliminada correctamente`);
+      mostrarToast(`Área "${areaAEliminar.nombre_area}" eliminada correctamente`);
     } catch (error) {
       console.error('Error eliminando área:', error.response?.data || error.message);
       mostrarToast('❌ Error al eliminar el área. Intenta nuevamente.');
@@ -141,6 +217,13 @@ const TablaArea = () => {
     setMostrarModalCategoria(false);
     setCategoriaEditando(null);
     setModalKey(Date.now());
+  };
+
+  const abrirModalNuevaCategoria = (areaIdPreseleccionada = null, categoria = null) => {
+    setAreaParaCategoria(areaIdPreseleccionada);
+    setCategoriaParaEditar(categoria);
+    setCategoriaEditando(categoria);
+    setMostrarModalCategoria(true);
   };
 
   return (
@@ -157,104 +240,112 @@ const TablaArea = () => {
       </div>
 
       <div className="grid-areas">
-        {areas.map((area, index) => (
-          <div className="card-area" key={index}>
-            <div className="card-header">
-              <h3>{area.nombre}</h3>
-              <div className="card-actions">
-                <button onClick={() => editarArea(index)}><FaEdit /></button>
-                <button onClick={() => preguntarEliminar(index)}><FaTrashAlt style={{ color: 'red' }}  /></button>
+        {areas.map((area, index) => {
+          const categoriasDeEstaArea = relaciones
+            .filter(rel => rel.area_id === area.id)
+            .map(rel => categorias.find(cat => cat.id === rel.categoria_id))
+            .filter(Boolean);
+
+          return (
+            <div className="card-area" key={area.id}>
+              <div className="card-header">
+                <h3>{area.nombre_area}</h3>
+                <div className="card-actions">
+                  <button onClick={() => editarArea(index)}><FaEdit /></button>
+                  <button onClick={() => preguntarEliminar(index)}><FaTrashAlt style={{ color: 'red' }}  /></button>
+                </div>
               </div>
-            </div>
 
-            {/* Mostrar Costo */}
-            <p className="area-costo">Costo: <strong>{area.costo} Bs</strong></p>
+              <p className="area-costo">Costo: <strong>{area.costo} Bs</strong></p>
 
-            {/* Descripción */}
-            <p>{area.descripcion_area}</p>
+              <p>{area.descripcion_area}</p>
 
-            {/* Categorías */}
-            {area.categorias && area.categorias.length > 0 && (
-              <div className="categorias-box">
-                <h4>Categorías / Niveles</h4>
-                {area.categorias.map((cat, i) => (
-                  <div key={i} className="categoria-item">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <strong>{cat.nombre}</strong>
-                      <div>
-                        <button onClick={() => {
-                          setCategoriaEditando(cat);
-                          setMostrarModalCategoria(true);
-                        }}><FaEdit size={14} /></button>
-                        <button onClick={() => {
-                          setCategoriaAEliminar(cat.nombre);
-                          setAreaDeCategoria(area.nombre);
-                          setMostrarConfirmacionCategoria(true);
-                        }}><FaTrashAlt size={14} /></button>
+              {categoriasDeEstaArea.length === 0 ? (
+                <p>No hay categorías asociadas.</p>
+              ) : (
+                <div className="categorias-box">
+                  <h4>Categorías / Niveles</h4>
+                  {categoriasDeEstaArea.map((cat, i) => (
+                    <div key={i} className="categoria-item">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <strong>{cat.nombre_categoria}</strong>
+                        <div>
+                          <button onClick={() => {
+                            setCategoriaParaEditar(cat);
+                            setAreaParaCategoria(area.id);
+                            setCategoriaEditando(cat);
+                            setMostrarModalCategoria(true);
+                          }}><FaEdit size={14} /></button>
+                          <button onClick={() => {
+                            setCategoriaAEliminar(cat.nombre_categoria);
+                            setCategoriaIdAEliminar(cat.id);
+                            setAreaDeCategoria(area.nombre_area);
+                            setMostrarConfirmacionCategoria(true);
+                          }}><FaTrashAlt size={14} /></button>
+                        </div>
+                      </div>
+                      <p style={{ fontSize: '13px', margin: 0 }}>{cat.descripcion_cat}</p>
+                      <div className="grados">
+                        {grados
+                          .filter(g => g.id >= cat.grado_min_id && g.id <= cat.grado_max_id)
+                          .map(g => (
+                            <span key={g.id} className="grado-chip">
+                              {g.nombre_grado}º {(g.nivel?.nombre_nivel || g.nombre_nivel).toLowerCase()}
+                            </span>
+                          ))}
                       </div>
                     </div>
-                    <p style={{ fontSize: '13px', margin: 0 }}>{cat.descripcion}</p>
-                    <div className="grados">
-                      {cat.gradosPrimaria && cat.gradosPrimaria.map((g, idx) => (
-                        <span key={idx} className="grado-chip">Primaria {g}</span>
-                      ))}
-                      {cat.gradosSecundaria && cat.gradosSecundaria.map((g, idx) => (
-                        <span key={idx} className="grado-chip">Secundaria {g}</span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
 
-            <button
-              className="btn-categoria"
-              onClick={() => {
-                setAreaActual(area.nombre);
-                setCategoriaEditando(null);
-                setModalKey(Date.now());
-                setMostrarModalCategoria(true);
-              }}
-            >
-              <FaPlus /> Añadir Categoría
-            </button>
-          </div>
-        ))}
+              <button
+                className="btn-categoria"
+                onClick={() => abrirModalNuevaCategoria(area.id)}
+              >
+                <FaPlus /> Añadir Categoría
+              </button>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Modales */}
       <ModalNuevaArea
-  mostrar={mostrarModalArea}
-  cerrar={() => setMostrarModalArea(false)}
-  onCreacionExitosa={(areaActualizada) => {
-    if (areaEditandoIndex !== null) {
-      const nuevasAreas = [...areas];
-      nuevasAreas[areaEditandoIndex] = {
-        ...nuevasAreas[areaEditandoIndex],
-        ...areaActualizada
-      };
-      setAreas(nuevasAreas);
-    } else {
-      setAreas([...areas, { ...areaActualizada, categorias: [] }]);
-    }
-    setAreaEditandoIndex(null);
-    setAreaActual(null);
-  }}
-  areaAEditar={areaActual}
-/>
+        mostrar={mostrarModalArea}
+        cerrar={() => setMostrarModalArea(false)}
+        onCreacionExitosa={(areaActualizada) => {
+          if (areaEditandoIndex !== null) {
+            const nuevasAreas = [...areas];
+            nuevasAreas[areaEditandoIndex] = {
+              ...nuevasAreas[areaEditandoIndex],
+              ...areaActualizada
+            };
+            setAreas(nuevasAreas);
+            setAreaEditandoIndex(null);
+            setAreaActual(null);
+            setMostrarModalArea(false);
+            mostrarToast('Área actualizada correctamente');
+          } else {
+            setAreaEditandoIndex(null);
+            setAreaActual(null);
+            setMostrarModalArea(false);
+            window.location.reload();
+          }
+        }}
+        areaAEditar={areaActual}
+      />
 
-<ModalConfirmacionEliminar
-  mostrar={mostrarConfirmacion}
-  cerrar={() => setMostrarConfirmacion(false)}
-  confirmar={confirmarEliminacion}
-  nombreArea={areaAEliminar?.nombre}
-/>
-
+      <ModalConfirmacionEliminar
+        mostrar={mostrarConfirmacion}
+        cerrar={() => setMostrarConfirmacion(false)}
+        confirmar={confirmarEliminacion}
+        nombreArea={areaAEliminar?.nombre_area}
+      />
 
       <ModalConfirmacionEliminarCategoria
         mostrar={mostrarConfirmacionCategoria}
         cerrar={() => setMostrarConfirmacionCategoria(false)}
-        confirmar={eliminarCategoria}
+        confirmar={handleConfirmarEliminarCategoria}
         nombreCategoria={categoriaAEliminar}
       />
 
@@ -262,11 +353,13 @@ const TablaArea = () => {
         key={modalKey}
         mostrar={mostrarModalCategoria}
         cerrar={cerrarModalCategoria}
-        areaSeleccionada={areaActual?.nombre || ''}
         areas={areas}
+        grados={grados}
+        areaSeleccionada={areaParaCategoria}
+        categoriaAEditar={categoriaParaEditar}
         onCrearCategoria={agregarCategoria}
         onActualizarCategoria={actualizarCategoria}
-        categoriaAEditar={categoriaEditando}
+        todasLasRelaciones={relaciones}
       />
 
       {toastMensaje && (
@@ -279,4 +372,3 @@ const TablaArea = () => {
 };
 
 export default TablaArea;
-//123
