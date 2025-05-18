@@ -65,3 +65,18 @@ export const requirePermiso = (nombrePermiso) => {
         }
     };
 };
+
+
+/*export const esCajero = (req, res, next) => {
+
+    if (!req.usuario || !req.usuario.rol_id) {
+        return res.status(401).json({ error: 'token invalido' });
+    }
+
+    console.log('Rol del usuario:', req.usuario.rol_id); // Debugging
+    if (req.usuario.rol_id !== 3) { // id 2 rol de cajero
+        return res.status(403).json({ error: 'Acceso denegado' });
+    }
+
+    next();
+}*/

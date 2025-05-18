@@ -83,6 +83,16 @@ export const registrarInscripcion = async ({ area_id, categoria_id, tutor_ids })
 };
 
 
+export const obtenerMisInscripciones = async () => {
+    try {
+        console.log('Consultando mis inscripciones...');
+        const response = await apiAuth.get('/competidor/mis-inscripciones');
+        console.log('Respuesta recibida:', response.data);
+        return response.data.inscripciones;
+    } catch (error) {
+        console.error('Error al obtener mis inscripciones:', error);
+
+
 export const obtenerGrados = async (id) => {
     try {
         const response = await api.get(`/ver-grados-categoria/${id}`);

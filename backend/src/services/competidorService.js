@@ -136,3 +136,46 @@ export const obtenerSolicitudesDelCompetidor = async (usuarioId) => {
 
     return Object.values(agrupadas);
 };
+
+export const obtenerInscripcionesCompetidor = async (usuarioId) => {
+    // Buscar el competidor asociado al usuario
+    const competidor = await prisma.competidor.findUnique({
+        where: { usuario_id: usuarioId }
+    });
+
+    if (!competidor) {
+        throw new Error('No se encontró el competidor');
+    }
+
+    // Obtener todas las inscripciones del competidor
+    const inscripciones = await prisma.inscripcion.findMany({
+        where: { competidor_id: competidor.id },
+        include: {
+            area: true,
+            categoria: {
+                include: {
+                    grado_min: {
+                        include: {
+                            nivel: true
+                        }
+                    }
+                }
+            },
+            convocatoria: true
+        },
+        orderBy: { fecha_inscripcion: 'desc' }
+    });
+
+    // Formatear los datos para la respuesta
+    return inscripciones.map(inscripcion => ({
+        id: inscripcion.id,
+        area: inscripcion.area?.nombre_area || 'No asignada',
+        categoria: inscripcion.categoria?.nombre_categoria || 'No asignada',
+        grado: inscripcion.categoria?.grado_min?.nombre_grado || 'No especificado',
+        nivel: inscripcion.categoria?.grado_min?.nivel?.nombre_nivel || 'No especificado',
+        convocatoria: inscripcion.convocatoria?.nombre_convocatoria || 'No asignada',
+        fecha_inscripcion: inscripcion.fecha_inscripcion,
+        estado: inscripcion.estado_inscripcion || 'Pendiente',
+        fecha_estado: inscripcion.fecha_estado || null
+    }));
+};
