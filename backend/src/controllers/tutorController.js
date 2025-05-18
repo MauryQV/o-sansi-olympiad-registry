@@ -227,6 +227,16 @@ export const obtenerTutoresFiltrados = async (req, res) => {
     }
 };
 
+export const obtenerSolicitudesPendientesView = async (req, res) => {
+    try {
+        const solicitudes = await tutorService.obtenerSolicitudesView();
+        res.status(200).json(solicitudes);
+    } catch (error) {
+        console.error('Error real:', error);
+        res.status(500).json({ error: 'Error al obtener solicitudes pendientes.' });
+    }
+};
+
 export const obtenerCompetidoresAsignados = async (req, res) => {
     try {
         const usuarioId = req.user.id;
@@ -235,7 +245,7 @@ export const obtenerCompetidoresAsignados = async (req, res) => {
 
         const inscripciones = await tutorService.obtenerInscripcionesCompetidores(usuarioId);
         console.log(`Encontradas ${inscripciones.length} inscripciones asignadas`);
-        
+
         res.status(200).json({ inscripciones });
     } catch (error) {
         console.error('Error al obtener inscripciones de competidores:', error);
