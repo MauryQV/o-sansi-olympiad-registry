@@ -1,52 +1,100 @@
 import React from 'react';
-import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/renderer';
+import logoUMSS from '../../image/sansimon-f-BLAN.png'; 
+import { boletaStyles as styles } from '../../styles/PagosCompetidor/boletaPagoStyles';
 
-const styles = StyleSheet.create({
-  page: {
-    fontFamily: 'Helvetica',
-    padding: 30,
-    fontSize: 12,
-    lineHeight: 1.5,
-    flexDirection: 'column',
-  },
-  section: {
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 18,
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  label: {
-    fontWeight: 'bold',
-  }
-});
+const numeroALiteral = (monto) => {
+  if (monto === 16.00) return 'DIECISÉIS 00/100 BOLIVIANOS';
+  if (monto === 15.00) return 'QUINCE 00/100 BOLIVIANOS';
+  return `${monto.toFixed(2)} BOLIVIANOS`;
+};
 
-const BoletaPagoPDF = ({ boleta, nombre, ci, area, fechaEmision, estado, monto }) => (
-  <Document>
-    <Page style={styles.page}>
-      <Text style={styles.title}>Boleta de Pago</Text>
 
-      <View style={styles.section}>
-        <Text><Text style={styles.label}>Boleta:</Text> {boleta}</Text>
-        <Text><Text style={styles.label}>Estado:</Text> {estado}</Text>
-      </View>
+const BoletaPagoPDF = ({
+  boleta,
+  nombre,
+  ci,
+  area,
+  fechaEmision,
+  estado,
+  monto,
+  control = '17569',
+  metodo = 'Electrónico',
+  concepto = 'OLIMPIADA EN CIENCIAS SAN SIMON O! SANSI',
+  comision = 1.00,
+  horaEmision
+}) => {
+  const total = monto + comision;
 
-      <View style={styles.section}>
-        <Text><Text style={styles.label}>Nombre del Competidor:</Text> {nombre}</Text>
-        <Text><Text style={styles.label}>CI:</Text> {ci}</Text>
-      </View>
 
-      <View style={styles.section}>
-        <Text><Text style={styles.label}>Área:</Text> {area}</Text>
-        <Text><Text style={styles.label}>Fecha de Emisión:</Text> {fechaEmision}</Text>
-      </View>
+  return (
+    <Document>
+      <Page size="A5" style={styles.page}>
+        <View style={styles.content}>
 
-      <View style={styles.section}>
-        <Text><Text style={styles.label}>Monto:</Text> Bs. {monto.toFixed(2)}</Text>
-      </View>
-    </Page>
-  </Document>
-);
+          {/* Encabezado con logo */}
+          <View style={styles.header}>
+            <Image src={logoUMSS} style={styles.logo} />
+            <View style={styles.headerTextGroup}>
+              <Text style={styles.headerLine}>UNIVERSIDAD MAYOR DE SAN SIMÓN</Text>
+              <Text style={styles.headerLine}>DIRECCIÓN ADMINISTRATIVA Y FINANCIERA</Text>
+            </View>
+          </View>
+
+          <Text style={styles.titulo}>BOLETA DE PAGO</Text>
+
+          <View style={styles.infoTablaDer}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>Nro. Control:</Text>
+              <Text>{control}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>Fecha:</Text>
+              <Text>{fechaEmision} {horaEmision}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>Método de pago:</Text>
+              <Text>{metodo}</Text>
+            </View>
+          </View>
+
+
+          {/* Datos personales */}
+          <View style={styles.section}>
+            <Text><Text style={styles.label}>Nombre:</Text> {nombre}</Text>
+            <Text><Text style={styles.label}>CI:</Text> {ci}</Text>
+          </View>
+
+          {/* Concepto */}
+          <View style={styles.conceptoMontoContainer}>
+            {/* Columna izquierda: concepto */}
+            <View style={styles.conceptoCol}>
+              <Text style={styles.label}>Concepto de:</Text>
+              <Text>{concepto}</Text>
+              <Text>PAGO ELECTRÓNICO</Text>
+            </View>
+
+            {/* Columna derecha: montos */}
+            <View style={styles.montoCol}>
+              <Text style={styles.montoRight}>{monto.toFixed(2)}</Text>
+              <Text style={styles.montoRight}>{comision.toFixed(2)}</Text>
+              <View style={styles.montoLine} />
+              <Text style={styles.total}>Total: Bs {total.toFixed(2)}</Text>
+            </View>
+          </View>
+
+          <Text style={styles.literal}>
+            La suma de: {numeroALiteral(total)}
+          </Text>
+          <Text style={styles.aclaracion}>
+            Aclaración: {concepto}-bio
+          </Text>
+
+        </View>
+      </Page>
+    </Document>
+  );
+};
 
 export default BoletaPagoPDF;
+

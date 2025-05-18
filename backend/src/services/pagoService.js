@@ -115,6 +115,15 @@ export const validarPago = async (pagoId) => {
     const pago = await prisma.pago.findUnique({
         where: {
             id: pagoId
+        },
+        include: {
+            inscripcion: {
+                include: {
+                    competidor: {
+                        include: { usuario: true }
+                    }
+                }
+            }
         }
     });
 
@@ -123,18 +132,33 @@ export const validarPago = async (pagoId) => {
     }
 
     if (pago.estado !== 'Pendiente') {
-        throw new Error('El pago ya esta validado o rechazado');
+        throw new Error('El pago ya está validado o rechazado');
     }
-    //falta agregar la logica
-    return await prisma.pago.update({
-        where: {
-            id: pagoId
-        },
-        data: {
-            estado: 'Validado'
-        }
+
+    const updatedPago = await prisma.pago.update({
+        where: { id: pagoId },
+        data: { estado: 'Validado' }
     });
-}
+
+    // Obtener usuario del competidor
+    const usuario = pago.inscripcion.competidor.usuario;
+
+    // Crear notificación
+    const noti = await crearNotificacion({
+        usuarioId: usuario.id,
+        tipo: 'estado',
+        mensaje: 'Tu pago ha sido validado.'
+    });
+
+    // Enviar notificación vía socket
+    const socketId = connectedUsers.get(usuario.id);
+    if (socketId) {
+        io.to(socketId).emit('notificacion:nueva', noti);
+    }
+
+    return { mensaje: 'Pago validado y notificación enviada.' };
+};
+
 
 export const buscarPagos = async ({ tipo, valor }) => {
     if (!valor || valor.trim() === '') {
