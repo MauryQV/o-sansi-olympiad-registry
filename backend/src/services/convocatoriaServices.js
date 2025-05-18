@@ -147,7 +147,7 @@ export const obtenerConvocatoriaPorId = async (id) => {
         include: {
             Area_convocatoria: {
                 select: {
-                    area_id: true // Incluir solo los IDs de las áreas asociadas
+                    area_id: true // Incluir solo los IDs de las areas asociadas
                 }
             }
         }
