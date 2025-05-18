@@ -1,0 +1,218 @@
+.competidores-asignados-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.competidores-asignados-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.competidores-asignados-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.btn-actualizar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-actualizar:hover {
+    background-color: #e9e9e9;
+}
+
+.btn-actualizar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spinning {
+    animation: spin 1s linear infinite;
+}
+
+.competidores-asignados-error {
+    padding: 1rem;
+    background-color: #ffeded;
+    border-left: 4px solid #f44336;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.competidores-asignados-error p {
+    margin: 0;
+    color: #e53935;
+    font-weight: 500;
+}
+
+.competidores-asignados-cargando {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+    color: #666;
+}
+
+.competidores-asignados-vacio {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.competidores-asignados-vacio p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+.competidores-asignados-vacio small {
+    color: #888;
+}
+
+.competidores-asignados-tabla-container {
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+
+.competidores-asignados-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.competidores-asignados-tabla th {
+    padding: 1rem;
+    background-color: #f5f5f5;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.competidores-asignados-tabla td {
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+}
+
+.competidores-asignados-tabla tr:last-child td {
+    border-bottom: none;
+}
+
+.estudiante-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.estudiante-info small {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.estado-badge {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-align: center;
+    min-width: 100px;
+}
+
+.estado-pendiente {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.estado-aprobado {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.estado-completado {
+    background-color: #e8f5e9;
+    color: #1b5e20;
+}
+
+.estado-cancelado {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.competidores-asignados-info {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.competidores-asignados-info h3 {
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.estados-explicacion {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.estados-explicacion li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .competidores-asignados-container {
+        padding: 1rem;
+    }
+
+    .competidores-asignados-tabla {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .estados-explicacion {
+        grid-template-columns: 1fr;
+    }
+}

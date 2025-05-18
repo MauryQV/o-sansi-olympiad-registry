@@ -15,6 +15,7 @@ import Reportes from "./components/reportes/Reportes.jsx";
 import HistorialConvocatorias from "./components/HistorialConvocatorias.jsx";
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
 import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
+import CompetidoresAsignados from "./components/CompetidoresAsignados.jsx";
 import InicioTutor from "./components/InicioTutor.jsx";
 import InicioCajero from "./components/InicioCajero.jsx";
 import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
@@ -74,6 +75,10 @@ function App() {
           <Route
             path="/solicitudes"
             element={<SolicitudesTutoria setRol={setRol} />}
+          />
+          <Route
+            path="/competidores-asignados"
+            element={<CompetidoresAsignados />}
           />
           <Route
             path="/inicio-tutor"

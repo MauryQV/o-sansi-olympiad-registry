@@ -278,6 +278,11 @@ const Navbar = () => {
                     Solicitudes
                   </Link>
                 </li>
+                <li>
+                  <Link to="/competidores-asignados" className="menu-item">
+                    Mis Competidores
+                  </Link>
+                </li>
                 <li className="campanita">
                   <div
                     className="campana-notificacion"

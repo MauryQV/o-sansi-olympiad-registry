@@ -226,3 +226,21 @@ export const obtenerTutoresFiltrados = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener tutores filtrados.' });
     }
 };
+
+export const obtenerCompetidoresAsignados = async (req, res) => {
+    try {
+        const usuarioId = req.user.id;
+        console.log("=== Obteniendo inscripciones de competidores asignados al tutor ===");
+        console.log("Tutor usuario ID:", usuarioId);
+
+        const inscripciones = await tutorService.obtenerInscripcionesCompetidores(usuarioId);
+        console.log(`Encontradas ${inscripciones.length} inscripciones asignadas`);
+        
+        res.status(200).json({ inscripciones });
+    } catch (error) {
+        console.error('Error al obtener inscripciones de competidores:', error);
+        res.status(500).json({
+            error: error.message || 'Error al cargar inscripciones de competidores.'
+        });
+    }
+};
