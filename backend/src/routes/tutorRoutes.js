@@ -20,6 +20,7 @@ router.get('/solicitudes', autentificacion.authMiddleware, tutorController.getSo
 
 router.get('/tutor-areas', tutorController.obtenerTutoresFiltrados);
 
+router.get('/solicitudes-view', tutorController.obtenerSolicitudesPendientesView);
 
 
 export default router; 

@@ -1,6 +1,7 @@
 import prisma from '../config/prismaClient.js';
 import Joi from 'joi';
 import { generarPassword } from '../utils/passwordSecurity.js';
+import { supabase } from '../config/supabaseClient.js';
 
 const ROL_TUTOR_ID = 4;
 
@@ -205,3 +206,22 @@ export const buscarTutores = async (id_area, nombre) => {
         },
     });
 };
+
+
+export const obtenerSolicitudesView = async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('public.SolicitudesPendientesTutor') // Asegúrate que el nombre es correcto
+            .select('*');
+        if (error) {
+            console.error('Error de Supabase:', error); // <-- Esto mostrará el error real de la consulta
+            throw new Error('Error al obtener las solicitudes pendientes');
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Error real:', error); // Esto mostrará el error lanzado arriba
+        res.status(500).json({ error: 'Error al obtener solicitudes pendientes.' });
+    }
+};
+
+

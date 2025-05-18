@@ -226,3 +226,13 @@ export const obtenerTutoresFiltrados = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener tutores filtrados.' });
     }
 };
+
+export const obtenerSolicitudesPendientesView = async (req, res) => {
+    try {
+        const solicitudes = await tutorService.obtenerSolicitudesView();
+        res.status(200).json(solicitudes);
+    } catch (error) {
+        console.error('Error real:', error);
+        res.status(500).json({ error: 'Error al obtener solicitudes pendientes.' });
+    }
+};
