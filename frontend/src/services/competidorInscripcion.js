@@ -91,7 +91,8 @@ export const obtenerMisInscripciones = async () => {
         return response.data.inscripciones;
     } catch (error) {
         console.error('Error al obtener mis inscripciones:', error);
-
+    }
+}
 
 export const obtenerGrados = async (id) => {
     try {
@@ -101,4 +102,5 @@ export const obtenerGrados = async (id) => {
         console.error('Error al obtener grados:', error);
         throw error;
     }
+
 };
