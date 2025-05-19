@@ -57,6 +57,14 @@ const CardConvocatoria = ({ data, onVer, onEditar, onEliminar }) => {
       </div>
       
       <div className="card-fecha">
+        <span>Pago:</span>
+        <span>
+          {data.pago_inicio ? formatDate(data.pago_inicio) : 'N/A'} - 
+          {data.pago_fin ? formatDate(data.pago_fin) : 'N/A'}
+        </span>
+      </div>
+      
+      <div className="card-fecha">
         <span>Competencia:</span>
         <span>
           {data.competicion_inicio ? formatDate(data.competicion_inicio) : 'N/A'} - 
