@@ -6,12 +6,33 @@ import { generarPassword } from '../utils/passwordSecurity.js';
 
 const ROL_COMPETIDOR_ID = 2;
 
+
+
 const competidorSchema = Joi.object({
     nombre: Joi.string().min(2).max(50).required(),
     apellido: Joi.string().min(2).max(50).required(),
     correo_electronico: Joi.string().email().required(),
     carnet_identidad: Joi.string().min(5).max(20).required(),
-    fecha_nacimiento: Joi.date().iso().required(),
+    fecha_nacimiento: Joi.date().iso().required()
+        .custom((value, helpers) => {
+            const hoy = new Date();
+            const edad = hoy.getFullYear() - value.getFullYear();
+            const mes = hoy.getMonth() - value.getMonth();
+            const dia = hoy.getDate() - value.getDate();
+
+
+            const edadReal = (mes < 0 || (mes === 0 && dia < 0)) ? edad - 1 : edad;
+
+            if (edadReal > 18) {
+                return helpers.message('El competidor no debe tener más de 18 años');
+            }
+
+            if (edadReal < 9) {
+                return helpers.message('El competidor debe tener al menos 9 años para competir');
+            }
+
+            return value;
+        }, 'Restricción de edad'),
     colegio_id: Joi.number().integer().required(),
     provincia_id: Joi.number().integer().required(),
 });
