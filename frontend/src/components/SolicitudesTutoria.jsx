@@ -37,7 +37,7 @@ const SolicitudesTutoria = () => {
       confirmButtonColor: '#0284C7',
     }).then((result) => {
       if (result.isConfirmed) {
-        aceptarSolicitudTutor(id); // 👈 Aquí se llama tu servicio real
+        aceptarSolicitudTutor(id); 
         actualizarEstado(id, 'Aceptada');
       }
     });
