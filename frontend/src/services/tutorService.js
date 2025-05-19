@@ -1,4 +1,5 @@
 import axios from 'axios';
+import api from '../api/api';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:7777/api';
 
@@ -55,5 +56,33 @@ export const obtenerTutorPorId = async (id, token) => {
             throw new Error(error.response.data.error || 'Error al obtener el tutor');
         }
         throw new Error('Error de conexión con el servidor');
+    }
+};
+
+/**
+ * Obtiene las solicitudes pendientes para un tutor
+ * @returns {Promise} - Promesa con las solicitudes pendientes
+ */
+export const obtenerSolicitudesPendientes = async () => {
+    try {
+        const { data } = await api.get('/solicitudes');
+        return data;
+    } catch (error) {
+        console.error('Error al obtener solicitudes pendientes:', error);
+        throw error;
+    }
+};
+
+/**
+ * Obtiene las inscripciones de competidores asignados a un tutor
+ * @returns {Promise} - Promesa con las inscripciones de los competidores
+ */
+export const obtenerCompetidoresAsignados = async () => {
+    try {
+        const { data } = await api.get('/mis-competidores');
+        return data.inscripciones || [];
+    } catch (error) {
+        console.error('Error al obtener competidores asignados:', error);
+        throw error;
     }
 }; 

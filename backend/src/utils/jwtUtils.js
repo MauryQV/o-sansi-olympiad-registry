@@ -17,14 +17,25 @@ export const generarToken = (payload) => {
  * @returns {Object|null} - Datos del token si es válido, null si no
  */
 export const validarToken = (token) => {
-  if (!token) return null;
+  if (!token) {
+    console.log('Token no proporcionado');
+    return null;
+  }
 
   try {
     // Eliminar prefijo "Bearer " si existe
+    console.log('Token recibido para validar:', token.substring(0, 20) + '...');
     const tokenLimpio = token.startsWith('Bearer ') ? token.slice(7) : token;
-    return jwt.verify(tokenLimpio, JWT_SECRET);
+    const decoded = jwt.verify(tokenLimpio, JWT_SECRET);
+    console.log('Token validado correctamente, payload:', JSON.stringify(decoded, null, 2));
+    return decoded;
   } catch (error) {
     console.error('Error al validar token:', error.message);
+    if (error.name === 'TokenExpiredError') {
+      console.log('El token ha expirado');
+    } else if (error.name === 'JsonWebTokenError') {
+      console.log('Token JWT inválido');
+    }
     return null;
   }
 }; 

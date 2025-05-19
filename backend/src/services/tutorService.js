@@ -1,6 +1,7 @@
 import prisma from '../config/prismaClient.js';
 import Joi from 'joi';
 import { generarPassword } from '../utils/passwordSecurity.js';
+import { supabase } from '../config/supabaseClient.js';
 
 const ROL_TUTOR_ID = 4;
 
@@ -125,9 +126,9 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
             aprobado: false
         },
         select: {
-            id: true,
             inscripcion: {
                 select: {
+                    id: true,
                     fecha_inscripcion: true,
                     estado_inscripcion: true,
                     competidor: {
@@ -166,7 +167,7 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
     });
 
     return solicitudes.map((s) => ({
-        solicitud_id: s.id,
+        solicitud_id: s.inscripcion.id,
         nombre_completo: `${s.inscripcion.competidor.usuario.nombre} ${s.inscripcion.competidor.usuario.apellido}`,
         area_nombre: s.inscripcion.area.nombre_area,
         categoria_nombre: s.inscripcion.categoria.nombre_categoria,
@@ -177,6 +178,67 @@ export const obtenerSolicitudesPendientes = async (tutorUsuarioId) => {
     }));
 };
 
+export const obtenerInscripcionesCompetidores = async (tutorUsuarioId) => {
+    const tutor = await prisma.tutor.findUnique({
+        where: { usuario_id: tutorUsuarioId }
+    });
+
+    if (!tutor) {
+        throw new Error('Este usuario no tiene perfil de tutor.');
+    }
+
+    // Obtener todas las inscripciones donde este tutor está asignado
+    const inscripciones = await prisma.inscripcion_tutor.findMany({
+        where: {
+            tutor_id: tutor.id,
+        },
+        include: {
+            inscripcion: {
+                include: {
+                    competidor: {
+                        include: {
+                            usuario: true,
+                            colegio: true
+                        }
+                    },
+                    area: true,
+                    categoria: {
+                        include: {
+                            grado_min: {
+                                include: {
+                                    nivel: true
+                                }
+                            }
+                        }
+                    },
+                    convocatoria: true
+                }
+            }
+        }
+    });
+
+    // Formatear la respuesta para el frontend
+    return inscripciones.map(inscripcionTutor => {
+        const inscripcion = inscripcionTutor.inscripcion;
+        const competidor = inscripcion.competidor;
+        
+        return {
+            id: inscripcion.id,
+            estudiante: `${competidor.usuario.nombre} ${competidor.usuario.apellido}`,
+            area: inscripcion.area.nombre_area,
+            categoria: inscripcion.categoria.nombre_categoria,
+            grado: inscripcion.categoria.grado_min.nombre_grado,
+            nivel: inscripcion.categoria.grado_min.nivel.nombre_nivel,
+            colegio: competidor.colegio.nombre_colegio,
+            email: competidor.usuario.correo_electronico,
+            ci: competidor.carnet_identidad,
+            fecha_inscripcion: inscripcion.fecha_inscripcion,
+            estado: inscripcion.estado_inscripcion,
+            aprobado: inscripcionTutor.aprobado,
+            fecha_aprobacion: inscripcionTutor.fecha_aprobacion
+        };
+    });
+};
 
 
 export const buscarTutores = async (id_area, nombre) => {
@@ -204,3 +266,22 @@ export const buscarTutores = async (id_area, nombre) => {
         },
     });
 };
+
+
+export const obtenerSolicitudesView = async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('public.SolicitudesPendientesTutor') // Asegúrate que el nombre es correcto
+            .select('*');
+        if (error) {
+            console.error('Error de Supabase:', error); // <-- Esto mostrará el error real de la consulta
+            throw new Error('Error al obtener las solicitudes pendientes');
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Error real:', error); // Esto mostrará el error lanzado arriba
+        res.status(500).json({ error: 'Error al obtener solicitudes pendientes.' });
+    }
+};
+
+

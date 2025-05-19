@@ -15,4 +15,6 @@ router.get('/ver-grados', categoriaController.verGrados);
 
 router.get('/ver-grados-categoria/:id', categoriaController.obtenerGradosPorCategoria);
 
+router.delete('/eliminar-categoria-completa/:id', categoriaController.eliminarCategoriaCompleta);
+
 export default router;

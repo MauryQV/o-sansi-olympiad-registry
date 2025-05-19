@@ -10,7 +10,9 @@
     "test:concepto": "node test/testAreasRestriccion.js",
     "test:validador": "node test/probarRestriccion.js",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "seeds": "node scripts/insertar-datos-prueba.js",
+    "clean": "node scripts/limpiar-datos.js"
   },
   "keywords": [],
   "author": "",
