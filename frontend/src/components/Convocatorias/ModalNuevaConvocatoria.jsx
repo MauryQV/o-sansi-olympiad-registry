@@ -66,26 +66,26 @@ const ModalNuevaConvocatoria = ({ visible, cerrar, recargarConvocatorias }) => {
     return err;
   };
 
-const manejarCambio = (e) => {
-  const { name, value } = e.target;
-  const actualizado = { ...formulario, [name]: value };
-  setFormulario(actualizado);
+  const manejarCambio = (e) => {
+    const { name, value } = e.target;
+    const actualizado = { ...formulario, [name]: value };
+    setFormulario(actualizado);
 
-  const nuevosErrores = { ...errores, [name]: '' };
+    const nuevosErrores = { ...errores, [name]: '' };
 
-  // Validaciones específicas de nombre y descripción
-  if (name === 'nombre' && value.length > 100) {
-    nuevosErrores.nombre = 'Máximo 100 caracteres.';
-  }
-  if (name === 'descripcion' && value.length > 1000) {
-    nuevosErrores.descripcion = 'Máximo 1000 caracteres.';
-  }
+    // Validaciones específicas de nombre y descripción
+    if (name === 'nombre' && value.length > 100) {
+      nuevosErrores.nombre = 'Máximo 100 caracteres.';
+    }
+    if (name === 'descripcion' && value.length > 1000) {
+      nuevosErrores.descripcion = 'Máximo 1000 caracteres.';
+    }
 
-  // Validación de fechas cruzadas
-  const erroresFechas = validarFechasEnTiempoReal(actualizado);
+    // Validación de fechas cruzadas
+    const erroresFechas = validarFechasEnTiempoReal(actualizado);
 
-  setErrores({ ...nuevosErrores, ...erroresFechas });
-};
+    setErrores({ ...nuevosErrores, ...erroresFechas });
+  };
 
   const manejarCheckbox = (idArea) => {
     const seleccionadas = formulario.areasSeleccionadas.includes(idArea)
@@ -99,13 +99,8 @@ const manejarCambio = (e) => {
   const validarFormulario = () => {
     const nuevosErrores = {};
 
-    const erroresFechas = validarFechasEnTiempoReal(formulario);
-    Object.assign(nuevosErrores, erroresFechas);
-
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0); 
-
-      if (!formulario.nombre.trim()) nuevosErrores.nombre = 'Nombre obligatorio';
+    // PRIMERO: Validar campos obligatorios
+    if (!formulario.nombre.trim()) nuevosErrores.nombre = 'Nombre obligatorio';
     if (!formulario.descripcion.trim()) nuevosErrores.descripcion = 'Descripción obligatoria';
     if (!formulario.inscripcionInicio) nuevosErrores.inscripcionInicio = 'Fecha inicio inscripción obligatoria';
     if (!formulario.inscripcionFin) nuevosErrores.inscripcionFin = 'Fecha fin inscripción obligatoria';
@@ -115,14 +110,44 @@ const manejarCambio = (e) => {
     if (!formulario.competenciaFin) nuevosErrores.competenciaFin = 'Fecha fin competencia obligatoria';
     if (!formulario.id_estado_convocatoria) nuevosErrores.id_estado_convocatoria = 'Seleccione un estado';
     if (formulario.areasSeleccionadas.length === 0) nuevosErrores.areasSeleccionadas = 'Selecciona al menos un área';
-  
+
+    // SEGUNDO: Si no hay errores de campos obligatorios, validar fechas
+    if (Object.keys(nuevosErrores).length === 0) {
+      const erroresFechas = validarFechasEnTiempoReal(formulario);
+      Object.assign(nuevosErrores, erroresFechas);
+    }
+
+    // TERCERO: Actualizar errores y verificar si hay alguno
     setErrores(nuevosErrores);
-    return Object.keys(nuevosErrores).length === 0;
+    
+    // CRÍTICO: También verificar si ya hay errores en el estado actual
+    const tieneErroresActuales = Object.keys(errores).some(key => errores[key] && errores[key].trim() !== '');
+    const tieneErroresNuevos = Object.keys(nuevosErrores).length > 0;
+    
+    console.log('Errores actuales:', errores);
+    console.log('Errores nuevos:', nuevosErrores);
+    console.log('Tiene errores actuales:', tieneErroresActuales);
+    console.log('Tiene errores nuevos:', tieneErroresNuevos);
+    
+    return !tieneErroresActuales && !tieneErroresNuevos;
   };
   
   const manejarSubmit = async (e) => {
     e.preventDefault();
-    if (!validarFormulario()) return;
+    
+    // VALIDACIÓN CRÍTICA: Verificar errores antes de proceder
+    const formularioValido = validarFormulario();
+    
+    if (!formularioValido) {
+      console.log('Formulario inválido - No se puede proceder');
+      Swal.fire({
+        title: 'Errores en el formulario',
+        text: 'Por favor corrige los errores antes de continuar',
+        icon: 'warning',
+        confirmButtonText: 'Entendido'
+      });
+      return;
+    }
   
     try {
       const convocatoriaAEnviar = {
@@ -138,10 +163,30 @@ const manejarCambio = (e) => {
         areaIds: formulario.areasSeleccionadas
       };
   
-      // Imprimir los datos que se enviarán al servidor
       console.log('Datos enviados al servidor:', convocatoriaAEnviar);
       await crearConvocatoria(convocatoriaAEnviar);
       Swal.fire('Éxito', 'Convocatoria creada correctamente', 'success');
+      
+      // Limpiar formulario y errores
+      setFormulario({
+        nombre: '',
+        id_estado_convocatoria: '',
+        descripcion: '',
+        inscripcionInicio: '',
+        inscripcionFin: '',
+        pagoInicio: '',
+        pagoFin: '',
+        competenciaInicio: '',
+        competenciaFin: '',
+        areasSeleccionadas: []
+      });
+      setErrores({});
+      
+      // Recargar convocatorias si la función existe
+      if (recargarConvocatorias) {
+        recargarConvocatorias();
+      }
+      
       cerrar();
     } catch (error) {
       console.error('Error creando convocatoria:', error);
@@ -311,4 +356,3 @@ const manejarCambio = (e) => {
 };
 
 export default ModalNuevaConvocatoria;
-
