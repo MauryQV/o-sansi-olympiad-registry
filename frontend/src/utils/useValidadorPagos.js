@@ -5,12 +5,8 @@ import Swal from 'sweetalert2';
 import { esTerminoValido } from '../forms/validadorPagosValidator';
 import { mostrarConfirmacionPago } from '../components/cajero/ConfirmacionPagoModal';
 import axios from 'axios';
-import { useSearchParams } from 'react-router-dom';
 
 export const useValidadorPagos = () => {
-  const [searchParams] = useSearchParams();
-  const estadoFiltro = searchParams.get('estado');
-  
   const [criterio, setCriterio] = useState('codigo');
   const [termino, setTermino] = useState('');
   const [boletas, setBoletas] = useState([]);
@@ -26,44 +22,26 @@ export const useValidadorPagos = () => {
         throw new Error('No se encontró el token de autenticación');
       }
 
-      let pagosData = [];
+      // Obtener pagos pendientes
+      const responsePendientes = await axios.get('http://localhost:7777/api/pagos/pendientes', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
 
-      if (estadoFiltro === 'Pagado') {
-        const responseRealizados = await axios.get('http://localhost:7777/api/pagos/realizados', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        pagosData = responseRealizados.data;
-      } else if (estadoFiltro === 'Pendiente') {
-        const responsePendientes = await axios.get('http://localhost:7777/api/pagos/pendientes', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        pagosData = responsePendientes.data;
-      } else {
-        // Si no hay filtro, cargar todos los pagos
-        const [responsePendientes, responseRealizados] = await Promise.all([
-          axios.get('http://localhost:7777/api/pagos/pendientes', {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          }),
-          axios.get('http://localhost:7777/api/pagos/realizados', {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          })
-        ]);
-        pagosData = [...responsePendientes.data, ...responseRealizados.data];
-      }
+      // Obtener pagos realizados
+      const responseRealizados = await axios.get('http://localhost:7777/api/pagos/realizados', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
 
-      const pagosAdaptados = pagosData.map(pago => ({
+      // Combinar ambos resultados
+      const todosLosPagos = [...responsePendientes.data, ...responseRealizados.data];
+
+      const pagosAdaptados = todosLosPagos.map(pago => ({
         id: pago.id,
         codigo: pago.codigo_pago,
         competidor: `${pago.inscripcion.competidor.usuario.nombre} ${pago.inscripcion.competidor.usuario.apellido}`,
@@ -88,7 +66,7 @@ export const useValidadorPagos = () => {
 
   useEffect(() => {
     cargarPagos();
-  }, [estadoFiltro]); // Recargar cuando cambie el estado en la URL
+  }, []);
 
   const handleBuscar = () => {
     const t = termino.trim().toLowerCase();

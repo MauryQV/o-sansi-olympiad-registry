@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Search } from 'lucide-react';
 import '../../styles/InscripcionCompetidor/FormularioInscripcion.css';
 import { useFormularioInscripcion } from '../../hooks/useFormularioInscripcion';
@@ -6,7 +6,6 @@ import TutoresTable from './TutoresTable';
 import ModalTutores from './ModalTutores';
 
 const FormularioInscripcion = () => {
-  // Usamos el custom hook con toda la lógica del formulario
   const {
     area, 
     categoria, 
@@ -18,17 +17,25 @@ const FormularioInscripcion = () => {
     mostrarModal,
     areasDisponibles,
     categoriasDisponibles, 
-    gradosDisponibles, 
+    gradosFiltrados, 
     nivelesDisponibles,
     cargandoGrados,
+    cargandoCategorias,
+    tutoresDisponibles,
+    busqueda,
+    resultados,
     setArea, 
     setCategoria, 
     setGrado, 
     setNivel,
     setMostrarModal,
+    setBusqueda,
+    setNuevoTutor,
+    buscarTutores,
     agregarTutor, 
     eliminarTutor, 
-    manejarEnvio
+    manejarEnvio,
+    tutoresFiltrados
   } = useFormularioInscripcion();
 
   return (
@@ -61,10 +68,17 @@ const FormularioInscripcion = () => {
             <select 
               value={categoria} 
               onChange={(e) => setCategoria(e.target.value)} 
-              disabled={categoriasDisponibles.length === 0} 
+              disabled={!area || categoriasDisponibles.length === 0 || cargandoCategorias} 
               className={errores.categoria ? 'forminsc-input-error' : ''}
             >
-              <option value="">Seleccione una categoría</option>
+              <option value="">
+                {cargandoCategorias 
+                  ? 'Cargando categorías...' 
+                  : categoriasDisponibles.length === 0 
+                    ? 'Seleccione primero un área'
+                    : 'Seleccione una categoría'
+                }
+              </option>
               {categoriasDisponibles.map((c) => (
                 <option key={c.id} value={c.id}>{c.nombre}</option>
               ))}
@@ -75,29 +89,12 @@ const FormularioInscripcion = () => {
 
         <div className="forminsc-fila">
           <div className="forminsc-campo">
-            <label>Grados</label>
-            <select 
-  value={grado} 
-  onChange={(e) => setGrado(e.target.value)} 
-  className={errores.grado ? 'forminsc-input-error' : ''}
-  disabled={gradosDisponibles.length === 0 || cargandoGrados}
->
-  <option value="">
-    {cargandoGrados ? 'Cargando grados...' : 'Seleccione su grado'}
-  </option>
-  {gradosDisponibles.map((g, i) => (
-    <option key={i} value={g}>{g}</option>
-  ))}
-</select>
-            {errores.grado && <span className="forminsc-texto-error">Este campo es obligatorio</span>}
-          </div>
-
-          <div className="forminsc-campo">
             <label>Nivel Educativo</label>
             <select 
               value={nivel} 
               onChange={(e) => setNivel(e.target.value)} 
               className={errores.nivel ? 'forminsc-input-error' : ''}
+              disabled={nivelesDisponibles.length === 0}
             >
               <option value="">Seleccione un nivel</option>
               {nivelesDisponibles.map((n, i) => (
@@ -105,6 +102,33 @@ const FormularioInscripcion = () => {
               ))}
             </select>
             {errores.nivel && <span className="forminsc-texto-error">Este campo es obligatorio</span>}
+          </div>
+
+          <div className="forminsc-campo">
+            <label>Grado</label>
+            <select 
+              value={grado} 
+              onChange={(e) => setGrado(e.target.value)} 
+              className={errores.grado ? 'forminsc-input-error' : ''}
+              disabled={!nivel || gradosFiltrados.length === 0 || cargandoGrados}
+            >
+              <option value="">
+                {cargandoGrados 
+                  ? 'Cargando grados...' 
+                  : !nivel 
+                    ? 'Seleccione primero un nivel' 
+                    : gradosFiltrados.length === 0 
+                      ? 'No hay grados disponibles' 
+                      : 'Seleccione su grado'
+                }
+              </option>
+              {gradosFiltrados.map((g) => (
+                <option key={g.id} value={g.id}>
+                  {g.nombre_grado}°
+                </option>
+              ))}
+            </select>
+            {errores.grado && <span className="forminsc-texto-error">Este campo es obligatorio</span>}
           </div>
         </div>
       </section>

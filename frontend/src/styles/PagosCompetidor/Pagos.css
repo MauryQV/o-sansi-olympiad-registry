@@ -88,7 +88,6 @@
   height: 100%;
 }
 
-
 .pagoscomp-boton-ver,
 .pagoscomp-boton-descargar {
   display: flex;
@@ -115,6 +114,20 @@
   border-color:  #3399ff;
   color: #3399ff;
 }
+
+.pagoscomp-boton-descargar.disabled {
+  background-color: #f5f5f5;
+  border-color: #ddd;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.pagoscomp-boton-descargar.disabled:hover {
+  background-color: #f5f5f5;
+  border-color: #ddd;
+  color: #999;
+}
+
 .imagen-ver-descargar{
   width: 1rem;
 }
@@ -127,5 +140,160 @@
 .pagoscomp-tabla-pagos th:last-child,
 .pagoscomp-tabla-pagos td:last-child {
   border-top-right-radius: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+}
+
+.pagination-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: #eaf4ff;
+  border-color: #3399ff;
+  color: #3399ff;
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: #666;
+}
+
+.pdf-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.pdf-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pdf-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.pdf-modal-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.pdf-modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  line-height: 1;
+}
+
+.pdf-modal-close:hover {
+  color: #333;
+}
+
+.pdf-modal-body {
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.pdf-modal-footer {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  text-align: right;
+}
+
+.pdf-download-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.pdf-download-button:hover {
+  background-color: #45a049;
+}
+
+.pdf-download-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.alert-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff4444;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 5px;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.pagoscomp-mensaje-advertencia {
+  color: #dc3545;
+  font-size: 14px;
+  margin: 10px 0 20px 0;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: start;
 }
 

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrashAlt, FaPlus } from 'react-icons/fa';
+import { Search, RotateCcw } from 'lucide-react';
+import { useBuscadorAreas } from '../../hooks/useBuscadorAreas';
 import ModalNuevaArea from './ModalNuevaArea';
 import ModalConfirmacionEliminar from './ModalConfirmacionEliminar';
 import ModalConfirmacionEliminarCategoria from './ModalConfirmacionEliminarCategoria';
@@ -29,12 +31,20 @@ const TablaArea = () => {
   const [areaParaCategoria, setAreaParaCategoria] = useState(null);
   const [categoriaParaEditar, setCategoriaParaEditar] = useState(null);
   const [categoriaIdAEliminar, setCategoriaIdAEliminar] = useState(null);
+  const {
+    criterio, setCriterio,
+    termino, setTermino,
+    areas: areasFiltradas,
+    actualizarAreas,
+    handleBuscar, handleResetear
+  } = useBuscadorAreas([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const dataAreas = await getAreas();
         setAreas(dataAreas || []);
+        actualizarAreas(dataAreas || []);
 
         const resCategorias = await fetch('http://localhost:7777/api/ver-categorias');
         const dataCategorias = await resCategorias.json();
@@ -239,8 +249,46 @@ const TablaArea = () => {
         </button>
       </div>
 
+      <div className="buscador-areas">
+        <h3>Buscar Áreas</h3>
+        <div className="buscador-formulario">
+          <div>
+            <label>Buscar por</label>
+            <select value={criterio} onChange={(e) => setCriterio(e.target.value)}>
+              <option value="nombre">Nombre del área</option>
+              <option value="costo">Costo</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Término de búsqueda</label>
+            <input
+              type="text"
+              placeholder={criterio === 'nombre' ? "Ej: Matemática" : "Ej: 25"}
+              value={termino}
+              onChange={(e) => setTermino(e.target.value)}
+              onKeyPress={(e) => {
+                if (criterio === 'costo') {
+                  if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }
+              }}
+            />
+          </div>
+
+          <button className="btn-buscar" onClick={handleBuscar}>
+            <Search size={16} /> Buscar
+          </button>
+
+          <button className="btn-resetear" onClick={handleResetear}>
+            <RotateCcw size={16} /> Resetear
+          </button>
+        </div>
+      </div>
+
       <div className="grid-areas">
-        {areas.map((area, index) => {
+        {areasFiltradas.map((area, index) => {
           const categoriasDeEstaArea = relaciones
             .filter(rel => rel.area_id === area.id)
             .map(rel => categorias.find(cat => cat.id === rel.categoria_id))

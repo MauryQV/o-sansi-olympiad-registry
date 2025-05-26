@@ -1,9 +1,8 @@
-// src/components/DetallePago.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import '../../styles/PagosCompetidor/DetallePago.css';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import QRCode from 'react-qr-code';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 
 import descarga from '../../image/descarga.svg';
 import casaInicio from '../../image/casaInicio.svg';
@@ -13,38 +12,37 @@ import BoletaPagoPDF from '../PagosCompetidor/BoletaPagoPDF.jsx';
 const DetallePago = () => {
   const { boleta } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [metodoPago, setMetodoPago] = useState("caja");
   const [detallePago, setDetallePago] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showPDFModal, setShowPDFModal] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const volver = () => navigate('/pagos-competidor');
 
-  useEffect(() => {
-    // Simulación de datos del backendd
-    const datosSimulados = {
-      nombreCompetidor: "Luis Flores",
-      ci: "9389739",
-      area: "Matemática",
-      fechaEmision: "2025-04-01",
-      estado: "Pendiente",
-      monto: 15,
-    };
+  const handleDownloadClick = useCallback(() => {
+    setShowPDFModal(true);
+  }, []);
 
-    setTimeout(() => {
-      setDetallePago(datosSimulados);
+  const handleCloseModal = useCallback(() => {
+    setShowPDFModal(false);
+  }, []);
+
+  useEffect(() => {
+    if (location.state && location.state.pago) {
+      setDetallePago(location.state.pago);
       setLoading(false);
-    }, 500);
-  }, [boleta]);
+    } else {
+      setError('No se encontraron los datos del pago');
+      setLoading(false);
+    }
+  }, [location.state]);
 
   if (loading) return <p style={{ padding: '2rem' }}>Cargando datos de pago...</p>;
+  if (error) return <p style={{ padding: '2rem', color: 'red' }}>{error}</p>;
   if (!detallePago) return <p style={{ padding: '2rem', color: 'red' }}>No se encontraron detalles para esta boleta.</p>;
-
-  const { nombreCompetidor, ci, area, fechaEmision, estado, monto } = detallePago;
-  const horaActual = new Date().toLocaleTimeString('es-BO', {
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-});
 
   return (
     <div className="detallepago-container">
@@ -56,50 +54,34 @@ const DetallePago = () => {
       <div className="detallepago-tarjeta">
         <div className="detallepago-info">
           <div>
-            <h3><b>Boleta de Pago: {boleta}</b></h3>
+            <h3><b>Boleta de Pago: {detallePago.boleta}</b></h3>
             <p className="detallepago-estado-texto">Pendiente de Pago</p>
             <br />
             <p className="detallepago-estado-texto">Competidor</p>
-            <p><strong><b>Competidor {nombreCompetidor}</b></strong></p>
-            <p className="detallepago-estado-texto">CI: {ci}</p>
+            <p><strong><b>Competidor {detallePago.nombre}</b></strong></p>
+            <p className="detallepago-estado-texto">CI: {detallePago.ci}</p>
             <br />
             <p className="detallepago-estado-texto">Monto</p>
-            <span className="detallepago-monto">Bs. {monto.toFixed(2)}</span>
+            <span className="detallepago-monto">{detallePago.monto}</span>
           </div>
           <div className="detalles-de-detalles-pago">
             <p>Detalles</p>
-            <p className="detalle-area"><b>Área: {area}</b></p>
-            <p><b>Emisión:</b> {fechaEmision}</p>
-            <p><b>Estado:</b><br/><span className="detallepago-estado">{estado}</span></p>
+            <p className="detalle-area"><b>Área: {detallePago.area}</b></p>
+            <p><b>Emisión:</b> {detallePago.fecha}</p>
+            <p><b>Estado:</b><br/><span className="detallepago-estado">{detallePago.estado}</span></p>
           </div>
         </div>
 
         <hr/>
 
         <div className="detallepago-acciones">
-          <PDFDownloadLink
-            document={
-              <BoletaPagoPDF
-                boleta={boleta}
-                nombre={nombreCompetidor}
-                ci={ci}
-                area={area}
-                fechaEmision={fechaEmision}
-                horaEmision={horaActual}
-                estado={estado}
-                monto={monto}
-              />
-            }
-            fileName={`boleta_${boleta}.pdf`}
-            style={{ textDecoration: 'none' }}
+          <button 
+            className="detallepago-descargar"
+            onClick={handleDownloadClick}
           >
-            {({ loading }) => (
-              <button className="detallepago-descargar">
-                <img className='imagen-descargar' src={descarga} alt="descargar" />
-                {loading ? 'Generando...' : 'Descargar Boleta'}
-              </button>
-            )}
-          </PDFDownloadLink>
+            <img className='imagen-descargar' src={descarga} alt="descargar" />
+            Descargar Boleta
+          </button>
         </div>
       </div>
 
@@ -128,31 +110,78 @@ const DetallePago = () => {
             <p><strong>Instrucciones para Pago en Caja</strong></p>
             <ol>
               <li>Acuda a la oficina en horario de atención (8:00 - 16:00).</li>
-              <li>Presente su boleta Nº {boleta} en ventanilla.</li>
-              <li>Realice el pago de Bs. {monto.toFixed(2)}.</li>
+              <li>Presente su boleta Nº {detallePago.boleta} en ventanilla.</li>
+              <li>Realice el pago de {detallePago.monto}.</li>
               <li>Conserve su recibo como comprobante.</li>
             </ol>
           </div>
         ) : (
           <div className="detallepago-instrucciones">
             <div className="detallepago-qr-img">
-            <QRCode
-              value={
-                `Boleta de Pago\n` +
-                `Boleta: ${boleta}\n` +
-                `Nombre: ${nombreCompetidor}\n` +
-                `Área: ${area}\n` +
-                `CI: ${ci}\n` +
-                `Monto: Bs. ${monto.toFixed(2)}`
-              }
-              size={150}
-            />
+              <QRCode
+                value={
+                  `Boleta de Pago\n` +
+                  `Boleta: ${detallePago.boleta}\n` +
+                  `Nombre: ${detallePago.nombre}\n` +
+                  `Área: ${detallePago.area}\n` +
+                  `CI: ${detallePago.ci}\n` +
+                  `Monto: ${detallePago.monto}`
+                }
+                size={150}
+              />
             </div>
-            <p className="detallepago-qr-texto">Escanee este código QR para pagar Bs. {monto.toFixed(2)}</p>
+            <p className="detallepago-qr-texto">Escanee este código QR para pagar {detallePago.monto}</p>
             <button className="detallepago-btn-qr-confirmar">Pago QR</button>
           </div>
         )}
       </div>
+
+      {showPDFModal && (
+        <div className="pdf-modal-overlay" onClick={handleCloseModal}>
+          <div className="pdf-modal-content" onClick={e => e.stopPropagation()}>
+            <div className="pdf-modal-header">
+              <h3>Vista previa del PDF</h3>
+              <button className="pdf-modal-close" onClick={handleCloseModal}>×</button>
+            </div>
+            <div className="pdf-modal-body">
+              <PDFViewer style={{ width: '100%', height: '80vh' }}>
+                <BoletaPagoPDF
+                  boleta={detallePago.boleta}
+                  nombre={detallePago.nombre || ''}
+                  ci={detallePago.ci || ''}
+                  area={detallePago.area}
+                  fechaEmision={detallePago.fecha}
+                  estado={detallePago.estado}
+                  monto={parseFloat(detallePago.monto.replace('Bs. ', ''))}
+                />
+              </PDFViewer>
+            </div>
+            <div className="pdf-modal-footer">
+              <PDFDownloadLink
+                document={
+                  <BoletaPagoPDF
+                    boleta={detallePago.boleta}
+                    nombre={detallePago.nombre || ''}
+                    ci={detallePago.ci || ''}
+                    area={detallePago.area}
+                    fechaEmision={detallePago.fecha}
+                    estado={detallePago.estado}
+                    monto={parseFloat(detallePago.monto.replace('Bs. ', ''))}
+                  />
+                }
+                fileName={`boleta_${detallePago.boleta}.pdf`}
+                style={{ textDecoration: 'none' }}
+              >
+                {({ loading }) => (
+                  <button className="pdf-download-button">
+                    {loading ? 'Generando...' : 'Descargar PDF'}
+                  </button>
+                )}
+              </PDFDownloadLink>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

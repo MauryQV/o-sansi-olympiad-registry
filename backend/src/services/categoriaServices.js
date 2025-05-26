@@ -117,34 +117,75 @@ export const obtenerGrados = async () => {
 
 
 export const obtenerGradosCategorias = async (id_categoria) => {
-    return await prisma.categoria.findUnique({
-        where: { id: parseInt(id_categoria, 10) },
-        select: {
-            nombre_categoria: true, 
-            grado_min: {
-                select: {
-                    nombre_grado: true, 
-                    id_nivel: true,    
-                    nivel: {       
-                        select: {
-                            nombre_nivel: true, 
-                        },
-                    },
+    try {
+        // Obtener la categoría con sus grados mínimo y máximo
+        const categoria = await prisma.categoria.findUnique({
+            where: { id: parseInt(id_categoria, 10) },
+            include: {
+                grado_min: {
+                    include: {
+                        nivel: true
+                    }
                 },
+                grado_max: {
+                    include: {
+                        nivel: true
+                    }
+                }
+            }
+        });
+
+        if (!categoria) {
+            throw new Error('Categoría no encontrada');
+        }
+
+        // Obtener todos los grados que están dentro del rango de la categoría
+        const gradosCategoria = await prisma.grado.findMany({
+            where: {
+                AND: [
+                    { id: { gte: categoria.grado_min_id } },
+                    { id: { lte: categoria.grado_max_id } }
+                ]
             },
-            grado_max: {
-                select: {
-                    nombre_grado: true, 
-                    id_nivel: true,    
-                    nivel: {          
-                        select: {
-                            nombre_nivel: true, 
-                        },
-                    },
-                },
+            include: {
+                nivel: true
             },
-        },
-    });
+            orderBy: [
+                { nivel: { nombre_nivel: 'asc' } },
+                { id: 'asc' }
+            ]
+        });
+
+        // Formatear los grados según las equivalencias
+        const equivalencias = {
+            "Primero": "1",
+            "Segundo": "2",
+            "Tercero": "3",
+            "Cuarto": "4",
+            "Quinto": "5",
+            "Sexto": "6"
+        };
+
+        const gradosFormateados = gradosCategoria.map(grado => ({
+            id: grado.id,
+            nombre_grado: equivalencias[grado.nombre_grado] || grado.nombre_grado,
+            nivel: grado.nivel.nombre_nivel
+        }));
+
+        // Obtener niveles únicos
+        const nivelesUnicos = [...new Set(gradosFormateados.map(g => g.nivel))];
+
+        // Formatear la respuesta
+        return {
+            id_categoria: categoria.id,
+            nombre_categoria: categoria.nombre_categoria,
+            grados: gradosFormateados,
+            niveles: nivelesUnicos
+        };
+    } catch (error) {
+        console.error('Error al obtener grados de la categoría:', error);
+        throw error;
+    }
 };
 
 export const eliminarCategoriaCompletaBD = async (categoriaId) => {
@@ -170,4 +211,22 @@ export const eliminarCategoriaCompletaBD = async (categoriaId) => {
 
         return categoriaEliminada;
     });
+};
+
+export const obtenerCategoriasPorArea = async (areaId) => {
+    try {
+        const categorias = await prisma.categoria_area.findMany({
+            where: {
+                area_id: parseInt(areaId, 10)
+            },
+            include: {
+                categoria: true
+            }
+        });
+
+        return categorias;
+    } catch (error) {
+        console.error('Error al obtener categorías por área:', error);
+        throw error;
+    }
 };

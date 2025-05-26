@@ -40,33 +40,10 @@ export const verGrados = async (req, res, next) => {
 export const obtenerGradosPorCategoria = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const grados = await categoriaService.obtenerGradosCategorias(id);
-
-        // Mapeo para reasignar los valores de los grados
-        const formatearGrado = (grado) => {
-            const equivalencias = {
-                "Primero": "1º",
-                "Segundo": "2º",
-                "Tercero": "3º",
-                "Cuarto": "4º",
-                "Quinto": "5º",
-                "Sexto": "6º",
-            };
-
-            return {
-                nombre_grado: equivalencias[grado.nombre_grado] || grado.nombre_grado, 
-                nivel: grado.nivel.nombre_nivel, 
-            };
-        };
-
-        const respuestaFormateada = {
-            nombre_categoria: grados.nombre_categoria,
-            grado_min: formatearGrado(grados.grado_min),
-            grado_max: formatearGrado(grados.grado_max),
-        };
-
-        res.status(200).json(respuestaFormateada);
+        const resultado = await categoriaService.obtenerGradosCategorias(id);
+        res.status(200).json(resultado);
     } catch (error) {
+        console.error('Error al obtener grados:', error);
         next(error);
     }
 };
@@ -80,6 +57,16 @@ export const eliminarCategoriaCompleta = async (req, res, next) => {
         if (error.code === 'P2025') {
             return res.status(404).json({ message: `Error al eliminar: No se encontró la categoría con ID ${req.params.id}.` });
         }
+        next(error);
+    }
+};
+
+export const obtenerCategoriasPorArea = async (req, res, next) => {
+    try {
+        const { areaId } = req.params;
+        const categorias = await categoriaService.obtenerCategoriasPorArea(areaId);
+        res.status(200).json(categorias);
+    } catch (error) {
         next(error);
     }
 };
