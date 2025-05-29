@@ -35,21 +35,30 @@ export const authMiddleware = async (req, res, next) => {
  * Middleware para verificar si el token JWT es válido
  */
 export const verificarToken = (req, res, next) => {
-  // Obtener el token del encabezado
-  const token = req.headers.authorization;
-  //console.log('Token recibido:', token);//debuggggggggggggggggggggggggggggggg
-  if (!token) {
-    return res.status(401).json({ error: 'Acceso denegado. No se proporciono token de autenticación' });
+  try {
+    // Obtener el token del encabezado
+    const token = req.headers.authorization;
+    console.log('Headers recibidos:', req.headers);
+    console.log('Token recibido:', token ? `${token.substring(0, 20)}...` : 'No hay token');
+    
+    if (!token) {
+      return res.status(401).json({ error: 'Acceso denegado. No se proporcionó token de autenticación' });
+    }
+
+    const usuario = validarToken(token);
+
+    if (!usuario) {
+      console.log('Token inválido o expirado');
+      return res.status(401).json({ error: 'Token inválido o expirado' });
+    }
+
+    console.log('Usuario autenticado:', usuario);
+    req.usuario = usuario;
+    next();
+  } catch (error) {
+    console.error('Error en verificarToken:', error);
+    return res.status(500).json({ error: 'Error interno del servidor al verificar token' });
   }
-
-  const usuario = validarToken(token);
-
-  if (!usuario) {
-    return res.status(401).json({ error: 'Token invalido o expirado' });
-  }
-
-  req.usuario = usuario;
-  next();
 };
 
 /**

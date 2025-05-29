@@ -171,17 +171,18 @@ model Categoria_area {
 }
 
 model Inscripcion_tutor {
-  id                Int             @id @default(autoincrement())
-  inscripcion_id    Int
-  tutor_id          String
-  aprobado          Boolean         @default(false)
-  fecha_aprobacion  DateTime?
-  motivo_rechazo_id Int? //campo opcional para el motivo de rechazo :v 
-  inscripcion       Inscripcion     @relation(fields: [inscripcion_id], references: [id])
-  tutor             Tutor           @relation(fields: [tutor_id], references: [id])
-  Competidor        Competidor?     @relation(fields: [competidorId], references: [id])
-  competidorId      String?
-  MotivoRechazo     Motivo_rechazo? @relation(fields: [motivo_rechazo_id], references: [id])
+  id                  Int             @id @default(autoincrement())
+  inscripcion_id      Int
+  tutor_id            String
+  aprobado            Boolean         @default(false)
+  fecha_aprobacion    DateTime?
+  motivo_rechazo_id   Int? //campo opcional para el motivo de rechazo :v 
+  descripcion_rechazo String?
+  inscripcion         Inscripcion     @relation(fields: [inscripcion_id], references: [id])
+  tutor               Tutor           @relation(fields: [tutor_id], references: [id])
+  Competidor          Competidor?     @relation(fields: [competidorId], references: [id])
+  competidorId        String?
+  MotivoRechazo       Motivo_rechazo? @relation(fields: [motivo_rechazo_id], references: [id])
 }
 
 model Metodo_pago {

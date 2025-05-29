@@ -1,8 +1,7 @@
-
 // src/routes/RutaProtegida.jsx
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/authContext";
 
 const RutaProtegida = ({ children, rolRequerido }) => {
   const { usuario } = useAuth();
@@ -19,4 +18,3 @@ const RutaProtegida = ({ children, rolRequerido }) => {
 };
 
 export default RutaProtegida;
-
