@@ -82,10 +82,6 @@ const InicioCajero = () => {
             <p className="inicio-cajero-label">Pagadas</p>
             <p className="inicio-cajero-valor">{stats.pagados}</p>
           </div>
-          <div className="inicio-cajero-card cancelado">
-            <p className="inicio-cajero-label">Canceladas</p>
-            <p className="inicio-cajero-valor">{stats.cancelados}</p>
-          </div>
         </div>
 
         <div className="inicio-cajero-seccion">
