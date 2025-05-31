@@ -29,11 +29,17 @@ export const aceptarSolicitudTutor = async (solicitudId) => {
     return response.data;
 }
 
-//servicio para rechazar solicitud de tutor
-export const rechazarSolicitudTutor = async (solicitudId, motivoRechazoId) => {
+
+export const rechazarSolicitudTutor = async (solicitudId, motivoRechazoId, descripcionRechazo = null) => {
+    const payload = { motivo_rechazo_id: motivoRechazoId };
+
+    if (motivoRechazoId === 7 && descripcionRechazo) {
+        payload.descripcion_rechazo = descripcionRechazo;
+    }
+
     const response = await apiAuth.patch(
         `/inscripcion-tutor/rechazar/${solicitudId}`,
-        { motivo_rechazo_id: motivoRechazoId }
+        payload
     );
 
     if (response.status !== 200) {

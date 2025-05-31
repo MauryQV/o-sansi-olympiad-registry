@@ -4,6 +4,7 @@ import { X, Check } from 'lucide-react';
 import '../styles/SolicitudesTutoria.css';
 import { useSolicitudesTutoria } from '../hooks/solicitudesTutoria';
 import { aceptarSolicitudTutor } from '../services/solicitudTutor';
+import { rechazarSolicitudTutor } from '../services/solicitudTutor';
 
 
 const SolicitudesTutoria = () => {
@@ -43,48 +44,57 @@ const SolicitudesTutoria = () => {
     });
   };
 
-  const rechazarSolicitud = (id) => {
-    const opcionesMotivos = {};
-    motivosRechazo.forEach(motivo => {
-      opcionesMotivos[motivo.id] = motivo.mensaje;
-    });
-    
+ const rechazarSolicitud = (id) => {
+  const opcionesMotivos = {};
+  motivosRechazo.forEach(motivo => {
+    opcionesMotivos[motivo.id] = motivo.mensaje;
+  });
 
-    Swal.fire({
-      title: 'Motivo del rechazo',
-      input: 'select',
-      inputOptions: opcionesMotivos,
-      inputPlaceholder: 'Selecciona un motivo',
-      showCancelButton: true,
-      confirmButtonText: 'Rechazar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#E4272A',
-      inputValidator: (value) => {
-        if (!value) return 'Debes seleccionar un motivo.';
-      }
-    }).then(result => {
-      if (result.isConfirmed) {
-        const motivoSeleccionado = result.value;
-        if (motivoSeleccionado === 'otro') {
-          Swal.fire({
-            title: 'Especifica el motivo',
-            input: 'textarea',
-            inputPlaceholder: 'Describe el motivo...',
-            showCancelButton: true,
-            confirmButtonText: 'Enviar',
-            confirmButtonColor: '#E4272A',
-          }).then(res => {
-            if (res.isConfirmed) {
+  Swal.fire({
+    title: 'Motivo del rechazo',
+    input: 'select',
+    inputOptions: opcionesMotivos,
+    inputPlaceholder: 'Selecciona un motivo',
+    showCancelButton: true,
+    confirmButtonText: 'Aceptar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#E4272A',
+    inputValidator: (value) => {
+      if (!value) return 'Debes seleccionar un motivo.';
+    }
+  }).then(result => {
+    if (result.isConfirmed) {
+      const motivoSeleccionado = parseInt(result.value);
+
+      if (motivoSeleccionado === 7) {
+        // Motivo personalizado
+        Swal.fire({
+          title: 'Especifica el motivo',
+          input: 'textarea',
+          inputPlaceholder: 'Describe el motivo...',
+          showCancelButton: true,
+          confirmButtonText: 'Enviar',
+          confirmButtonColor: '#E4272A',
+        }).then(async res => {
+          if (res.isConfirmed) {
+            try {
+              await rechazarSolicitudTutor(id, motivoSeleccionado, res.value); // con descripción
               actualizarEstado(id, 'Rechazada', res.value);
+            } catch (err) {
+              Swal.fire('Error', 'No se pudo rechazar la solicitud.', 'error');
             }
-          });
-        } else {
-          const motivoTexto = opcionesMotivos[motivoSeleccionado];
-          actualizarEstado(id, 'Rechazada', motivoTexto);
-        }
+          }
+        });
+      } else {
+        const motivoTexto = opcionesMotivos[motivoSeleccionado];
+        rechazarSolicitudTutor(id, motivoSeleccionado) // sin descripción
+          .then(() => actualizarEstado(id, 'Rechazada', motivoTexto))
+          .catch(() => Swal.fire('Error', 'No se pudo rechazar la solicitud.', 'error'));
       }
-    });
-  };
+    }
+  });
+};
+
 
   return (
     <div className="solicitudes-tutoria-container">
