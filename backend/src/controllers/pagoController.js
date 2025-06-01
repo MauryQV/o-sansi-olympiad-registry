@@ -39,12 +39,14 @@ export const validarPago = async (req, res) => {
 export const verMisPagosPendientes = async (req, res) => {
     try {
         const usuarioId = req.user.id;
-        const competidor = pagoService.obtenerIdCompetidor(usuarioId);
+        //console.log('ID del usuario:', usuarioId);
+        const competidor = await pagoService.obtenerIdCompetidor(usuarioId);
+        console.log('ID del competidor:', competidor || 'No se encontró competidor para el usuario controler');
         if (!competidor) {
             return res.status(404).json({ error: 'Competidor no encontrado para este usuario.' });
         }
 
-        const pagosPendientes = await pagoService.verMisPagosPendientes(competidor.id);
+        const pagosPendientes = await pagoService.verMisPagosPendientes(competidor);
 
         res.status(200).json(pagosPendientes);
     } catch (error) {

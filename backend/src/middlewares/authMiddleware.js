@@ -52,7 +52,7 @@ export const verificarToken = (req, res, next) => {
       return res.status(401).json({ error: 'Token inválido o expirado' });
     }
 
-    console.log('Usuario autenticado:', usuario);
+    //console.log('Usuario autenticado:', usuario);
     req.usuario = usuario;
     next();
   } catch (error) {
