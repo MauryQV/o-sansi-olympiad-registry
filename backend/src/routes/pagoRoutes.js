@@ -1,4 +1,4 @@
-import { Router } from "express";   
+import { Router } from "express";
 import * as pagoControllers from "../controllers/pagoController.js";
 import { esCajero } from "../middlewares/permisoMiddleware.js";
 import * as authMiddleware from "../middlewares/authMiddleware.js";
@@ -13,6 +13,7 @@ router.patch("/validar-pago/:pagoId", authMiddleware.verificarToken, esCajero, p
 
 // Rutas para el competidor
 router.get("/mis-pagos-pendientes", authMiddleware.authMiddleware, pagoControllers.verMisPagosPendientes);
+
 router.get("/detalle-pago/:pagoId", authMiddleware.authMiddleware, pagoControllers.verDetallePago);
 
 // Ruta para el cajero para buscar un pago por búsqueda

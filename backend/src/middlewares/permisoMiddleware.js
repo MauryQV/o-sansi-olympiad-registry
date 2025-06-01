@@ -38,11 +38,11 @@ export const requirePermiso = (nombrePermiso) => {
  */
 export const verificarRol = (rolesPermitidos) => {
     return async (req, res, next) => {
-        console.log('Verificando roles para:', req.usuario);
-        console.log('Roles permitidos:', rolesPermitidos);
+        // console.log('Verificando roles para:', req.usuario);
+        //console.log('Roles permitidos:', rolesPermitidos);
 
         if (!req.usuario || !req.usuario.rol_id) {
-            console.log('Token no válido o rol ausente');
+            //console.log('Token no válido o rol ausente');
             return res.status(401).json({ error: 'Token no válido o rol ausente' });
         }
 

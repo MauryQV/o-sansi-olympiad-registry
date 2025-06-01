@@ -25,7 +25,7 @@ export const authMiddleware = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error('Error al verificar token:', error);
+    //console.error('Error al verificar token:', error);
     return res.status(401).json({ error: 'Token inválido' });
   }
 };
@@ -38,9 +38,9 @@ export const verificarToken = (req, res, next) => {
   try {
     // Obtener el token del encabezado
     const token = req.headers.authorization;
-    console.log('Headers recibidos:', req.headers);
-    console.log('Token recibido:', token ? `${token.substring(0, 20)}...` : 'No hay token');
-    
+    //console.log('Headers recibidos:', req.headers);
+    //console.log('Token recibido:', token ? `${token.substring(0, 20)}...` : 'No hay token');
+    //Muchos console logs que no tienen sentido, pero los dejo por si acaso
     if (!token) {
       return res.status(401).json({ error: 'Acceso denegado. No se proporcionó token de autenticación' });
     }
@@ -48,7 +48,7 @@ export const verificarToken = (req, res, next) => {
     const usuario = validarToken(token);
 
     if (!usuario) {
-      console.log('Token inválido o expirado');
+      // console.log('Token inválido o expirado');
       return res.status(401).json({ error: 'Token inválido o expirado' });
     }
 
@@ -56,7 +56,7 @@ export const verificarToken = (req, res, next) => {
     req.usuario = usuario;
     next();
   } catch (error) {
-    console.error('Error en verificarToken:', error);
+    ///console.error('Error en verificarToken:', error);
     return res.status(500).json({ error: 'Error interno del servidor al verificar token' });
   }
 };

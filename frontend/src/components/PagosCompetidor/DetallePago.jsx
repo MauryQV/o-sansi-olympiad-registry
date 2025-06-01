@@ -169,7 +169,7 @@ const DetallePago = () => {
                     monto={parseFloat(detallePago.monto.replace('Bs. ', ''))}
                   />
                 }
-                fileName={`boleta_${detallePago.boleta}.pdf`}
+                fileName={`boleta_${detallePago.codigo_boleta}.pdf`}
                 style={{ textDecoration: 'none' }}
               >
                 {({ loading }) => (

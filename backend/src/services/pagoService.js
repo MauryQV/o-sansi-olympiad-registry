@@ -179,9 +179,9 @@ export const validarPago = async (pagoId, io, connectedUsers) => {
 
         const updatedPago = await prisma.pago.update({
             where: { id: pagoId },
-            data: { 
-                estado: 'Pagado', 
-                fecha_pago: new Date() 
+            data: {
+                estado: 'Pagado',
+                fecha_pago: new Date()
             }
         });
 
@@ -201,7 +201,7 @@ export const validarPago = async (pagoId, io, connectedUsers) => {
             io.to(socketId).emit('notificacion:nueva', noti);
         }
 
-        return { 
+        return {
             success: true,
             mensaje: 'Pago validado y marcado como pagado.',
             pago: updatedPago
@@ -306,6 +306,8 @@ export const emitirBoleta = async (pagoId) => {
     });
 }
 
+
+//Jhazmin
 export const obtenerPagosRealizados = async () => {
     return await prisma.pago.findMany({
         where: {
@@ -367,7 +369,7 @@ export const obtenerEstadisticasPagos = async () => {
 
 export const obtenerPagosCompetidorService = async (userId, page = 1, limit = 10) => {
     const skip = (page - 1) * limit;
-    
+
     // Get the competitor ID first
     const competidor = await prisma.competidor.findUnique({
         where: {
