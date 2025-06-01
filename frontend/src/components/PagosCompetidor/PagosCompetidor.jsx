@@ -76,9 +76,9 @@ const PagosCompetidor = () => {
             <div className="pagos-competidor-info">
               <div>
                 <h3><b>Boleta de Pago: {pago.boleta}</b></h3>
-                <p className="pagos-competidor-estado-texto">Pendiente de Pago</p>
+                <p className="pagos-competidor-estado-texto">Pendiente de Pago </p>
                 <br />
-                <p className="pagos-competidor-estado-texto">Competidor</p>
+                <p className="pagos-competidor-estado-texto">Competidor   abc123</p>
                 <p><strong><b>Competidor {pago.nombre}</b></strong></p>
                 <p className="pagos-competidor-estado-texto">CI: {pago.ci}</p>
                 <br />
@@ -134,9 +134,10 @@ const PagosCompetidor = () => {
             <div className="pdf-modal-body">
               <PDFViewer style={{ width: '100%', height: '80vh' }}>
                 <BoletaPagoPDF
-                  boleta={selectedPago.boleta}
+                  boleta={selectedPago.codigo_boleta}
                   nombre={selectedPago.nombre || ''}
                   ci={selectedPago.ci || ''}
+                  control={selectedPago.control}
                   area={selectedPago.area}
                   fechaEmision={selectedPago.fecha}
                   estado={selectedPago.estado}

@@ -59,7 +59,7 @@ export const verDetallePago = async (req, res) => {
         const pagoId = parseInt(req.params.pagoId); // obtener el id del pago 
 
         if (isNaN(pagoId)) {
-            return res.status(400).json({ error: 'El ID del pago debe ser un número válido.' });
+            return res.status(400).json({ error: 'El ID del pago debe ser un numero valido.' });
         }
 
         const detallePago = await pagoService.verDetallePago(pagoId);
@@ -92,7 +92,7 @@ export const obtenerPagosCompetidor = async (req, res) => {
     try {
         if (!req.user || !req.user.id) {
             console.error('No se encontró el usuario en la request');
-            return res.status(401).json({ 
+            return res.status(401).json({
                 message: 'No autorizado',
                 error: 'Usuario no autenticado'
             });
@@ -102,7 +102,7 @@ export const obtenerPagosCompetidor = async (req, res) => {
         const limit = parseInt(req.query.limit) || 10;
 
         console.log('Obteniendo pagos del competidor. User ID:', req.user.id);
-        
+
         const resultado = await obtenerPagosCompetidorService(req.user.id, page, limit);
         console.log('Pagos encontrados:', JSON.stringify(resultado, null, 2));
 
@@ -110,7 +110,7 @@ export const obtenerPagosCompetidor = async (req, res) => {
     } catch (error) {
         console.error('Error en obtenerPagosCompetidor:', error);
         console.error('Stack trace:', error.stack);
-        res.status(500).json({ 
+        res.status(500).json({
             message: 'Error al obtener los pagos',
             error: error.message
         });

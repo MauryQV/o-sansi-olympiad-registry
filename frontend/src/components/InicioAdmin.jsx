@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2'; 
 import '../styles/InicioAdmin.css';
+import { getAreas } from '../services/areaService'
+import { obtenerConvocatorias } from '../services/convocatoriaService';
 
 const InicioAdmin = () => {
   const [estadisticas, setEstadisticas] = useState({
@@ -14,16 +16,12 @@ const InicioAdmin = () => {
 
   const cargarAreas = async () => {
     try {
-      const response = await fetch('http://localhost:7777/api/ver-areas'); 
-      if (!response.ok) {
-        throw new Error('Error al obtener las áreas');
-      }
-      const data = await response.json();
+      const data = await getAreas();
       setAreas(data);
       setEstadisticas(prevEstadisticas => ({
-      ...prevEstadisticas,
-      areas: data.length, 
-    }));
+        ...prevEstadisticas,
+        areas: data.length,
+      }));
     } catch (error) {
       console.error('Error cargando áreas:', error);
       Swal.fire('Error', 'No se pudieron cargar las áreas', 'error');
@@ -31,11 +29,7 @@ const InicioAdmin = () => {
   };
   const cargarConvocatorias = async () => {
     try {
-      const response = await fetch('http://localhost:7777/api/convocatorias'); 
-      if (!response.ok) {
-        throw new Error('Error al obtener las convocatorias');
-      }
-      const data = await response.json();
+      const data = await obtenerConvocatorias();
       setConvocatoriasRecientes(data);
     } catch (error) {
       console.error('Error cargando convocatorias:', error);

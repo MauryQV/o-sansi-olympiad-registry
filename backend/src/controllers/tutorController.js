@@ -240,8 +240,8 @@ export const obtenerSolicitudesPendientesView = async (req, res) => {
 export const obtenerCompetidoresAsignados = async (req, res) => {
     try {
         const usuarioId = req.user.id;
-        console.log("=== Obteniendo inscripciones de competidores asignados al tutor ===");
-        console.log("Tutor usuario ID:", usuarioId);
+        //console.log("=== Obteniendo inscripciones de competidores asignados al tutor ===");
+        //console.log("Tutor usuario ID:", usuarioId);
 
         const inscripciones = await tutorService.obtenerInscripcionesCompetidores(usuarioId);
         console.log(`Encontradas ${inscripciones.length} inscripciones asignadas`);

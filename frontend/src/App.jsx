@@ -24,6 +24,8 @@ import { GestionUsuarios } from "./components/admin";
 import Inicio from "./components/Inicio.jsx";
 import Areas from "./components/AreasInicio.jsx";
 import Acercade from "./components/AcercaDe.jsx";
+//import PagosCompetidor from "./components/PagosCompetidor/PagosCompetidor.jsx";
+//import PagosCompetidor from "./components/PagosCompetidor/PagosCompetidor.jsx";
 
 function App() {
   const [rol, setRol] = useState(() => localStorage.getItem("rol"));
@@ -59,13 +61,15 @@ function App() {
           <Route path="/registro" element={<RegistroUsuario />} />
           <Route path="/inicio-competidor" element={<RegistroCompetidores />} />
           <Route path="/inscripcion" element={<FormularioInscripcion />} />
+          <Route path="/pagos-competidor" element={<Pagos />} />
           <Route
             path="/inscripcion/:convocatoriaId"
             element={<FormularioInscripcion />}
           />
           <Route path="/mis-inscripciones" element={<MisInscripciones />} />
-          <Route path="/pagos-competidor" element={<Pagos />} />
           <Route path="/pagos/detalle/:boleta" element={<DetallePago />} />
+          
+
           <Route
             path="/usuarios"
             element={<AdminGestionUsuario setRol={setRol} />}
