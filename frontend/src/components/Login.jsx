@@ -37,7 +37,7 @@ const Login = () => {
           password: formData.contraseña,
         };
 
-        console.log("Enviando datos:", JSON.stringify(datosParaEnviar));
+        //console.log("Enviando datos:", JSON.stringify(datosParaEnviar));
 
         const response = await axios.post(
           "http://localhost:7777/api/login",
@@ -49,7 +49,7 @@ const Login = () => {
           }
         );
 
-        console.log("respuesta:", response);
+        //console.log("respuesta:", response);
         const { token, usuario } = response.data;
 
         login(usuario, token);

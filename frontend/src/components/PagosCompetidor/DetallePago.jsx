@@ -54,7 +54,7 @@ const DetallePago = () => {
       <div className="detallepago-tarjeta">
         <div className="detallepago-info">
           <div>
-            <h3><b>Boleta de Pago: {detallePago.boleta}</b></h3>
+            <h3><b>Boleta de Pago: {detallePago.codigo_boleta}</b></h3>
             <p className="detallepago-estado-texto">Pendiente de Pago</p>
             <br />
             <p className="detallepago-estado-texto">Competidor</p>
@@ -146,7 +146,7 @@ const DetallePago = () => {
             <div className="pdf-modal-body">
               <PDFViewer style={{ width: '100%', height: '80vh' }}>
                 <BoletaPagoPDF
-                  boleta={detallePago.boleta}
+                  boleta={detallePago.codigo_boleta}
                   nombre={detallePago.nombre || ''}
                   ci={detallePago.ci || ''}
                   area={detallePago.area}

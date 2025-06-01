@@ -1,12 +1,12 @@
-import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/renderer';
 import logoUMSS from '../../image/sansimon-f-BLAN.png'; 
 import { boletaStyles as styles } from '../../styles/PagosCompetidor/boletaPagoStyles';
+import {numeroALetras} from '../../utils/numeroALetras'; // Asegúrate de tener esta función utilitaria
 
 const numeroALiteral = (monto) => {
-  if (monto === 16.00) return 'DIECISÉIS 00/100 BOLIVIANOS';
-  if (monto === 15.00) return 'QUINCE 00/100 BOLIVIANOS';
-  return `${monto.toFixed(2)} BOLIVIANOS`;
+  const entero = Math.floor(monto);
+  const decimales = Math.round((monto - entero) * 100).toString().padStart(2, '0');
+  return `${numeroALetras(entero).toUpperCase()} ${decimales}/100 BOLIVIANOS`;
 };
 
 
@@ -18,8 +18,8 @@ const BoletaPagoPDF = ({
   fechaEmision,
   estado,
   monto,
-  control = '17569',
-  metodo = 'Electrónico',
+  control,
+  metodo = 'caja',
   concepto = 'OLIMPIADA EN CIENCIAS SAN SIMON O! SANSI',
   comision = 1.00,
   horaEmision
@@ -44,10 +44,15 @@ const BoletaPagoPDF = ({
           <Text style={styles.titulo}>BOLETA DE PAGO</Text>
 
           <View style={styles.infoTablaDer}>
+
             <View style={styles.infoRow}>
+
               <Text style={styles.label}>Nro. Control:</Text>
-              <Text>{control}</Text>
+
+              <Text>{ boleta}</Text>
+
             </View>
+
             <View style={styles.infoRow}>
               <Text style={styles.label}>Fecha:</Text>
               <Text>{fechaEmision} {horaEmision}</Text>
