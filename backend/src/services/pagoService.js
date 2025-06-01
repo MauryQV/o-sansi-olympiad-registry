@@ -8,7 +8,7 @@ export const obtenerIdCompetidor = async (userId) => {
             usuario_id: userId
         }
     });
-
+    //console.log('ID del competidor pago service:', competidor ? competidor.id : 'No se encontró competidor para el usuario');
     if (!competidor) {
         throw new Error('Competidor no encontrado');
     }
@@ -57,13 +57,12 @@ export const obtenerPagosPendientes = async () => {
 
 
 export const verMisPagosPendientes = async (userId) => {
+    console.log('ID del usuario en verMisPagosPendientes:', userId);
     return await prisma.pago.findMany({
         where: {
             estado: 'Pendiente',
             inscripcion: {
-                competidor: {
-                    usuario_id: userId
-                }
+                competidor_id: userId
             }
         },
         select: {
