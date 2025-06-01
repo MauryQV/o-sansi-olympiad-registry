@@ -10,14 +10,16 @@
     "test:concepto": "node test/testAreasRestriccion.js",
     "test:validador": "node test/probarRestriccion.js",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "seeds": "node scripts/insertar-datos-prueba.js",
+    "clean": "node scripts/limpiar-datos.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@prisma/client": "^6.6.0",
+    "@prisma/client": "^6.8.2",
     "@supabase/supabase-js": "^2.49.4",
     "axios": "^1.9.0",
     "bcrypt": "^5.1.1",
@@ -27,6 +29,7 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "olympiad-backend": "file:",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
   },

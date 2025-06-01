@@ -40,23 +40,32 @@ export const verGrados = async (req, res, next) => {
 export const obtenerGradosPorCategoria = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const grados = await categoriaService.obtenerGradosCategorias(id);
+        const resultado = await categoriaService.obtenerGradosCategorias(id);
+        res.status(200).json(resultado);
+    } catch (error) {
+        console.error('Error al obtener grados:', error);
+        next(error);
+    }
+};
 
-        if (!grados || !grados.grado_min || !grados.grado_max) {
-            return res.status(404).json({ error: 'Grados no encontrados para esta categoría' });
+export const eliminarCategoriaCompleta = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const categoriaEliminada = await categoriaService.eliminarCategoriaCompletaBD(id);
+        res.status(200).json({ message: 'Categoría y relaciones eliminadas correctamente', data: categoriaEliminada });
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ message: `Error al eliminar: No se encontró la categoría con ID ${req.params.id}.` });
         }
+        next(error);
+    }
+};
 
-        const gradoMinStr = `${grados.grado_min.nombre_grado} de ${grados.grado_min.nivel.nombre_nivel}`.toUpperCase();
-        const gradoMaxStr = `${grados.grado_max.nombre_grado} de ${grados.grado_max.nivel.nombre_nivel}`.toUpperCase();
-
-        const mismoGrado = (
-            grados.grado_min.nombre_grado === grados.grado_max.nombre_grado &&
-            grados.grado_min.id_nivel === grados.grado_max.id_nivel
-        );
-
-        const rango = mismoGrado ? gradoMinStr : `${gradoMinStr} - ${gradoMaxStr}`;
-
-        res.status(200).json({ rango });
+export const obtenerCategoriasPorArea = async (req, res, next) => {
+    try {
+        const { areaId } = req.params;
+        const categorias = await categoriaService.obtenerCategoriasPorArea(areaId);
+        res.status(200).json(categorias);
     } catch (error) {
         next(error);
     }

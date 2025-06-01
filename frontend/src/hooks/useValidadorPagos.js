@@ -4,24 +4,91 @@ import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { esTerminoValido } from '../forms/validadorPagosValidator';
 import { mostrarConfirmacionPago } from '../components/cajero/ConfirmacionPagoModal';
+import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
 
 export const useValidadorPagos = () => {
+  const [searchParams] = useSearchParams();
+  const estadoFiltro = searchParams.get('estado');
+  
   const [criterio, setCriterio] = useState('codigo');
   const [termino, setTermino] = useState('');
   const [boletas, setBoletas] = useState([]);
   const [boletasOriginal, setBoletasOriginal] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const cargarPagos = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No se encontró el token de autenticación');
+      }
+
+      let pagosData = [];
+
+      if (estadoFiltro === 'Pagado') {
+        const responseRealizados = await axios.get('http://localhost:7777/api/pagos/realizados', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        pagosData = responseRealizados.data;
+      } else if (estadoFiltro === 'Pendiente') {
+        const responsePendientes = await axios.get('http://localhost:7777/api/pagos/pendientes', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        pagosData = responsePendientes.data;
+      } else {
+        // Si no hay filtro, cargar todos los pagos
+        const [responsePendientes, responseRealizados] = await Promise.all([
+          axios.get('http://localhost:7777/api/pagos/pendientes', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          }),
+          axios.get('http://localhost:7777/api/pagos/realizados', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          })
+        ]);
+        pagosData = [...responsePendientes.data, ...responseRealizados.data];
+      }
+
+      const pagosAdaptados = pagosData.map(pago => ({
+        id: pago.id,
+        codigo: pago.codigo_pago,
+        competidor: `${pago.inscripcion.competidor.usuario.nombre} ${pago.inscripcion.competidor.usuario.apellido}`,
+        ci: pago.inscripcion.competidor.carnet_identidad,
+        monto: parseFloat(pago.monto),
+        fecha: new Date(pago.fecha_pago).toLocaleDateString(),
+        estado: pago.estado
+      }));
+
+      setBoletas(pagosAdaptados);
+      setBoletasOriginal(pagosAdaptados);
+      setError(null);
+    } catch (error) {
+      console.error('Error al cargar pagos:', error);
+      setError(error.response?.data?.message || 'Error al cargar los pagos');
+      setBoletas([]);
+      setBoletasOriginal([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setTimeout(() => {
-      const datosSimulados = [
-        { codigo: 'BOL-2024-001', competidor: 'Lidia Veizaga', ci: '4567890', monto: 15.0, fecha: '2025-04-01' },
-        { codigo: 'BOL-2024-002', competidor: 'Juan Pérez', ci: '1234567', monto: 20.0, fecha: '2025-04-02' }
-      ];
-      setBoletas(datosSimulados);
-      setBoletasOriginal(datosSimulados);
-    }, 1000);
-  }, []);
+    cargarPagos();
+  }, [estadoFiltro]); // Recargar cuando cambie el estado en la URL
 
   const handleBuscar = () => {
     const t = termino.trim().toLowerCase();
@@ -44,27 +111,33 @@ export const useValidadorPagos = () => {
     if (!confirmado) return;
 
     try {
-      await fetch('/api/validar-pago', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ codigo: boleta.codigo })
+      const token = localStorage.getItem('token');
+      const response = await axios.patch(`http://localhost:7777/api/pagos/validar-pago/${boleta.id}`, {}, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
 
-      const actualizadas = boletas.filter(b => b.codigo !== boleta.codigo);
-      setBoletas(actualizadas);
-      setBoletasOriginal(actualizadas);
+      if (response.data.success) {
+        // Recargar todos los pagos después de validar
+        await cargarPagos();
 
-      Swal.fire({
-        icon: 'success',
-        title: '¡Pago Validado!',
-        text: 'El pago fue registrado correctamente.',
-        confirmButtonColor: '#4caf50'
-      });
+        Swal.fire({
+          icon: 'success',
+          title: '¡Pago Validado!',
+          text: response.data.message || 'El pago fue registrado correctamente.',
+          confirmButtonColor: '#4caf50'
+        });
+      } else {
+        throw new Error(response.data.error || 'Error al validar el pago');
+      }
     } catch (error) {
+      console.error('Error al validar pago:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'No se pudo validar el pago. Intente nuevamente.',
+        text: error.response?.data?.error || error.message || 'No se pudo validar el pago. Intente nuevamente.',
         confirmButtonColor: '#e53935'
       });
     }
@@ -73,7 +146,7 @@ export const useValidadorPagos = () => {
   return {
     criterio, setCriterio,
     termino, setTermino,
-    boletas, error,
+    boletas, error, loading,
     handleBuscar, handleResetear, confirmarValidacion,
     esTerminoValido
   };

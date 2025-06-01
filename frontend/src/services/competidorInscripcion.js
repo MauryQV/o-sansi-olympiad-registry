@@ -83,12 +83,57 @@ export const registrarInscripcion = async ({ area_id, categoria_id, tutor_ids })
 };
 
 
+export const obtenerMisInscripciones = async () => {
+    try {
+        console.log('Consultando mis inscripciones...');
+        const response = await apiAuth.get('/competidor/mis-inscripciones');
+        console.log('Respuesta recibida:', response.data);
+        return response.data.inscripciones;
+    } catch (error) {
+        console.error('Error al obtener mis inscripciones:', error);
+    }
+}
+
 export const obtenerGrados = async (id) => {
     try {
         const response = await api.get(`/ver-grados-categoria/${id}`);
-        return response.data;
+        const data = response.data;
+
+        // Verificar que la respuesta tenga el formato esperado
+        if (!data || !data.grados || !Array.isArray(data.grados)) {
+            throw new Error('Formato de respuesta inválido');
+        }
+
+        return {
+            grados: data.grados.map(g => ({
+                ...g,
+                nombre_grado: g.nombre_grado.toString() // Asegurar que sea string
+            })),
+            niveles: data.niveles || []
+        };
     } catch (error) {
         console.error('Error al obtener grados:', error);
+        throw error;
+    }
+};
+
+export const obtenerCategorias = async (areaId) => {
+    try {
+        const response = await api.get(`/ver-categorias-area/${areaId}`);
+        const categorias = response.data;
+        
+        // Verificar si hay datos y tienen el formato esperado
+        if (!Array.isArray(categorias)) {
+            console.error('Formato de respuesta inesperado:', categorias);
+            throw new Error('Formato de respuesta inválido');
+        }
+
+        return categorias.map(cat => ({
+            id: cat.categoria.id,
+            nombre: cat.categoria.nombre_categoria
+        }));
+    } catch (error) {
+        console.error('Error al obtener categorías por área:', error);
         throw error;
     }
 };

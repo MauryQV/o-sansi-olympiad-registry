@@ -3,8 +3,12 @@ import '../../styles/cajero/ValidadorPagos.css';
 import { Search, RotateCcw } from 'lucide-react';
 import TablaBoletas from './TablaBoletas';
 import { useValidadorPagos } from '../../hooks/useValidadorPagos';
-import { mostrarConfirmacionPago } from './ConfirmacionPagoModal';
+import { useSearchParams } from 'react-router-dom';
+
 const ValidadorPagos = () => {
+  const [searchParams] = useSearchParams();
+  const estadoFiltro = searchParams.get('estado');
+
   const {
     criterio, setCriterio,
     termino, setTermino,
@@ -13,9 +17,18 @@ const ValidadorPagos = () => {
     esTerminoValido
   } = useValidadorPagos();
 
+  const getTitulo = () => {
+    if (estadoFiltro === 'Pagado') {
+      return 'Pagos Realizados';
+    } else if (estadoFiltro === 'Pendiente') {
+      return 'Pagos Pendientes';
+    }
+    return 'Validar Pagos';
+  };
+
   return (
     <div className="validador-container">
-      <h2>Validar Pagos</h2>
+      <h2>{getTitulo()}</h2>
 
       <div className="validador-busqueda">
         <h3>Buscar Boletas</h3>
@@ -55,9 +68,13 @@ const ValidadorPagos = () => {
       </div>
 
       <div className="validador-tabla">
-        <h3>Boletas Pendientes</h3>
+        <h3>Boletas de Pago</h3>
         {!error ? (
-          <TablaBoletas boletas={boletas} onConfirmar={confirmarValidacion} />
+          <TablaBoletas 
+            boletas={boletas} 
+            onConfirmar={confirmarValidacion}
+            mostrarBotonValidar={estadoFiltro === 'Pendiente'} 
+          />
         ) : (
           <p style={{ color: 'red' }}>{error}</p>
         )}

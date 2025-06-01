@@ -60,10 +60,18 @@ export const updateArea = async (id, nombre_area, descripcion_area, costo) => {
 }
 
 export const deleteArea = async (id) => {
+    const area = await prisma.area.findUnique({
+        where: { id: parseInt(id, 10) },
+    });
+
+    if (!area) {
+        throw new Error('Área no encontrada');
+    }
+
     return await prisma.area.delete({
         where: { id: parseInt(id, 10) },
     });
-}
+};
 
 export const getCategoriasArea = async (id) => {
     return await prisma.categoria_area.findMany({

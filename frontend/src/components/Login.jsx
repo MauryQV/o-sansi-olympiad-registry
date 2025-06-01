@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
-import { validateLogin, handleUsuarioInputChange} from "../forms/usuarioFormHandler";
-import { useAuth } from "../context/AuthContext";
+import {
+  validateLogin,
+  handleUsuarioInputChange,
+} from "../forms/usuarioFormHandler";
+import { useAuth } from "../context/authContext";
 import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth(); 
-  const [formData, setFormData] = useState({ correo: '', contraseña: '' });
+  const { login } = useAuth();
+  const [formData, setFormData] = useState({ correo: "", contraseña: "" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,25 +34,25 @@ const Login = () => {
         // Adaptar los datos según lo que espera el backend
         const datosParaEnviar = {
           correo_electronico: formData.correo,
-          password: formData.contraseña
+          password: formData.contraseña,
         };
 
-        console.log("Enviando datos:", JSON.stringify(datosParaEnviar));
-        
+        //console.log("Enviando datos:", JSON.stringify(datosParaEnviar));
+
         const response = await axios.post(
-          "http://localhost:7777/api/login", 
+          "http://localhost:7777/api/login",
           datosParaEnviar,
           {
             headers: {
-              'Content-Type': 'application/json'
-            }
+              "Content-Type": "application/json",
+            },
           }
         );
-        
-        console.log("respuesta:", response);
+
+        //console.log("respuesta:", response);
         const { token, usuario } = response.data;
 
-        login(usuario, token); 
+        login(usuario, token);
 
         const destino = rutasPorRolId[usuario.rol_id];
         if (destino) {
@@ -60,7 +63,7 @@ const Login = () => {
         }
       } catch (error) {
         console.error("Error completo:", error);
-        
+
         setErrors({
           correo: "Error al iniciar sesion",
           contraseña: "credenciales incorrectas",
@@ -79,15 +82,19 @@ const Login = () => {
       <h2 className="login-titulo">¡Bienvenido!</h2>
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="input-group">
-          <input 
-          type="text" 
-          name="correo"
-          value={formData.correo}
-          onChange={handleChange}
-          placeholder="tu@gmail.com"
-          className={errors.correo ? "input-error" : ""}
+          <input
+            type="text"
+            name="correo"
+            value={formData.correo}
+            onChange={handleChange}
+            placeholder="tu@gmail.com"
+            className={errors.correo ? "input-error" : ""}
           />
-          <img src="/src/image/email-icon.svg" alt="Correo" className="icon-input" />
+          <img
+            src="/src/image/email-icon.svg"
+            alt="Correo"
+            className="icon-input"
+          />
         </div>
         {errors.correo && <span className="error-text">{errors.correo}</span>}
 
@@ -98,23 +105,33 @@ const Login = () => {
             value={formData.contraseña}
             onChange={handleChange}
             placeholder="Contraseña"
-            className={errors.contraseña ? "input-error" : ""}            
+            className={errors.contraseña ? "input-error" : ""}
           />
           <img
-            src={`/src/image/${showPassword ? "ojo-abierto" : "ojo-cerrado"}.svg`}
+            src={`/src/image/${
+              showPassword ? "ojo-abierto" : "ojo-cerrado"
+            }.svg`}
             alt={showPassword ? "Ocultar" : "Mostrar"}
             className="icon-input password-toggle"
             onClick={togglePasswordVisibility}
             style={{ cursor: "pointer" }}
           />
         </div>
-        {errors.contraseña && <span className="error-text">{errors.contraseña}</span>}
+        {errors.contraseña && (
+          <span className="error-text">{errors.contraseña}</span>
+        )}
 
-        <a href="#" className="forgot-password">Olvidé mi contraseña</a>
-        <button type="submit" className="login-btn login-submit">Iniciar sesión</button>
+        <a href="#" className="forgot-password">
+          Olvidé mi contraseña
+        </a>
+        <button type="submit" className="login-btn login-submit">
+          Iniciar sesión
+        </button>
       </form>
 
-      <p className="login-footer">Bienvenido a Oh! SANSI - Plataforma de olimpiadas</p>
+      <p className="login-footer">
+        Bienvenido a Oh! SANSI - Plataforma de olimpiadas
+      </p>
     </div>
   );
 };

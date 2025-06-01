@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/Areas/ModalNuevaCategoria.css';
 import useCategoriaForm from '../../hooks/useCategoriaForm';
 import GradosSelector from './gradosComponent';
+import { obtenerCategorias } from '../../services/categoriaService';
 
 /**
  * Modal para crear o editar una categoría
@@ -14,7 +15,25 @@ const ModalNuevaCategoria = ({
   onCrearCategoria,
   categoriaAEditar,
   onActualizarCategoria,
+  todasLasRelaciones = [],
 }) => {
+  const [todasLasCategorias, setTodasLasCategorias] = useState([]);
+
+  useEffect(() => {
+    const cargarCategorias = async () => {
+      if (mostrar) {
+        try {
+          const data = await obtenerCategorias();
+          setTodasLasCategorias(data || []);
+        } catch (error) {
+          console.error("Error al cargar todas las categorías:", error);
+          setTodasLasCategorias([]);
+        }
+      }
+    };
+    cargarCategorias();
+  }, [mostrar]);
+
   const {
     nombre,
     setNombre,
@@ -33,7 +52,9 @@ const ModalNuevaCategoria = ({
     areaSeleccionada,
     onCrearCategoria,
     onActualizarCategoria,
-    cerrar
+    cerrar,
+    todasLasCategorias,
+    todasLasRelaciones
   );
 
   if (!mostrar) return null;
@@ -82,8 +103,8 @@ const ModalNuevaCategoria = ({
             >
               <option value="">Seleccione un área</option>
               {areas.map((area, index) => (
-                <option key={index} value={area.nombre}>
-                  {area.nombre}
+                <option key={area.id || index} value={area.id}>
+                  {area.nombre_area}
                 </option>
               ))}
             </select>

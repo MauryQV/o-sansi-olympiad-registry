@@ -98,7 +98,10 @@ const Convocatorias = () => {
     <div className="convocatorias-wrapper">
       <div className="convocatorias-header">
         <h2>Gestión de Convocatorias</h2>
-        <button className="btn-nueva" onClick={() => setMostrarModal(true)}>
+        <button className="btn-nueva" 
+         data-testid="btn-nueva-convocatoria"
+        onClick={() => setMostrarModal(true)}>
+         
           <span className="icono-circular">
             <Plus size={16} strokeWidth={2.5} />
           </span>

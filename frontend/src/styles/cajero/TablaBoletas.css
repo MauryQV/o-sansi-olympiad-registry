@@ -1,0 +1,130 @@
+.tabla-boletas-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.tabla-boletas {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tabla-boletas th,
+.tabla-boletas td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tabla-boletas th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.tabla-boletas tr:hover {
+  background-color: #f8f9fa;
+}
+
+.estado-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.estado-badge.pagado {
+  background-color: #4caf50;
+  color: white;
+}
+
+.estado-badge.pendiente {
+  background-color: #ff9800;
+  color: white;
+}
+
+.estado-badge.validado {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.estado-badge.cancelado {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.btn-validar {
+  padding: 6px 12px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.btn-validar:hover {
+  background-color: #1976d2;
+}
+
+.btn-validar:disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-container {
+  padding: 1rem;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+.error-message {
+  color: #721c24;
+  margin: 0;
+}
+
+.no-data-container {
+  padding: 2rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+.no-boletas {
+  text-align: center;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.no-boletas p {
+  color: #666;
+  font-size: 1.1em;
+} 

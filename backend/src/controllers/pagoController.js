@@ -1,4 +1,6 @@
 import * as pagoService from '../services/pagoService.js';
+import { obtenerPagosCompetidorService } from '../services/pagoService.js';
+import { io, connectedUsers } from '../index.js';
 
 //funcion para el cajero para ver todos los pagos pendientes
 //creo que queda un poco redundante, pero es para que el cajero pueda ver todos los pagos pendientes
@@ -15,18 +17,19 @@ export const obtenerPagosPendientes = async (req, res) => {
 
 //funcion del cajero para validar un pago
 export const validarPago = async (req, res) => {
-
     const pago_id = parseInt(req.params.pagoId);
     try {
-        const pagoValidado = await pagoService.validarPago(pago_id);
+        const resultado = await pagoService.validarPago(pago_id, io, connectedUsers);
         res.status(200).json({
-            status: "success",
-            message: "Pago validado correctamente"
+            success: true,
+            message: resultado.mensaje,
+            pago: resultado.pago
         });
     } catch (error) {
+        console.error('Error al validar pago:', error);
         res.status(500).json({
-            error: error.message,
-            status: "error",
+            success: false,
+            error: error.message || 'Error al validar el pago'
         });
     }
 }
@@ -81,6 +84,55 @@ export const buscarPagos = async (req, res) => {
         res.status(200).json(resultados); //devolvemos los resultados
     } catch (error) {
         console.error('Error al buscar pagos:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const obtenerPagosCompetidor = async (req, res) => {
+    try {
+        if (!req.user || !req.user.id) {
+            console.error('No se encontró el usuario en la request');
+            return res.status(401).json({ 
+                message: 'No autorizado',
+                error: 'Usuario no autenticado'
+            });
+        }
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        console.log('Obteniendo pagos del competidor. User ID:', req.user.id);
+        
+        const resultado = await obtenerPagosCompetidorService(req.user.id, page, limit);
+        console.log('Pagos encontrados:', JSON.stringify(resultado, null, 2));
+
+        res.json(resultado);
+    } catch (error) {
+        console.error('Error en obtenerPagosCompetidor:', error);
+        console.error('Stack trace:', error.stack);
+        res.status(500).json({ 
+            message: 'Error al obtener los pagos',
+            error: error.message
+        });
+    }
+};
+
+export const obtenerPagosRealizados = async (req, res) => {
+    try {
+        const pagosRealizados = await pagoService.obtenerPagosRealizados();
+        res.status(200).json(pagosRealizados);
+    } catch (error) {
+        console.error('Error al obtener pagos realizados:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const obtenerEstadisticasPagos = async (req, res) => {
+    try {
+        const estadisticas = await pagoService.obtenerEstadisticasPagos();
+        res.status(200).json(estadisticas);
+    } catch (error) {
+        console.error('Error al obtener estadísticas de pagos:', error);
         res.status(500).json({ error: error.message });
     }
 };

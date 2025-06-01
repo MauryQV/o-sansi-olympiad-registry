@@ -10,10 +10,12 @@ import DetallePago from "./components/PagosCompetidor/DetallePago.jsx";
 import AdminGestionUsuario from "./components/AdminGestionUsuarios/AdminGestionUsuario.jsx";
 import RegistroCompetidores from "./components/InscripcionCompetidor/RegistroCompetidores.jsx";
 import FormularioInscripcion from "./components/InscripcionCompetidor/FormularioInscripcion.jsx";
+import MisInscripciones from "./components/InscripcionCompetidor/MisInscripciones.jsx";
 import Reportes from "./components/reportes/Reportes.jsx";
 import HistorialConvocatorias from "./components/HistorialConvocatorias.jsx";
 import Convocatorias from "./components/Convocatorias/Convocatorias.jsx";
 import SolicitudesTutoria from "./components/SolicitudesTutoria.jsx";
+import CompetidoresAsignados from "./components/CompetidoresAsignados.jsx";
 import InicioTutor from "./components/InicioTutor.jsx";
 import InicioCajero from "./components/InicioCajero.jsx";
 import ValidadorPagos from "./components/cajero/ValidadorPagos.jsx";
@@ -22,6 +24,8 @@ import { GestionUsuarios } from "./components/admin";
 import Inicio from "./components/Inicio.jsx";
 import Areas from "./components/AreasInicio.jsx";
 import Acercade from "./components/AcercaDe.jsx";
+//import PagosCompetidor from "./components/PagosCompetidor/PagosCompetidor.jsx";
+//import PagosCompetidor from "./components/PagosCompetidor/PagosCompetidor.jsx";
 
 function App() {
   const [rol, setRol] = useState(() => localStorage.getItem("rol"));
@@ -57,12 +61,15 @@ function App() {
           <Route path="/registro" element={<RegistroUsuario />} />
           <Route path="/inicio-competidor" element={<RegistroCompetidores />} />
           <Route path="/inscripcion" element={<FormularioInscripcion />} />
+          <Route path="/pagos-competidor" element={<Pagos />} />
           <Route
             path="/inscripcion/:convocatoriaId"
             element={<FormularioInscripcion />}
           />
-          <Route path="/pagos-competidor" element={<Pagos />} />
+          <Route path="/mis-inscripciones" element={<MisInscripciones />} />
           <Route path="/pagos/detalle/:boleta" element={<DetallePago />} />
+          
+
           <Route
             path="/usuarios"
             element={<AdminGestionUsuario setRol={setRol} />}
@@ -74,6 +81,10 @@ function App() {
             element={<SolicitudesTutoria setRol={setRol} />}
           />
           <Route
+            path="/competidores-asignados"
+            element={<CompetidoresAsignados />}
+          />
+          <Route
             path="/inicio-tutor"
             element={<InicioTutor setRol={setRol} />}
           />
@@ -81,7 +92,6 @@ function App() {
             path="/inicio-cajero"
             element={<InicioCajero setRol={setRol} />}
           />
-          
         </Routes>
       </div>
     </Router>

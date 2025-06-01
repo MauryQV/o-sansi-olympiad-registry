@@ -1,134 +1,146 @@
 .tutor-inicio-wrapper {
-    padding: 2rem;
-    font-family: 'Comfortaa', sans-serif;
-    background-color: #f5f6f8;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .tutor-inicio-titulo {
-    font-size: 1.5rem;
-    margin-bottom: 2.5rem;
-    width: 100%;
-    max-width: 1100px;
-    text-align: left;
-  }
-  
-  .tutor-inicio-content {
-    width: 100%;
-    max-width: 1100px; /* ancho constante */
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-  }
-  
-  /* TARJETAS SUPERIORES */
-  .tutor-inicio-cards {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 4rem;
-  }
-  
-  .tutor-inicio-card {
-    flex: 1;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 1.2rem;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
-    margin: 0 0.5rem;
-  }
-  
-  .tutor-inicio-card-label {
-    font-size: 0.95rem;
-    color: #555;
-  }
-  
-  .tutor-inicio-card-valor {
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: #111;
-    margin-top: 0.4rem;
-  }
-  
-  .tutor-inicio-tabla-box {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    padding: 2rem;
-    width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
-    margin-top: 1rem; 
-    margin-bottom: 3rem; 
-  }
-  
-  .tutor-inicio-tabla-titulo {
-    font-size: 1.25rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .tutor-inicio-tabla {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1.5rem;
-  }
-  
-  .tutor-inicio-tabla th,
-  .tutor-inicio-tabla td {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #e0e0e0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
-  }
-  
-  .tutor-inicio-tabla th:nth-child(1),
-  .tutor-inicio-tabla td:nth-child(1) {
-    width: 30%;
-  }
-  
-  .tutor-inicio-tabla th:nth-child(2),
-  .tutor-inicio-tabla td:nth-child(2) {
-    width: 50%;
-  }
-  
-  .tutor-inicio-tabla th:nth-child(3),
-  .tutor-inicio-tabla td:nth-child(3) {
-    width: 20%;
-  }
-  
-  .tutor-inicio-tabla th {
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .tutor-inicio-tabla td:first-child {
-    font-weight: bold;
-    color: #111;
-  }
-  
-  .tutor-inicio-btn-contenedor {
-    margin-top: 2rem;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .tutor-inicio-btn {
-    font-family: 'Comfortaa', sans-serif;
-    padding: 0.6rem 1.4rem;
-    background-color: white;
-    border: 2px solid #111;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .tutor-inicio-btn:hover {
-    background-color: #f0f0f0;
-  }
-  
+  padding: 2rem;
+  font-family: 'Comfortaa', sans-serif;
+  background-color: #f5f6f8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tutor-inicio-titulo {
+  font-size: 1.5rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
+  max-width: 1100px;
+  text-align: left;
+}
+
+.tutor-inicio-content {
+  width: 100%;
+  max-width: 1100px;
+  /* ancho constante */
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* TARJETAS SUPERIORES */
+.tutor-inicio-cards {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 4rem;
+}
+
+.tutor-inicio-card {
+  flex: 1;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 1.2rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  margin: 0 0.5rem;
+}
+
+.tutor-inicio-card-label {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.tutor-inicio-card-valor {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #111;
+  margin-top: 0.4rem;
+}
+
+.tutor-inicio-tabla-box {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+.tutor-inicio-tabla-titulo {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.tutor-inicio-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.tutor-inicio-tabla th,
+.tutor-inicio-tabla td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.tutor-inicio-tabla th:nth-child(1),
+.tutor-inicio-tabla td:nth-child(1) {
+  width: 30%;
+}
+
+.tutor-inicio-tabla th:nth-child(2),
+.tutor-inicio-tabla td:nth-child(2) {
+  width: 50%;
+}
+
+.tutor-inicio-tabla th:nth-child(3),
+.tutor-inicio-tabla td:nth-child(3) {
+  width: 20%;
+}
+
+.tutor-inicio-tabla th {
+  font-weight: bold;
+  color: #333;
+}
+
+.tutor-inicio-tabla td:first-child {
+  font-weight: bold;
+  color: #111;
+}
+
+.tutor-inicio-btn-contenedor {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.tutor-inicio-btn {
+  font-family: 'Comfortaa', sans-serif;
+  padding: 0.6rem 1.4rem;
+  background-color: white;
+  border: 2px solid #111;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.tutor-inicio-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.tutor-inicio-btn-verde {
+  background-color: #2e7d32;
+  border: 2px solid #2e7d32;
+  color: white;
+}
+
+.tutor-inicio-btn-verde:hover {
+  background-color: #1b5e20;
+  border-color: #1b5e20;
+}
