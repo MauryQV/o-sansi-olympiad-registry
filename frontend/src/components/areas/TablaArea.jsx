@@ -5,8 +5,9 @@ import ModalConfirmacionEliminar from './ModalConfirmacionEliminar';
 import ModalConfirmacionEliminarCategoria from './ModalConfirmacionEliminarCategoria';
 import ModalNuevaCategoria from './ModalNuevaCategoria';
 import '../../styles/Areas/TablaArea.css';
-import { eliminarArea, getAreas } from '../../services/areaService';
+import { eliminarArea, getAreas, getCategorias, getCategoriasAreas, getGrados } from '../../services/areaService';
 import { crearCategoria, actualizarCategoria as actualizarCategoriaAPI, eliminarCategoriaYRelaciones } from '../../services/categoriaService';
+import axios from 'axios';
 
 const TablaArea = () => {
   const [areas, setAreas] = useState([]);
@@ -31,21 +32,18 @@ const TablaArea = () => {
   const [categoriaIdAEliminar, setCategoriaIdAEliminar] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const response = async () => {
       try {
         const dataAreas = await getAreas();
         setAreas(dataAreas || []);
 
-        const resCategorias = await fetch('http://localhost:7777/api/ver-categorias');
-        const dataCategorias = await resCategorias.json();
+        const dataCategorias = await getCategorias();
         setCategorias(dataCategorias || []);
 
-        const resRelaciones = await fetch('http://localhost:7777/api/ver-categorias-areas');
-        const dataRelaciones = await resRelaciones.json();
+        const dataRelaciones = await getCategoriasAreas();
         setRelaciones(dataRelaciones || []);
 
-        const resGrados = await fetch('http://localhost:7777/api/ver-grados');
-        const dataGrados = await resGrados.json();
+        const dataGrados = await getGrados();
         setGrados(dataGrados || []);
 
       } catch (error) {
@@ -56,7 +54,7 @@ const TablaArea = () => {
         setGrados([]);
       }
     };
-    fetchData();
+    response();
   }, []);
 
   const mostrarToast = (mensaje) => {
