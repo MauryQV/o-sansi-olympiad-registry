@@ -41,7 +41,7 @@ export const verMisPagosPendientes = async (req, res) => {
         const usuarioId = req.user.id;
         //console.log('ID del usuario:', usuarioId);
         const competidor = await pagoService.obtenerIdCompetidor(usuarioId);
-        console.log('ID del competidor:', competidor || 'No se encontró competidor para el usuario controler');
+        //console.log('ID del competidor:', competidor || 'No se encontró competidor para el usuario controler');
         if (!competidor) {
             return res.status(404).json({ error: 'Competidor no encontrado para este usuario.' });
         }
@@ -93,7 +93,7 @@ export const buscarPagos = async (req, res) => {
 export const obtenerPagosCompetidor = async (req, res) => {
     try {
         if (!req.user || !req.user.id) {
-            console.error('No se encontró el usuario en la request');
+            //console.error('No se encontró el usuario en la request');
             return res.status(401).json({
                 message: 'No autorizado',
                 error: 'Usuario no autenticado'
@@ -103,7 +103,7 @@ export const obtenerPagosCompetidor = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
 
-        console.log('Obteniendo pagos del competidor. User ID:', req.user.id);
+        //console.log('Obteniendo pagos del competidor. User ID:', req.user.id);
 
         const resultado = await obtenerPagosCompetidorService(req.user.id, page, limit);
         console.log('Pagos encontrados:', JSON.stringify(resultado, null, 2));

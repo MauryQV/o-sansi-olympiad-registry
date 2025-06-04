@@ -94,7 +94,7 @@ export const crearCategoria = async (categoria) => {
 
         const categoriaFormateada = adaptarCategoriaParaAPI(categoria);
         console.log('Payload a enviar:', categoriaFormateada);
-        const response = await axios.post(`${API_URL}crear-categorias`, categoriaFormateada);
+        const response = await axios.post(`${API_URL}crear-categoria`, categoriaFormateada);
         return response.data;
     } catch (error) {
         console.error("Error al crear la categoría:", error);
