@@ -61,7 +61,7 @@ const TablaBoletas = ({ boletas, onConfirmar, mostrarBotonValidar }) => {
                     onClick={() => onConfirmar(boleta)}
                     disabled={boleta.estado === 'Pagado'}
                   >
-                    Validar
+                    Cobrar
                   </button>
                 </td>
               )}
