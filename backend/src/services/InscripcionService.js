@@ -13,8 +13,11 @@ export const crearInscripcion = async ({
     // validacion de la existencia de los tutores
     const tutores = await validarTutores(tutor_ids);
 
+
     // convocatoria asociada al area
     const convocatoria = await obtenerConvocatoriaActivaParaArea(area_id);
+
+
 
     // validar que no se haya inscrito antes
     await validarInscripcionDuplicada(competidor_id, convocatoria.id, area_id);
@@ -81,6 +84,7 @@ const validarTutores = async (tutor_ids) => {
 
 
 const obtenerConvocatoriaActivaParaArea = async (area_id) => {
+
     const ahora = new Date();
 
     const areaConvocatoria = await prisma.area_convocatoria.findFirst({
@@ -98,7 +102,7 @@ const obtenerConvocatoriaActivaParaArea = async (area_id) => {
     });
 
     if (!areaConvocatoria) {
-        throw new Error('No hay convocatorias disponibles para esta área.');
+        throw new Error('El sistema no se encuentra en fechas de inscripción');
     }
 
     return areaConvocatoria.convocatoria;
@@ -260,3 +264,25 @@ export const obtenerMotivosRechazo = async () => {
         throw new Error('Error al obtener motivos de rechazo.');
     }
 };
+
+
+export const validarFechasDeInscripcion = (convocatoria) => {
+    const ahora = new Date();
+    const inicio = new Date(convocatoria.fecha_inicio);
+    const fin = new Date(convocatoria.fecha_fin);
+
+    if (ahora < inicio) {
+        const error = new Error('No se encuentra en fechas de inscripción');
+        error.codigo = 'FUERA_DE_FECHA_INICIO';
+        throw error;
+    }
+
+    if (ahora > fin) {
+        const error = new Error('Las fechas de inscripción ya han pasado');
+        error.codigo = 'FUERA_DE_FECHA_FIN';
+        throw error;
+    }
+
+};
+
+

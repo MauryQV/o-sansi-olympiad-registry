@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import usuario from "../image/user.svg";
 import { useAuth } from "../context/authContext";
 import { useSocket } from "../context/socketContext";
+import logo from "../image/logo.png"; // Asegúrate de que la ruta sea correcta
+import campana from "../image/campana-notificacion.svg"; // Asegúrate de que la ruta sea correcta
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -139,28 +141,7 @@ const Navbar = () => {
   }, [socket, notificationCounter, rol]);
 
   // Simular una notificación inicial para competidor si es necesario para pruebas
-  useEffect(() => {
-    if (rol === "competidor" && notificacionesComp.length === 0) {
-      // Puedes comentar esto en producción, esto es solo para probar
-
-      setNotificacionesComp([
-        /*
-      {
-        id: Date.now(),
-        mensaje: 'Tu solicitud fue aceptada',
-        motivo: null,
-        fecha: new Date().toLocaleString()
-      }
-      */
-        {
-          id: Date.now(),
-          mensaje: "Tu solicitud fue rechazada",
-          motivo: "Falta de documentos obligatorios",
-          fecha: new Date().toLocaleString(),
-        },
-      ]);
-    }
-  }, [rol]);
+ 
 
   const handleCerrarNotificacion = (id) => {
     setNotificacionesComp((prev) => prev.filter((n) => n.id !== id));
@@ -189,7 +170,7 @@ const Navbar = () => {
       {/* Menú de navegación */}
       <div className="link-pagina">
         <div className="imagen-completa">
-          <img className="imagen-nav" src="/src/image/logo.png"></img>
+          <img className="imagen-nav" src={logo} alt="Logo" />
           <div className="linea-vertical"></div>
 
           <div className="texto-sansi">
@@ -291,7 +272,7 @@ const Navbar = () => {
                     }
                   >
                     <img
-                      src="/src/image/campana-notificacion.svg"
+                      src={campana}
                       alt="Notificaciones"
                     />
                     {notificaciones.length > 0 && (
@@ -343,7 +324,7 @@ const Navbar = () => {
                     onClick={() => setMostrarNotifComp(!mostrarNotifComp)}
                   >
                     <img
-                      src="/src/image/campana-notificacion.svg"
+                      src={campana}
                       alt="Notificaciones"
                     />
                     {notificacionesComp.length > 0 && (

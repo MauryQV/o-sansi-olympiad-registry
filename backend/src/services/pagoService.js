@@ -1,5 +1,6 @@
 import prisma from '../config/prismaClient.js';
 import { crearNotificacion } from './notificacionService.js';
+import { validarFechasDePago } from '../utils/validarFechas.js';
 
 //helpers
 export const obtenerIdCompetidor = async (userId) => {
@@ -154,12 +155,11 @@ export const verDetallePago = async (pagoId) => {
 export const validarPago = async (pagoId, io, connectedUsers) => {
     try {
         const pago = await prisma.pago.findUnique({
-            where: {
-                id: pagoId
-            },
+            where: { id: pagoId },
             include: {
                 inscripcion: {
                     include: {
+                        convocatoria: true,
                         competidor: {
                             include: { usuario: true }
                         }
@@ -176,6 +176,9 @@ export const validarPago = async (pagoId, io, connectedUsers) => {
             throw new Error('El pago ya está pagado o rechazado');
         }
 
+        const convocatoria = pago.inscripcion.convocatoria;
+        validarFechasDePago(convocatoria); // lanza error si fuera de rango
+
         const updatedPago = await prisma.pago.update({
             where: { id: pagoId },
             data: {
@@ -184,17 +187,14 @@ export const validarPago = async (pagoId, io, connectedUsers) => {
             }
         });
 
-        // Obtener usuario del competidor
         const usuario = pago.inscripcion.competidor.usuario;
 
-        // Crear notificación
         const noti = await crearNotificacion({
             usuarioId: usuario.id,
             tipo: 'estado',
             mensaje: 'Tu pago ha sido validado y marcado como pagado.'
         });
 
-        // Enviar notificación vía socket
         const socketId = connectedUsers.get(usuario.id);
         if (socketId) {
             io.to(socketId).emit('notificacion:nueva', noti);
