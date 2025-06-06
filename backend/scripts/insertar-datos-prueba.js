@@ -347,7 +347,7 @@ async function main() {
       });
 
       // Crear inscripción para cada competidor con diferentes estados y áreas
-      const estados = ['Pendiente', 'Completado', 'Cancelado'];
+      const estados = ['Pendiente', 'Aceptada', 'Cancelado'];
       const areasCreadas = await prisma.area.findMany();
       
       const areaSeleccionada = areasCreadas[index % areasCreadas.length];
@@ -400,7 +400,7 @@ async function main() {
             convocatoria_id: convocatoria.id,
             categoria_id: categoria.id,
             fecha_inscripcion: new Date(),
-            estado_inscripcion: 'Completado'
+            estado_inscripcion: 'Aceptada'
           }
         });
         console.log('Inscripción para Matemáticas creada');
