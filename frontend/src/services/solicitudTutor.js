@@ -29,13 +29,15 @@ export const aceptarSolicitudTutor = async (solicitudId) => {
     return response.data;
 }
 
-
 export const rechazarSolicitudTutor = async (solicitudId, motivoRechazoId, descripcionRechazo = null) => {
     const payload = { motivo_rechazo_id: motivoRechazoId };
 
     if (motivoRechazoId === 7 && descripcionRechazo) {
         payload.descripcion_rechazo = descripcionRechazo;
+        console.log('Enviando descripción:', descripcionRechazo); // Debug temporal
     }
+
+    console.log('Payload final:', payload); // Debug temporal
 
     const response = await apiAuth.patch(
         `/inscripcion-tutor/rechazar/${solicitudId}`,
