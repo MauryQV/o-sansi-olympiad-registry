@@ -17,6 +17,6 @@ router.delete('/eliminar-categoria/:id', categoriaController.eliminarCategoriaCo
 
 router.get('/ver-categorias-area/:areaId', categoriaController.obtenerCategoriasPorArea);
 
-router.delete('/eliminar-categoria-completa/:id', categoriaController.eliminarCategoriaCompleta);
+router.delete('/eliminar-categoria-completa/:id', categoriaController.eliminarCategoriaCompleta); //fue eliminado
 
 export default router;
