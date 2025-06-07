@@ -61,7 +61,7 @@ export const verMisPagosPendientes = async (userId) => {
     console.log('ID del usuario en verMisPagosPendientes:', userId);
     return await prisma.pago.findMany({
         where: {
-            estado: 'Pendiente',
+            // estado: 'Pendiente',
             inscripcion: {
                 competidor_id: userId
             }
