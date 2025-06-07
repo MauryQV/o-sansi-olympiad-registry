@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { obtenerReportePostulantes } from '../services/reporteService';
+import { getAreas } from '../services/areaService';
 
 export const useReporteInscripciones = () => {
   const [estadoFiltro, setEstadoFiltro] = useState('');
@@ -16,17 +17,21 @@ export const useReporteInscripciones = () => {
   useEffect(() => {
     const cargarAreas = async () => {
       try {
-        // Aquí podrías usar un servicio para cargar las áreas desde el backend
-        // Por ahora usamos datos mock
-        const mockAreas = [
-          { id: 1, nombre: 'Robótica' },
-          { id: 2, nombre: 'Física' },
-          { id: 3, nombre: 'Matemáticas' }
-        ];
-        setAreas(mockAreas);
+        const areasData = await getAreas();
+        console.log('Áreas cargadas desde el backend:', areasData);
+        
+        // Transformar los datos para que tengan la estructura esperada por el componente
+        const areasFormateadas = areasData.map(area => ({
+          id: area.id,
+          nombre: area.nombre_area
+        }));
+        
+        setAreas(areasFormateadas);
       } catch (error) {
         console.error('Error al cargar áreas:', error);
         setError('Error al cargar áreas');
+        // En caso de error, usar un arreglo vacío
+        setAreas([]);
       }
     };
 
