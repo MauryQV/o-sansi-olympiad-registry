@@ -85,12 +85,12 @@ export const registrarInscripcion = async ({ area_id, categoria_id, tutor_ids })
 
 export const obtenerMisInscripciones = async () => {
     try {
-        console.log('Consultando mis inscripciones...');
-        const response = await apiAuth.get('/competidor/mis-inscripciones');
-        console.log('Respuesta recibida:', response.data);
+        //console.log('Consultando mis inscripciones...');
+        const response = await apiAuth.get('/mis-inscripciones');
+        //console.log('Respuesta recibida:', response.data);
         return response.data.inscripciones;
     } catch (error) {
-        console.error('Error al obtener mis inscripciones:', error);
+        //console.error('Error al obtener mis inscripciones:', error);
     }
 }
 
@@ -121,7 +121,7 @@ export const obtenerCategorias = async (areaId) => {
     try {
         const response = await api.get(`/ver-categorias-area/${areaId}`);
         const categorias = response.data;
-        
+
         // Verificar si hay datos y tienen el formato esperado
         if (!Array.isArray(categorias)) {
             console.error('Formato de respuesta inesperado:', categorias);

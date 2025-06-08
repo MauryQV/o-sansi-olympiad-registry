@@ -1,6 +1,3 @@
-// src/components/cajero/TablaBoletas.jsx
-
-import React from 'react';
 import '../../styles/cajero/TablaBoletas.css';
 
 const TablaBoletas = ({ boletas, onConfirmar, mostrarBotonValidar }) => {
@@ -61,7 +58,7 @@ const TablaBoletas = ({ boletas, onConfirmar, mostrarBotonValidar }) => {
                     onClick={() => onConfirmar(boleta)}
                     disabled={boleta.estado === 'Pagado'}
                   >
-                    Validar
+                    Cobrar
                   </button>
                 </td>
               )}

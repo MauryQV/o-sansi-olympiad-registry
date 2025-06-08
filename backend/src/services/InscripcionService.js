@@ -19,6 +19,14 @@ export const crearInscripcion = async ({
     // validar que no se haya inscrito antes
     await validarInscripcionDuplicada(competidor_id, convocatoria.id, area_id);
 
+    // Obtener información del competidor para el mensaje
+    const competidor = await prisma.competidor.findUnique({
+        where: { id: competidor_id },
+        include: {
+            usuario: true,
+        }
+    });
+
     // creamos la inscripcion
     const inscripcion = await prisma.inscripcion.create({
         data: {
@@ -42,13 +50,35 @@ export const crearInscripcion = async ({
         )
     );
 
-    // notificacion a los tutores
+    // Crear notificaciones en la base de datos y enviar en tiempo real
     for (const tutor of tutores) {
-        const socketId = connectedUsers.get(tutor.usuario_id);
-        if (socketId) {
-            io.to(socketId).emit('notificacion:nueva', {
-                mensaje: 'Tienes una nueva solicitud de inscripción'
+        try {
+            // Crear mensaje personalizado con información del competidor
+            const mensaje = `Nueva solicitud de inscripción de ${competidor.usuario.nombre}`;
+
+            // Crear notificación en la base de datos
+            const notificacion = await crearNotificacion({
+                usuarioId: tutor.usuario_id,
+                tipo: 'solicitud',
+                mensaje: mensaje
             });
+
+            // Enviar notificación en tiempo real si el tutor está conectado
+            const socketId = connectedUsers.get(tutor.usuario_id);
+            if (socketId) {
+                io.to(socketId).emit('notificacion:nueva', {
+                    id: notificacion.id,
+                    mensaje: notificacion.mensaje,
+                    tipo: notificacion.tipo,
+                    fecha: notificacion.createdAt,
+                    leido: false
+                });
+            }
+
+            //console.log(`Notificación creada para tutor ${tutor.usuario_id}: ${mensaje}`);
+        } catch (error) {
+            //console.error(`Error al crear notificación para tutor ${tutor.usuario_id}:`, error);
+            // No lanzamos el error para que no afecte la creación de la inscripción
         }
     }
 
@@ -58,7 +88,6 @@ export const crearInscripcion = async ({
         tutores_asignados: vinculos
     };
 };
-
 
 //Validar que existen los tutores y que son 1 a 3
 const validarTutores = async (tutor_ids) => {
@@ -81,6 +110,7 @@ const validarTutores = async (tutor_ids) => {
 
 
 const obtenerConvocatoriaActivaParaArea = async (area_id) => {
+
     const ahora = new Date();
 
     const areaConvocatoria = await prisma.area_convocatoria.findFirst({
@@ -98,7 +128,7 @@ const obtenerConvocatoriaActivaParaArea = async (area_id) => {
     });
 
     if (!areaConvocatoria) {
-        throw new Error('No hay convocatorias disponibles para esta área.');
+        throw new Error('El sistema no se encuentra en fechas de inscripción');
     }
 
     return areaConvocatoria.convocatoria;
@@ -153,7 +183,7 @@ export const aceptarInscripcion = async ({ inscripcion_id, tutorId }) => {
     if (todosAprobados) {
         await prisma.inscripcion.update({
             where: { id: inscripcion_id },
-            data: { estado_inscripcion: 'aprobado' }
+            data: { estado_inscripcion: 'Aceptada' }
         });
 
         const { usuario } = await prisma.competidor.findUnique({
@@ -224,7 +254,7 @@ export const rechazarInscripcion = async ({
         // Actualizar el estado de la inscripción a 'rechazado'
         await prisma.inscripcion.update({
             where: { id: inscripcion_id },
-            data: { estado_inscripcion: 'rechazada' },
+            data: { estado_inscripcion: 'Rechazada' },
         });
 
         // Notificar al competidor
@@ -260,3 +290,25 @@ export const obtenerMotivosRechazo = async () => {
         throw new Error('Error al obtener motivos de rechazo.');
     }
 };
+
+
+export const validarFechasDeInscripcion = (convocatoria) => {
+    const ahora = new Date();
+    const inicio = new Date(convocatoria.fecha_inicio);
+    const fin = new Date(convocatoria.fecha_fin);
+
+    if (ahora < inicio) {
+        const error = new Error('No se encuentra en fechas de inscripción');
+        error.codigo = 'FUERA_DE_FECHA_INICIO';
+        throw error;
+    }
+
+    if (ahora > fin) {
+        const error = new Error('Las fechas de inscripción ya han pasado');
+        error.codigo = 'FUERA_DE_FECHA_FIN';
+        throw error;
+    }
+
+};
+
+

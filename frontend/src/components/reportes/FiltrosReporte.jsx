@@ -15,10 +15,23 @@ const FiltrosReporte = ({
   const [estadoTemp, setEstadoTemp] = React.useState(estadoFiltro);
   const [areaTemp, setAreaTemp] = React.useState(areaFiltro);
 
+  // Sincronizar estados temporales cuando cambien los filtros principales
+  React.useEffect(() => {
+    setEstadoTemp(estadoFiltro);
+    setAreaTemp(areaFiltro);
+  }, [estadoFiltro, areaFiltro]);
+
   const aplicarFiltros = () => {
+    console.log("=== APLICAR FILTROS COMPONENTE ===");
+    console.log("estadoTemp:", estadoTemp);
+    console.log("areaTemp:", areaTemp);
+    
+    // Actualizar los estados principales
     setEstadoFiltro(estadoTemp);
     setAreaFiltro(areaTemp);
-    onFiltrar();
+    
+    // Pasar los valores directamente a onFiltrar para evitar problemas de timing
+    onFiltrar(estadoTemp, areaTemp);
   };
 
   const resetearFiltros = () => {

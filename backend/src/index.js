@@ -17,8 +17,11 @@ import competidorRoutes from './routes/competidorRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import pagoRoutes from './routes/pagoRoutes.js';
+import notificacionRoutes from './routes/notificacionRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+
 import reportesRoutes from './routes/reportesRoutes.js';
+
 
 
 // Inicializar Express
@@ -59,13 +62,8 @@ app.use('/api', competidorRoutes);
 app.use('/api/pagos', pagoRoutes);
 app.use('/api/usuarios', userRoutes);
 app.use('/api', categoriaAreaRoutes);
-app.use('/api/reportes', reportesRoutes); 
-
-// Ruta de prueba
-app.get('/', (req, res) => {
-    res.send('<title>O! SANSI API</title><h1>API REST para O! SANSI Olympiad Registry</h1>');
-});
-
+app.use('/api/reportes', reportesRoutes);
+app.use('/api', notificacionRoutes);
 // Middleware de manejo de errores (debe ser el último middleware)
 app.use(errorHandler);
 
@@ -76,12 +74,12 @@ io.on('connection', (socket) => {
     console.log('Cliente conectado:', socket.id);
 
     socket.on('registrar_usuario', (userId) => {
-        console.log(`Usuario ${userId} registrado con socket ${socket.id}`);
+        //console.log(`Usuario ${userId} registrado con socket ${socket.id}`);
         connectedUsers.set(userId, socket.id);
     });
 
     socket.on('disconnect', () => {
-        console.log('Cliente desconectado:', socket.id);
+        //     console.log('Cliente desconectado:', socket.id);
         // Limpiar el usuario desconectado
         for (const [userId, socketId] of connectedUsers.entries()) {
             if (socketId === socket.id) {

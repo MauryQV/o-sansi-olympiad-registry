@@ -139,12 +139,27 @@
   color: #ffffff;
 }
 
+.estado--aceptado {
+  background-color: #22C55E;
+  color: #ffffff;
+}
+
+.estado--aceptada {
+  background-color: #22C55E;
+  color: #ffffff;
+}
+
 .estado--completado {
   background-color: #22C55E;
   color: #ffffff;
 }
 
 .estado--cancelado {
+  background-color: #E4272A;
+  color: #ffffff;
+}
+
+.estado--rechazada {
   background-color: #E4272A;
   color: #ffffff;
 }

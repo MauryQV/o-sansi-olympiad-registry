@@ -6,7 +6,6 @@ import { useSolicitudesTutoria } from '../hooks/solicitudesTutoria';
 import { aceptarSolicitudTutor } from '../services/solicitudTutor';
 import { rechazarSolicitudTutor } from '../services/solicitudTutor';
 
-
 const SolicitudesTutoria = () => {
   const { solicitudes, setSolicitudes, motivosRechazo, loading, error } = useSolicitudesTutoria();
 
@@ -44,57 +43,75 @@ const SolicitudesTutoria = () => {
     });
   };
 
- const rechazarSolicitud = (id) => {
-  const opcionesMotivos = {};
-  motivosRechazo.forEach(motivo => {
-    opcionesMotivos[motivo.id] = motivo.mensaje;
-  });
+  const rechazarSolicitud = (id) => {
+    const opcionesMotivos = {};
+    motivosRechazo.forEach(motivo => {
+      opcionesMotivos[motivo.id] = motivo.mensaje;
+    });
 
-  Swal.fire({
-    title: 'Motivo del rechazo',
-    input: 'select',
-    inputOptions: opcionesMotivos,
-    inputPlaceholder: 'Selecciona un motivo',
-    showCancelButton: true,
-    confirmButtonText: 'Aceptar',
-    cancelButtonText: 'Cancelar',
-    confirmButtonColor: '#E4272A',
-    inputValidator: (value) => {
-      if (!value) return 'Debes seleccionar un motivo.';
-    }
-  }).then(result => {
-    if (result.isConfirmed) {
-      const motivoSeleccionado = parseInt(result.value);
-
-      if (motivoSeleccionado === 7) {
-        // Motivo personalizado
-        Swal.fire({
-          title: 'Especifica el motivo',
-          input: 'textarea',
-          inputPlaceholder: 'Describe el motivo...',
-          showCancelButton: true,
-          confirmButtonText: 'Enviar',
-          confirmButtonColor: '#E4272A',
-        }).then(async res => {
-          if (res.isConfirmed) {
-            try {
-              await rechazarSolicitudTutor(id, motivoSeleccionado, res.value); // con descripción
-              actualizarEstado(id, 'Rechazada', res.value);
-            } catch (err) {
-              Swal.fire('Error', 'No se pudo rechazar la solicitud.', 'error');
-            }
-          }
-        });
-      } else {
-        const motivoTexto = opcionesMotivos[motivoSeleccionado];
-        rechazarSolicitudTutor(id, motivoSeleccionado) // sin descripción
-          .then(() => actualizarEstado(id, 'Rechazada', motivoTexto))
-          .catch(() => Swal.fire('Error', 'No se pudo rechazar la solicitud.', 'error'));
+    Swal.fire({
+      title: 'Motivo del rechazo',
+      input: 'select',
+      inputOptions: opcionesMotivos,
+      inputPlaceholder: 'Selecciona un motivo',
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#E4272A',
+      inputValidator: (value) => {
+        if (!value) return 'Debes seleccionar un motivo.';
       }
-    }
-  });
-};
+    }).then(result => {
+      if (result.isConfirmed) {
+        const motivoSeleccionado = parseInt(result.value);
 
+        if (motivoSeleccionado === 7) {
+          // Motivo personalizado
+          Swal.fire({
+            title: 'Especifica el motivo',
+            input: 'textarea',
+            inputPlaceholder: 'Describe el motivo...',
+            showCancelButton: true,
+            confirmButtonText: 'Enviar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#E4272A',
+            inputValidator: (value) => {
+              if (!value || value.trim() === '') {
+                return 'Debes especificar el motivo.';
+              }
+            }
+          }).then(async (res) => {
+            if (res.isConfirmed && res.value) {
+              try {
+                await rechazarSolicitudTutor(id, motivoSeleccionado, res.value.trim());
+                actualizarEstado(id, 'Rechazada', res.value.trim());
+              } catch (err) {
+                console.error('Error al rechazar solicitud:', err);
+                Swal.fire('Error', 'No se pudo rechazar la solicitud.', 'error');
+              }
+            }
+          });
+        } else {
+          // Motivo predefinido
+          const motivoTexto = opcionesMotivos[motivoSeleccionado];
+          
+          try {
+            rechazarSolicitudTutor(id, motivoSeleccionado)
+              .then(() => {
+                actualizarEstado(id, 'Rechazada', motivoTexto);
+              })
+              .catch((err) => {
+                console.error('Error al rechazar solicitud:', err);
+                Swal.fire('Error', 'No se pudo rechazar la solicitud.', 'error');
+              });
+          } catch (err) {
+            console.error('Error al rechazar solicitud:', err);
+            Swal.fire('Error', 'No se pudo rechazar la solicitud.', 'error');
+          }
+        }
+      }
+    });
+  };
 
   return (
     <div className="solicitudes-tutoria-container">
@@ -126,7 +143,6 @@ const SolicitudesTutoria = () => {
             <tbody>
               {solicitudes.map((s) => (
                 <tr key={s.id}>
-                  {console.log(s.id)}
                   <td>{s.nombre}</td>
                   <td>
                     {s.area}

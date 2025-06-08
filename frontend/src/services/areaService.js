@@ -16,6 +16,24 @@ export const getAreas = async () => {
 
 };
 
+export const getCategorias = async () => {
+    const response = await api.get(`${API_BASE_URL}/ver-categorias`);
+    return response.data;
+
+};
+
+export const getCategoriasAreas = async () => {
+    const response = await api.get(`${API_BASE_URL}/ver-categorias-areas`);
+    return response.data;
+
+};
+
+export const getGrados = async () => {
+    const response = await api.get(`${API_BASE_URL}/ver-grados`);
+    return response.data;
+
+};
+
 
 
 export const crearArea = async ({ nombre, descripcion, costo }) => {
@@ -37,7 +55,7 @@ export const crearArea = async ({ nombre, descripcion, costo }) => {
     const response = await api.post(`${API_BASE_URL}/crear-area`, {
         nombre_area: nombre.trim(),
         descripcion_area: descripcion,
-        costo: costoNumerico 
+        costo: costoNumerico
     });
     return response.data;
 };

@@ -1,40 +1,41 @@
 {
-  "name": "olympiad-backend",
-  "version": "1.0.0",
-  "description": "Backend for Olympic Programming Contest Registry",
-  "main": "src/index.js",
-  "scripts": {
-    "test:areas": "node test/testAreaCategoria.js",
-    "test:limites": "node test/testMaximoAreas.js",
-    "test:simulacion": "node test/testAreasSimulacion.js",
-    "test:concepto": "node test/testAreasRestriccion.js",
-    "test:validador": "node test/probarRestriccion.js",
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "seeds": "node scripts/insertar-datos-prueba.js",
-    "clean": "node scripts/limpiar-datos.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "@prisma/client": "^6.8.2",
-    "@supabase/supabase-js": "^2.49.4",
-    "axios": "^1.9.0",
-    "bcrypt": "^5.1.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^5.1.0",
-    "joi": "^17.13.3",
-    "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.0",
-    "olympiad-backend": "file:",
-    "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.10",
-    "prisma": "^6.6.0"
-  }
+    "name": "olympiad-backend",
+    "version": "1.0.0",
+    "description": "Backend for Olympic Programming Contest Registry",
+    "main": "src/index.js",
+    "scripts": {
+        "test:areas": "node test/testAreaCategoria.js",
+        "test:limites": "node test/testMaximoAreas.js",
+        "test:simulacion": "node test/testAreasSimulacion.js",
+        "test:concepto": "node test/testAreasRestriccion.js",
+        "test:validador": "node test/probarRestriccion.js",
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js",
+        "seeds": "node scripts/insertar-datos-prueba.js",
+        "clean": "node scripts/limpiar-datos.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "dependencies": {
+        "@prisma/client": "^6.8.2",
+        "@supabase/supabase-js": "^2.49.4",
+        "axios": "^1.9.0",
+        "bcrypt": "^5.1.1",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.7",
+        "express": "^5.1.0",
+        "joi": "^17.13.3",
+        "jsonwebtoken": "^9.0.2",
+        "morgan": "^1.10.0",
+        "numero-a-letras": "^1.0.6",
+        "olympiad-backend": "file:",
+        "socket.io": "^4.8.1",
+        "socket.io-client": "^4.8.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.10",
+        "prisma": "^6.8.2"
+    }
 }

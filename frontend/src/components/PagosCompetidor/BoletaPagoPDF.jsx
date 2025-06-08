@@ -19,12 +19,12 @@ const BoletaPagoPDF = ({
   estado,
   monto,
   control,
-  metodo = 'caja',
+  metodo = 'CAJA',
   concepto = 'OLIMPIADA EN CIENCIAS SAN SIMON O! SANSI',
   comision = 1.00,
   horaEmision
 }) => {
-  const total = monto + comision;
+  const total = monto;
 
 
   return (
@@ -76,15 +76,15 @@ const BoletaPagoPDF = ({
             <View style={styles.conceptoCol}>
               <Text style={styles.label}>Concepto de:</Text>
               <Text>{concepto}</Text>
-              <Text>PAGO ELECTRÓNICO</Text>
+              
             </View>
 
             {/* Columna derecha: montos */}
             <View style={styles.montoCol}>
               <Text style={styles.montoRight}>{monto.toFixed(2)}</Text>
-              <Text style={styles.montoRight}>{comision.toFixed(2)}</Text>
+           
               <View style={styles.montoLine} />
-              <Text style={styles.total}>Total: Bs {total.toFixed(2)}</Text>
+              <Text style={styles.total}>Total: Bs {monto.toFixed(2)}</Text>
             </View>
           </View>
 
