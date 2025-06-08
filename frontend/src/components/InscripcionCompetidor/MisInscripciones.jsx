@@ -30,6 +30,8 @@ const MisInscripciones = () => {
         return "estado-cancelado";
       default:
         return "estado-pendiente";
+      case "rechazada":
+        return "estado-rechazada";
     }
   };
 

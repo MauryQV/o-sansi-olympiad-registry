@@ -1,0 +1,20 @@
+  [31morigin/AlvaroBranch[m
+  [31morigin/Derick[m
+  [31morigin/HEAD[m -> origin/main
+  [31morigin/Inicio/Danae[m
+  [31morigin/Inscripciones[m
+  [31morigin/Jhazmin-pagos[m
+  [31morigin/Reportes[m
+  [31morigin/Rodrigo/RegistroCT[m
+  [31morigin/areas-reportes[m
+  [31morigin/cambio-colores-reporte[m
+  [31morigin/clemente[m
+  [31morigin/cosmi/Areas[m
+  [31morigin/develop[m
+  [31morigin/feature/boleta[m
+  [31morigin/feature/registro[m
+  [31morigin/gestion-usuarios[m
+  [31morigin/huAreas[m
+  [31morigin/main[m
+  [31morigin/saul[m
+  [31morigin/saulBack[m

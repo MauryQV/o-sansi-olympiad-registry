@@ -159,6 +159,11 @@
   color: #ffffff;
 }
 
+.estado--rechazada {
+  background-color: #E4272A;
+  color: #ffffff;
+}
+
 .reportes-minimal__total {
   margin-top: 1rem;
   font-weight: 500;

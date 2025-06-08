@@ -162,6 +162,11 @@
     color: #c62828;
 }
 
+.estado-rechazada {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
 .mis-inscripciones-info {
     background-color: #f9f9f9;
     padding: 1.5rem;

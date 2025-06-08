@@ -6,22 +6,28 @@ import "../styles/Navbar.css";
 import { useEffect } from "react";
 import usuario from "../image/user.svg";
 import { useAuth } from "../context/authContext";
-import { useSocket } from "../context/socketContext";
-import logo from "../image/logo.png"; // Asegúrate de que la ruta sea correcta
-import campana from "../image/campana-notificacion.svg"; // Asegúrate de que la ruta sea correcta
+import { useNotifications } from "../hooks/useNotificaciones";
+import logo from "../image/logo.png";
+import campana from "../image/campana-notificacion.svg";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const { usuario: usuarioAuth, logout } = useAuth();
 
-  // Sistema de notificaciones para ambos roles
-  const [notificaciones, setNotificaciones] = useState([]);
-  const [notificacionesComp, setNotificacionesComp] = useState([]);
-  const [notificationCounter, setNotificationCounter] = useState(1);
+  // Sistema de notificaciones unificado
+  const {
+    notificaciones,
+    loading: loadingNotif,
+    contadorNoLeidas,
+    marcarComoLeida,
+    eliminarNotificacion,
+    marcarTodasComoLeidas
+  } = useNotifications();
+
+  // Estados para mostrar/ocultar paneles
   const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
   const [mostrarNotifComp, setMostrarNotifComp] = useState(false);
-  const { socket } = useSocket();
 
   // Determinar el rol basado en el rol_id
   const getRol = () => {
@@ -43,121 +49,48 @@ const Navbar = () => {
 
   const rol = getRol();
 
-  // Escuchar notificaciones para competidor
+  // Filtrar notificaciones según el tipo para el tutor
+  const solicitudesPendientes = notificaciones.filter(n => 
+    n.tipo === 'solicitud' && !n.leido
+  );
+
+  // Debug: mostrar en consola las notificaciones cargadas
   useEffect(() => {
-    if (socket && rol === "competidor") {
-      // Eliminar primero cualquier listener existente para evitar duplicados
-      socket.off("notificacion:resultadoSolicitud");
-      socket.off("notificacion:competidor");
-      socket.off("notificacion:nueva");
+    console.log('Notificaciones en Navbar:', notificaciones);
+    console.log('Contador no leídas:', contadorNoLeidas);
+    console.log('Solicitudes pendientes (tutor):', solicitudesPendientes);
+  }, [notificaciones, contadorNoLeidas, solicitudesPendientes]);
 
-      // Escuchar el evento que envía el backend (notificacion:nueva)
-      socket.on("notificacion:nueva", (data) => {
-        console.log("Notificación recibida por competidor:", data);
-
-        // Agregar la nueva notificación al inicio del array con un ID único
-        setNotificacionesComp((prev) => [
-          {
-            id: Date.now(),
-            mensaje: data.mensaje || "Nueva notificación",
-            fecha: new Date().toLocaleString(),
-          },
-          ...prev,
-        ]);
-      });
-
-      // Mantener también los otros listeners por si acaso se usan en otro lado
-      socket.on("notificacion:resultadoSolicitud", (data) => {
-        console.log("Notificación de resultado recibida por competidor:", data);
-
-        const esRechazo = data.mensaje?.toLowerCase().includes("rechazada"); //esto
-
-        setNotificacionesComp((prev) => [
-          {
-            id: Date.now(),
-            mensaje: data.mensaje || "Resultado de tu solicitud",
-            motivo: esRechazo
-              ? data.motivoRechazo || "Sin motivo especificado"
-              : null, //esto
-            fecha: new Date().toLocaleString(),
-          },
-          ...prev,
-        ]);
-      });
-
-      socket.on("notificacion:competidor", (data) => {
-        console.log("Notificación general para competidor:", data);
-
-        setNotificacionesComp((prev) => [
-          {
-            id: Date.now(),
-            mensaje: data.mensaje || "Nueva notificación",
-            fecha: new Date().toLocaleString(),
-          },
-          ...prev,
-        ]);
-      });
-    }
-
-    return () => {
-      if (socket && rol === "competidor") {
-        socket.off("notificacion:resultadoSolicitud");
-        socket.off("notificacion:competidor");
-        socket.off("notificacion:nueva");
-      }
-    };
-  }, [socket, rol]);
-
-  // Escuchar notificaciones para tutor
-  useEffect(() => {
-    if (socket && rol === "tutor") {
-      console.log("Configurando listener para notificaciones");
-
-      socket.off("notificacion:nueva");
-      socket.on("notificacion:nueva", (data) => {
-        console.log("Notificación recibida:", data);
-
-        const newId = notificationCounter;
-        setNotificationCounter((prev) => prev + 1);
-
-        setNotificaciones((prev) => [
-          {
-            id: newId,
-            mensaje: data.mensaje || "Nueva solicitud recibida",
-            detalle: "Tienes una nueva solicitud pendiente",
-            fecha: new Date().toLocaleString(),
-          },
-          ...prev,
-        ]);
-      });
-    }
-
-    return () => {
-      if (socket && rol === "tutor") {
-        console.log("Limpiando listener de notificaciones");
-        socket.off("notificacion:nueva");
-      }
-    };
-  }, [socket, notificationCounter, rol]);
-
-  // Simular una notificación inicial para competidor si es necesario para pruebas
- 
-
-  const handleCerrarNotificacion = (id) => {
-    setNotificacionesComp((prev) => prev.filter((n) => n.id !== id));
+  const handleCerrarNotificacion = async (id) => {
+    await eliminarNotificacion(id);
   };
 
-  const limpiarTodasNotificaciones = () => {
-    setNotificacionesComp([]);
+  const limpiarTodasNotificaciones = async () => {
+    await marcarTodasComoLeidas();
     setMostrarNotifComp(false);
+    setMostrarNotificaciones(false);
   };
 
-  const handleAceptar = (id) => {
-    setNotificaciones((prev) => prev.filter((n) => n.id !== id));
+  const handleAceptar = async (id) => {
+    // Aquí deberías hacer la llamada a la API para aceptar la solicitud
+    try {
+      // await aceptarSolicitud(id); // Tu función para aceptar
+      await marcarComoLeida(id); // Marcar como leída
+      console.log('Solicitud aceptada:', id);
+    } catch (error) {
+      console.error('Error al aceptar solicitud:', error);
+    }
   };
 
-  const handleRechazar = (id) => {
-    setNotificaciones((prev) => prev.filter((n) => n.id !== id));
+  const handleRechazar = async (id) => {
+    // Aquí deberías hacer la llamada a la API para rechazar la solicitud
+    try {
+      // await rechazarSolicitud(id); // Tu función para rechazar
+      await marcarComoLeida(id); // Marcar como leída
+      console.log('Solicitud rechazada:', id);
+    } catch (error) {
+      console.error('Error al rechazar solicitud:', error);
+    }
   };
 
   const handleLogout = () => {
@@ -271,13 +204,10 @@ const Navbar = () => {
                       setMostrarNotificaciones(!mostrarNotificaciones)
                     }
                   >
-                    <img
-                      src={campana}
-                      alt="Notificaciones"
-                    />
-                    {notificaciones.length > 0 && (
+                    <img src={campana} alt="Notificaciones" />
+                    {solicitudesPendientes.length > 0 && (
                       <span className="notificacion-circulo">
-                        {notificaciones.length}
+                        {solicitudesPendientes.length}
                       </span>
                     )}
                   </div>
@@ -323,13 +253,10 @@ const Navbar = () => {
                     className="campana-notificacion"
                     onClick={() => setMostrarNotifComp(!mostrarNotifComp)}
                   >
-                    <img
-                      src={campana}
-                      alt="Notificaciones"
-                    />
-                    {notificacionesComp.length > 0 && (
+                    <img src={campana} alt="Notificaciones" />
+                    {contadorNoLeidas > 0 && (
                       <span className="notificacion-circulo">
-                        {notificacionesComp.length}
+                        {contadorNoLeidas}
                       </span>
                     )}
                   </div>
@@ -387,47 +314,65 @@ const Navbar = () => {
           )}
         </div>
       </div>
-      {mostrarNotificaciones && (
+
+      {/* Panel de solicitudes pendientes para tutor */}
+      {mostrarNotificaciones && rol === "tutor" && (
         <div className="panel-notificaciones">
           <h4>Solicitudes pendientes</h4>
           <div className="lista-notificaciones">
-            {notificaciones.map((n) => (
-              <div key={n.id} className="notificacion-item">
-                <p>
-                  <strong>{n.mensaje}</strong>
-                </p>
-                <p className="detalle">{n.detalle}</p>
-                <div className="acciones">
+            {loadingNotif ? (
+              <p>Cargando solicitudes...</p>
+            ) : solicitudesPendientes.length > 0 ? (
+              <>
+                {solicitudesPendientes.map((n) => (
+                  <div key={n.id} className="notificacion-item">
+                    <p>
+                      <strong>{n.mensaje}</strong>
+                    </p>
+                    <small className="fecha">{n.fecha}</small>
+                    <div className="acciones">
+                      <button
+                        className="rechazar"
+                        onClick={() => handleRechazar(n.id)}
+                      >
+                        Rechazar
+                      </button>
+                      <button
+                        className="aceptar"
+                        onClick={() => handleAceptar(n.id)}
+                      >
+                        Aceptar
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                <div className="notif-actions">
                   <button
-                    className="rechazar"
-                    onClick={() => handleRechazar(n.id)}
+                    className="limpiar-notif"
+                    onClick={limpiarTodasNotificaciones}
                   >
-                    Rechazar
-                  </button>
-                  <button
-                    className="aceptar"
-                    onClick={() => handleAceptar(n.id)}
-                  >
-                    Aceptar
+                    Marcar todas como leídas
                   </button>
                 </div>
-              </div>
-            ))}
-            {notificaciones.length === 0 && (
+              </>
+            ) : (
               <p>No tienes solicitudes pendientes.</p>
             )}
           </div>
         </div>
       )}
 
-      {mostrarNotifComp && (
+      {/* Panel de notificaciones para competidor */}
+      {mostrarNotifComp && rol === "competidor" && (
         <div className="panel-notificaciones">
           <h4>Notificaciones</h4>
           <div className="lista-notificaciones">
-            {notificacionesComp.length > 0 ? (
+            {loadingNotif ? (
+              <p>Cargando notificaciones...</p>
+            ) : notificaciones.length > 0 ? (
               <>
-                {notificacionesComp.map((n) => (
-                  <div key={n.id} className="notificacion-item">
+                {notificaciones.map((n) => (
+                  <div key={n.id} className={`notificacion-item ${!n.leido ? 'no-leida' : ''}`}>
                     <div className="notif-header">
                       <p className="mensaje">
                         <strong>{n.mensaje}</strong>
@@ -438,6 +383,14 @@ const Navbar = () => {
                         </p>
                       )}
                       <small className="fecha">{n.fecha}</small>
+                      {!n.leido && (
+                        <button
+                          className="marcar-leida"
+                          onClick={() => marcarComoLeida(n.id)}
+                        >
+                          Marcar como leída
+                        </button>
+                      )}
                     </div>
                     <button
                       className="cerrar-notif"
@@ -452,12 +405,12 @@ const Navbar = () => {
                     className="limpiar-notif"
                     onClick={limpiarTodasNotificaciones}
                   >
-                    Limpiar todas
+                    Marcar todas como leídas
                   </button>
                 </div>
               </>
             ) : (
-              <p>No tienes notificaciones nuevas.</p>
+              <p>No tienes notificaciones.</p>
             )}
           </div>
         </div>

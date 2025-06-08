@@ -155,20 +155,30 @@
 
 .estado-pendiente {
     background-color: #e3f2fd;
-    color: #1976d2;
+    color: #3B82F6;
 }
 
-.estado-aprobado {
+.estado-aprobada {
     background-color: #e8f5e9;
-    color: #2e7d32;
+    color: #10B981;
 }
 
-.estado-completado {
+.estado-completada {
     background-color: #e8f5e9;
-    color: #1b5e20;
+    color: #10B981;
 }
 
-.estado-cancelado {
+.estado-rechazada {
+    background-color: #ffebee;
+    color: #E4272A;
+}
+
+.estado-cancelada {
+    background-color: #ffebee;
+    color: #E4272A;
+}
+
+.estado-rechazada {
     background-color: #ffebee;
     color: #c62828;
 }

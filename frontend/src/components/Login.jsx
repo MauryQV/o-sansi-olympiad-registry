@@ -8,6 +8,9 @@ import {
 import { useAuth } from "../context/authContext";
 import axios from "axios";
 import logo from "../image/logo.png"; 
+import mail_icon from "../image/email-icon.svg";
+import ojoAbierto from "../image/ojo-abierto.svg"; 
+import ojoCerrado from "../image/ojo-cerrado.svg"; 
 
 const Login = () => {
   const navigate = useNavigate();
@@ -92,7 +95,7 @@ const Login = () => {
             className={errors.correo ? "input-error" : ""}
           />
           <img
-            src="/src/image/email-icon.svg"
+            src={mail_icon}
             alt="Correo"
             className="icon-input"
           />
@@ -109,14 +112,13 @@ const Login = () => {
             className={errors.contraseña ? "input-error" : ""}
           />
           <img
-            src={`/src/image/${
-              showPassword ? "ojo-abierto" : "ojo-cerrado"
-            }.svg`}
+            src={showPassword ? ojoAbierto : ojoCerrado}
             alt={showPassword ? "Ocultar" : "Mostrar"}
             className="icon-input password-toggle"
             onClick={togglePasswordVisibility}
             style={{ cursor: "pointer" }}
           />
+
         </div>
         {errors.contraseña && (
           <span className="error-text">{errors.contraseña}</span>

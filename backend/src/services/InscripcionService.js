@@ -13,14 +13,19 @@ export const crearInscripcion = async ({
     // validacion de la existencia de los tutores
     const tutores = await validarTutores(tutor_ids);
 
-
     // convocatoria asociada al area
     const convocatoria = await obtenerConvocatoriaActivaParaArea(area_id);
 
-
-
     // validar que no se haya inscrito antes
     await validarInscripcionDuplicada(competidor_id, convocatoria.id, area_id);
+
+    // Obtener información del competidor para el mensaje
+    const competidor = await prisma.competidor.findUnique({
+        where: { id: competidor_id },
+        include: {
+            usuario: true,
+        }
+    });
 
     // creamos la inscripcion
     const inscripcion = await prisma.inscripcion.create({
@@ -45,13 +50,35 @@ export const crearInscripcion = async ({
         )
     );
 
-    // notificacion a los tutores
+    // Crear notificaciones en la base de datos y enviar en tiempo real
     for (const tutor of tutores) {
-        const socketId = connectedUsers.get(tutor.usuario_id);
-        if (socketId) {
-            io.to(socketId).emit('notificacion:nueva', {
-                mensaje: 'Tienes una nueva solicitud de inscripción'
+        try {
+            // Crear mensaje personalizado con información del competidor
+            const mensaje = `Nueva solicitud de inscripción de ${competidor.usuario.nombre}`;
+
+            // Crear notificación en la base de datos
+            const notificacion = await crearNotificacion({
+                usuarioId: tutor.usuario_id,
+                tipo: 'solicitud',
+                mensaje: mensaje
             });
+
+            // Enviar notificación en tiempo real si el tutor está conectado
+            const socketId = connectedUsers.get(tutor.usuario_id);
+            if (socketId) {
+                io.to(socketId).emit('notificacion:nueva', {
+                    id: notificacion.id,
+                    mensaje: notificacion.mensaje,
+                    tipo: notificacion.tipo,
+                    fecha: notificacion.createdAt,
+                    leido: false
+                });
+            }
+
+            //console.log(`Notificación creada para tutor ${tutor.usuario_id}: ${mensaje}`);
+        } catch (error) {
+            //console.error(`Error al crear notificación para tutor ${tutor.usuario_id}:`, error);
+            // No lanzamos el error para que no afecte la creación de la inscripción
         }
     }
 
@@ -61,7 +88,6 @@ export const crearInscripcion = async ({
         tutores_asignados: vinculos
     };
 };
-
 
 //Validar que existen los tutores y que son 1 a 3
 const validarTutores = async (tutor_ids) => {

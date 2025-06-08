@@ -17,8 +17,11 @@ import competidorRoutes from './routes/competidorRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import pagoRoutes from './routes/pagoRoutes.js';
+import notificacionRoutes from './routes/notificacionRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+
 import reportesRoutes from './routes/reportesRoutes.js';
+
 
 
 // Inicializar Express
@@ -60,7 +63,7 @@ app.use('/api/pagos', pagoRoutes);
 app.use('/api/usuarios', userRoutes);
 app.use('/api', categoriaAreaRoutes);
 app.use('/api/reportes', reportesRoutes);
-
+app.use('/api', notificacionRoutes);
 // Middleware de manejo de errores (debe ser el último middleware)
 app.use(errorHandler);
 
