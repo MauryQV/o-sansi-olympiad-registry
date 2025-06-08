@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDatosRegistroCompetidor } from '../../hooks/useDatosRegistroCompetidor';
 import '../../styles/InscripcionCompetidor/RegistroCompetidores.css';
+import TablaPagos from './TablaPagos';
 
 const RegistroCompetidores = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const RegistroCompetidores = () => {
     pagos
   } = useDatosRegistroCompetidor();
 
-  const irAVistaPagos = () => {
+  const irAVistaPagos = (pago) => {
     navigate('/pagos-competidor');
   };
 
@@ -58,12 +59,12 @@ const RegistroCompetidores = () => {
           <h3 className="titulo-tarjeta">Convocatorias Activas</h3>
           {convocatoriaActiva ? (
             <>
-              <p><strong>{convocatoriaActiva.nombre_convocatoria}</strong></p>
-              <p>{convocatoriaActiva.descripcion_convocatoria}</p>
+              <p><strong>{convocatoriaActiva.nombre}</strong></p>
+              <p>{convocatoriaActiva.descripcion}</p>
               <p>
-                Inscripción {new Date(convocatoriaActiva.fecha_inicio).toLocaleDateString()} - {new Date(convocatoriaActiva.competicion_fin).toLocaleDateString()}
-            </p>
-              <span className="badge-estado en-inscripcion">En Inscripción</span>
+                Inscripción {convocatoriaActiva.fechaInicio} - {convocatoriaActiva.fechaFin}
+              </p>
+              <span className={`badge-estado ${convocatoriaActiva.estado?.toLowerCase().replace(/\s+/g, '-')}`}>{convocatoriaActiva.estado}</span>
             </>
           ) : (
             <p>No hay convocatorias activas.</p>
@@ -73,44 +74,7 @@ const RegistroCompetidores = () => {
 
       <div className="tarjeta-pagos-box">
          <h3 className="titulo-tabla-pagos">Mis Pagos</h3>
-          <table className="tabla-pagos">
-          <thead>
-            <tr>
-              <th>BOLETA</th>
-              <th>ÁREA</th>
-              <th>MONTO</th>
-              <th>FECHA</th>
-              <th>ESTADO</th>
-              <th>ACCIÓN</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pagos.length > 0 ? (
-              pagos.map((pago, index) => (
-                <tr key={index}>
-                  <td>{pago.boleta}</td>
-                  <td>{pago.area}</td>
-                  <td>{pago.monto}</td>
-                  <td>{pago.fecha}</td>
-                  <td>
-                    <span className={`estado-inscripcion ${pago.estado.toLowerCase()}`}>
-                      {pago.estado}
-                    </span>
-                  </td>
-                  <td>
-                    <button className="boton-ver-detalles" onClick={irAVistaPagos}>
-                      Ver Detalles
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6">No tienes pagos registrados.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+         <TablaPagos pagos={pagos} onVerDetalles={irAVistaPagos} />
       </div>
     </div>
   );

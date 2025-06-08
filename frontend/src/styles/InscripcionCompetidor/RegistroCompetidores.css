@@ -152,9 +152,16 @@
   font-weight: 500;
 }
 
-.validada {
+.badge-estado.en-inscripcion {
+  background-color: #165ccc;
+  color: #121314;
+  border-color: #3b82f6;
+}
+
+.badge-estado.validada {
   background-color: #B8E0A9;
   color: #111212;
+  border-color: #4ade80;
 }
 
 .en-inscripcion {
