@@ -30,6 +30,8 @@ const CompetidoresAsignados = () => {
         return "estado-cancelado";
       default:
         return "estado-pendiente";
+      case "rechazada":
+        return "estado-rechazada";  
     }
   };
 
@@ -130,8 +132,8 @@ const CompetidoresAsignados = () => {
             El competidor ha completado todos los requisitos.
           </li>
           <li>
-            <span className="estado-badge estado-cancelado">Cancelado</span> La
-            inscripción ha sido cancelada.
+            <span className="estado-badge estado-rechazada">Rechazada</span> La
+            inscripción ha sido rechazada.
           </li>
         </ul>
       </div>
