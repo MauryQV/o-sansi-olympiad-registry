@@ -13,10 +13,12 @@ body {
   background-color: #f8fafc;         /* Fondo gris claro */
   color: #333;                       /* Color de texto principal */
 }
-
+p{
+ color: #3a3a3a; 
+}
 /* Contenedor principal del componente */
 .contenedor-areas {
-  padding: 40px;                     /* Espaciado interno alrededor del contenido */
+  padding: 1rem 2rem;                     /* Espaciado interno alrededor del contenido */
   font-family: 'Comfortaa', cursive; /* Fuente aplicada a este contenedor */
 }
 
@@ -25,12 +27,12 @@ body {
   display: flex;                     /* Distribuye horizontalmente los elementos */
   justify-content: space-between;   /* Separa el título del botón */
   align-items: center;              /* Centra verticalmente los elementos */
-  margin-bottom: 30px;              /* Separación inferior */
+  margin-bottom: 1rem;              /* Separación inferior */
 }
 
 /* Estilo del título principal */
 .encabezado h2 {
-  font-size: 50px !important;                  /* Tamaño del texto */
+  font-size: 1.6rem;                  /* Tamaño del texto */
   font-weight: 800;                 /* Negrita media */
 }
 
@@ -117,21 +119,21 @@ body {
 }
 
 /* Descripción del área */
-.card-area p {
-  color: #6c757d !important;
-  font-size: 15px !important;
-  font-weight: 300 !important;
-  line-height: 1.4 !important;
-  margin: 0 0 10px !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* Muestra máximo 3 líneas */
-  -webkit-box-orient: vertical;
+.card-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 👈 Alinea todo hacia arriba */
+  padding: 20px;
+  min-height: 300px;
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid #d0d7de;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
+
 /* --- AÑADIMOS AQUÍ EL COSTO --- */
 .area-costo {
-  color: #007bff;
+  color: #3a3a3a;
   font-weight: 600;
   font-size: 14px;
   margin: 4px 0 14px 0;
@@ -144,6 +146,7 @@ body {
   color: #007bff;                   /* Texto azul */
   border-radius: 6px;               /* Bordes redondeados */
   padding: 6px 12px;                /* Espaciado interno */
+  margin-top: 16px;
   font-size: 14px;                  /* Tamaño de letra */
   cursor: pointer;                  /* Cursor tipo botón */
   display: flex;                    /* Ícono + texto */
@@ -179,3 +182,77 @@ body {
   100% { opacity: 0; transform: translateY(20px); }
 }
 
+
+.buscador-areas {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  border: 1px solid #e5e5e5;
+}
+
+.buscador-areas h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.buscador-formulario {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.buscador-formulario div {
+  display: flex;
+  flex-direction: column;
+}
+
+.buscador-formulario label {
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  color: #333;
+}
+
+.buscador-formulario select,
+.buscador-formulario input {
+  padding: 0.6rem;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 250px;
+}
+
+.btn-buscar,
+.btn-resetear {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+  border: none;
+}
+
+.btn-buscar {
+  background-color: #b0a1f3;
+  color: white;
+}
+
+.btn-buscar:hover {
+  background-color: #2f17a6;
+}
+
+.btn-resetear {
+  background-color: #f3f4f6;
+  color: #333;
+}
+
+.btn-resetear:hover {
+  background-color: #d1d5db;
+}

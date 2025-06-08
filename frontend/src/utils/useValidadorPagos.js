@@ -4,17 +4,9 @@ import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { esTerminoValido } from '../forms/validadorPagosValidator';
 import { mostrarConfirmacionPago } from '../components/cajero/ConfirmacionPagoModal';
-import { useSearchParams } from 'react-router-dom';
-import {
-  obtenerPagosPendientes,
-  obtenerPagosRealizados,
-  validarPago
-} from '../services/pagosService';
+import axios from 'axios';
 
 export const useValidadorPagos = () => {
-  const [searchParams] = useSearchParams();
-  const estadoFiltro = searchParams.get('estado');
-
   const [criterio, setCriterio] = useState('codigo');
   const [termino, setTermino] = useState('');
   const [boletas, setBoletas] = useState([]);
@@ -25,22 +17,31 @@ export const useValidadorPagos = () => {
   const cargarPagos = async () => {
     try {
       setLoading(true);
-      let pagosData = [];
-
-      if (estadoFiltro === 'Pagado') {
-        pagosData = await obtenerPagosRealizados();
-      } else if (estadoFiltro === 'Pendiente') {
-        pagosData = await obtenerPagosPendientes();
-      } else {
-        // Si no hay filtro, cargar todos los pagos
-        const [pagosPendientes, pagosRealizados] = await Promise.all([
-          obtenerPagosPendientes(),
-          obtenerPagosRealizados()
-        ]);
-        pagosData = [...pagosPendientes, ...pagosRealizados];
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No se encontró el token de autenticación');
       }
 
-      const pagosAdaptados = pagosData.map(pago => ({
+      // Obtener pagos pendientes
+      const responsePendientes = await axios.get('http://localhost:7777/api/pagos/pendientes', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      // Obtener pagos realizados
+      const responseRealizados = await axios.get('http://localhost:7777/api/pagos/realizados', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      // Combinar ambos resultados
+      const todosLosPagos = [...responsePendientes.data, ...responseRealizados.data];
+
+      const pagosAdaptados = todosLosPagos.map(pago => ({
         id: pago.id,
         codigo: pago.codigo_pago,
         competidor: `${pago.inscripcion.competidor.usuario.nombre} ${pago.inscripcion.competidor.usuario.apellido}`,
@@ -55,7 +56,7 @@ export const useValidadorPagos = () => {
       setError(null);
     } catch (error) {
       console.error('Error al cargar pagos:', error);
-      setError(error.message || 'Error al cargar los pagos');
+      setError(error.response?.data?.message || 'Error al cargar los pagos');
       setBoletas([]);
       setBoletasOriginal([]);
     } finally {
@@ -65,7 +66,7 @@ export const useValidadorPagos = () => {
 
   useEffect(() => {
     cargarPagos();
-  }, [estadoFiltro]); // Recargar cuando cambie el estado en la URL
+  }, []);
 
   const handleBuscar = () => {
     const t = termino.trim().toLowerCase();
@@ -88,27 +89,33 @@ export const useValidadorPagos = () => {
     if (!confirmado) return;
 
     try {
-      const response = await validarPago(boleta.id);
+      const token = localStorage.getItem('token');
+      const response = await axios.patch(`http://localhost:7777/api/pagos/validar-pago/${boleta.id}`, {}, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
 
-      if (response.success) {
+      if (response.data.success) {
         // Recargar todos los pagos después de validar
         await cargarPagos();
 
         Swal.fire({
           icon: 'success',
           title: '¡Pago Validado!',
-          text: response.message || 'El pago fue registrado correctamente.',
+          text: response.data.message || 'El pago fue registrado correctamente.',
           confirmButtonColor: '#4caf50'
         });
       } else {
-        throw new Error(response.error || 'Error al validar el pago');
+        throw new Error(response.data.error || 'Error al validar el pago');
       }
     } catch (error) {
       console.error('Error al validar pago:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: error.message || 'No se pudo validar el pago. Intente nuevamente.',
+        text: error.response?.data?.error || error.message || 'No se pudo validar el pago. Intente nuevamente.',
         confirmButtonColor: '#e53935'
       });
     }

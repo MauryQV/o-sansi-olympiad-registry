@@ -19,6 +19,8 @@ import userRoutes from './routes/userRoutes.js';
 import pagoRoutes from './routes/pagoRoutes.js';
 import reportesRoutes from './routes/reportesRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import reportesRoutes from './routes/reportesRoutes.js';
+
 
 // Inicializar Express
 const app = express();
@@ -30,7 +32,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         origin: 'http://localhost:5173',
-        methods: ['GET', 'POST'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true
     }
 });
@@ -56,13 +59,8 @@ app.use('/api', locationRoutes);
 app.use('/api/competidor', competidorRoutes);
 app.use('/api/pagos', pagoRoutes);
 app.use('/api/usuarios', userRoutes);
-app.use('/api/reportes', reportesRoutes);
 app.use('/api', categoriaAreaRoutes);
-
-// Ruta de prueba
-app.get('/', (req, res) => {
-    res.send('<title>O! SANSI API</title><h1>API REST para O! SANSI Olympiad Registry</h1>');
-});
+app.use('/api/reportes', reportesRoutes);
 
 // Middleware de manejo de errores (debe ser el último middleware)
 app.use(errorHandler);
@@ -71,16 +69,19 @@ app.use(errorHandler);
 const connectedUsers = new Map();
 
 io.on('connection', (socket) => {
+    console.log('Cliente conectado:', socket.id);
+
     socket.on('registrar_usuario', (userId) => {
+        //console.log(`Usuario ${userId} registrado con socket ${socket.id}`);
         connectedUsers.set(userId, socket.id);
-        console.log(`Usuario conectado: ${userId}`);
     });
 
     socket.on('disconnect', () => {
-        for (const [id, sockId] of connectedUsers.entries()) {
-            if (sockId === socket.id) {
-                connectedUsers.delete(id);
-                console.log(`Usuario desconectado: ${id}`);
+        //     console.log('Cliente desconectado:', socket.id);
+        // Limpiar el usuario desconectado
+        for (const [userId, socketId] of connectedUsers.entries()) {
+            if (socketId === socket.id) {
+                connectedUsers.delete(userId);
                 break;
             }
         }

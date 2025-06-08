@@ -204,7 +204,7 @@ model Inscripcion {
   convocatoria_id    Int
   categoria_id       Int
   fecha_inscripcion  DateTime            @default(now())
-  estado_inscripcion String              @default("pendiente") // pendiente, aprobado, rechazado
+  estado_inscripcion String              @default("Pendiente") // Pendiente, Aceptada, Rechazada
   tutorInscripciones Inscripcion_tutor[]
   pagos              Pago[]
 

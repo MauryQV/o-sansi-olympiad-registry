@@ -16,6 +16,7 @@
     "bootstrap": "^5.3.3",
     "date-fns": "^4.1.0",
     "emailjs": "^4.0.3",
+    "frontend": "file:",
     "html2pdf.js": "^0.10.3",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.28",

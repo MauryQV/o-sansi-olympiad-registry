@@ -137,7 +137,7 @@ CREATE TABLE "Grado" (
 CREATE TABLE "Pago" (
     "id" SERIAL NOT NULL,
     "inscripcion_id" INTEGER NOT NULL,
-    "monto" DECIMAL(65,30) NOT NULL,
+    "monto" DECIMAL(10,2) NOT NULL,
     "estado" TEXT NOT NULL DEFAULT 'Pendiente',
     "codigo_pago" TEXT NOT NULL,
     "fecha_pago" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -172,6 +172,7 @@ CREATE TABLE "Inscripcion_tutor" (
     "aprobado" BOOLEAN NOT NULL DEFAULT false,
     "fecha_aprobacion" TIMESTAMP(3),
     "motivo_rechazo_id" INTEGER,
+    "descripcion_rechazo" TEXT,
     "competidorId" TEXT,
 
     CONSTRAINT "Inscripcion_tutor_pkey" PRIMARY KEY ("id")
@@ -201,7 +202,7 @@ CREATE TABLE "Inscripcion" (
     "convocatoria_id" INTEGER NOT NULL,
     "categoria_id" INTEGER NOT NULL,
     "fecha_inscripcion" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "estado_inscripcion" TEXT NOT NULL DEFAULT 'pendiente',
+    "estado_inscripcion" TEXT NOT NULL DEFAULT 'Pendiente',
 
     CONSTRAINT "Inscripcion_pkey" PRIMARY KEY ("id")
 );

@@ -1,5 +1,5 @@
 import prisma from '../config/prismaClient.js';
-
+import Joi from 'joi';
 
 /*export const crearConvocatoria = async (data) => {
     // Verificar si ya existe una convocatoria con el mismo nombre
@@ -37,14 +37,69 @@ import prisma from '../config/prismaClient.js';
 
     */
 
+const convocatoriaModelSchema = Joi.object({
+    nombre_convocatoria: Joi.string().required(),
+    descripcion_convocatoria: Joi.string().required(),
+    id_estado_convocatoria: Joi.number().required(),
+    fecha_inicio: Joi.date().greater('now').required(),
+    fecha_fin: Joi.date().required(),
+    pago_inicio: Joi.date().required(),
+    pago_fin: Joi.date().required(),
+    competicion_inicio: Joi.date().required(),
+    competicion_fin: Joi.date().required(),
+}).custom((value, helpers) => {
+    const {
+        fecha_inicio,
+        fecha_fin,
+        pago_inicio,
+        pago_fin,
+        competicion_inicio,
+        competicion_fin
+    } = value;
+
+    if (fecha_inicio >= fecha_fin) {
+        return helpers.message('La fecha de inicio debe ser anterior a la fecha de fin');
+    }
+
+    if (pago_inicio < fecha_inicio) {
+        return helpers.message('El inicio del período de pago debe ser posterior a la fecha de inicio');
+    }
+
+    if (pago_fin <= pago_inicio) {
+        return helpers.message('El fin del período de pago debe ser posterior al inicio del período de pago');
+    }
+
+    if (competicion_inicio <= pago_fin) {
+        return helpers.message('El inicio de la competición debe ser posterior al fin del período de pago');
+    }
+
+    if (competicion_fin <= competicion_inicio) {
+        return helpers.message('El fin de la competición debe ser posterior al inicio de la competición');
+    }
+
+    return value;
+}, 'Validaciones cruzadas de fechas');
+
 const crearConvocatoria = async (data) => {
+    const { error, value } = convocatoriaModelSchema.validate(data, { abortEarly: false });
+
+    if (error) {
+        const messages = error.details.map((err) => err.message).join('; ');
+        throw new Error(`Error al crear la convocatoria: ${messages}`);
+    }
+
     return await prisma.convocatoria.create({
-        data,
+        data: value,
     });
 };
 
+
+
+
+
+
 export const asignarAreaAConvocatoria = async (convocatoriaId, areaId) => {
-    console.log(`🛠 Asignando área ${areaId} a convocatoria ${convocatoriaId}`);
+    console.log(`Asignando área ${areaId} a convocatoria ${convocatoriaId}`);
 
     const asignacionExistente = await prisma.area_convocatoria.findFirst({
         where: {
@@ -147,7 +202,7 @@ export const obtenerConvocatoriaPorId = async (id) => {
         include: {
             Area_convocatoria: {
                 select: {
-                    area_id: true // Incluir solo los IDs de las áreas asociadas
+                    area_id: true // Incluir solo los IDs de las areas asociadas
                 }
             }
         }
@@ -182,6 +237,8 @@ export const actualizarConvocatoria = async (id, data) => {
         id_estado_convocatoria,
         fecha_inicio,
         fecha_fin,
+        pago_inicio,
+        pago_fin,
         competicion_inicio,
         competicion_fin,
         areaIds
@@ -192,6 +249,8 @@ export const actualizarConvocatoria = async (id, data) => {
     if (descripcion_convocatoria) updateData.descripcion_convocatoria = descripcion_convocatoria;
     if (fecha_inicio) updateData.fecha_inicio = new Date(fecha_inicio);
     if (fecha_fin) updateData.fecha_fin = new Date(fecha_fin);
+    if (pago_inicio) updateData.pago_inicio = new Date(pago_inicio);
+    if (pago_fin) updateData.pago_fin = new Date(pago_fin);
     if (competicion_inicio) updateData.competicion_inicio = new Date(competicion_inicio);
     if (competicion_fin) updateData.competicion_fin = new Date(competicion_fin);
     if (id_estado_convocatoria) updateData.id_estado_convocatoria = id_estado_convocatoria;

@@ -4,7 +4,7 @@ import { X, Check } from 'lucide-react';
 import '../styles/SolicitudesTutoria.css';
 import { useSolicitudesTutoria } from '../hooks/solicitudesTutoria';
 import { aceptarSolicitudTutor } from '../services/solicitudTutor';
-
+import { rechazarSolicitudTutor } from '../services/solicitudTutor';
 
 const SolicitudesTutoria = () => {
   const { solicitudes, setSolicitudes, motivosRechazo, loading, error } = useSolicitudesTutoria();
@@ -37,7 +37,7 @@ const SolicitudesTutoria = () => {
       confirmButtonColor: '#0284C7',
     }).then((result) => {
       if (result.isConfirmed) {
-        aceptarSolicitudTutor(id); // 👈 Aquí se llama tu servicio real
+        aceptarSolicitudTutor(id); 
         actualizarEstado(id, 'Aceptada');
       }
     });
@@ -48,7 +48,6 @@ const SolicitudesTutoria = () => {
     motivosRechazo.forEach(motivo => {
       opcionesMotivos[motivo.id] = motivo.mensaje;
     });
-    
 
     Swal.fire({
       title: 'Motivo del rechazo',
@@ -56,7 +55,7 @@ const SolicitudesTutoria = () => {
       inputOptions: opcionesMotivos,
       inputPlaceholder: 'Selecciona un motivo',
       showCancelButton: true,
-      confirmButtonText: 'Rechazar',
+      confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#E4272A',
       inputValidator: (value) => {
@@ -64,23 +63,51 @@ const SolicitudesTutoria = () => {
       }
     }).then(result => {
       if (result.isConfirmed) {
-        const motivoSeleccionado = result.value;
-        if (motivoSeleccionado === 'otro') {
+        const motivoSeleccionado = parseInt(result.value);
+
+        if (motivoSeleccionado === 7) {
+          // Motivo personalizado
           Swal.fire({
             title: 'Especifica el motivo',
             input: 'textarea',
             inputPlaceholder: 'Describe el motivo...',
             showCancelButton: true,
             confirmButtonText: 'Enviar',
+            cancelButtonText: 'Cancelar',
             confirmButtonColor: '#E4272A',
-          }).then(res => {
-            if (res.isConfirmed) {
-              actualizarEstado(id, 'Rechazada', res.value);
+            inputValidator: (value) => {
+              if (!value || value.trim() === '') {
+                return 'Debes especificar el motivo.';
+              }
+            }
+          }).then(async (res) => {
+            if (res.isConfirmed && res.value) {
+              try {
+                await rechazarSolicitudTutor(id, motivoSeleccionado, res.value.trim());
+                actualizarEstado(id, 'Rechazada', res.value.trim());
+              } catch (err) {
+                console.error('Error al rechazar solicitud:', err);
+                Swal.fire('Error', 'No se pudo rechazar la solicitud.', 'error');
+              }
             }
           });
         } else {
+          // Motivo predefinido
           const motivoTexto = opcionesMotivos[motivoSeleccionado];
-          actualizarEstado(id, 'Rechazada', motivoTexto);
+          
+          try {
+            rechazarSolicitudTutor(id, motivoSeleccionado)
+              .then(() => {
+                actualizarEstado(id, 'Rechazada', motivoTexto);
+              })
+              .catch((err) => {
+                console.error('Error al rechazar solicitud:', err);
+                Swal.fire('Error', 'No se pudo rechazar la solicitud.', 'error');
+              });
+          } catch (err) {
+            console.error('Error al rechazar solicitud:', err);
+            Swal.fire('Error', 'No se pudo rechazar la solicitud.', 'error');
+          }
         }
       }
     });

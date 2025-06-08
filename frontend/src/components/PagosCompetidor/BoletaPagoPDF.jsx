@@ -1,12 +1,12 @@
-import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/renderer';
 import logoUMSS from '../../image/sansimon-f-BLAN.png'; 
 import { boletaStyles as styles } from '../../styles/PagosCompetidor/boletaPagoStyles';
+import {numeroALetras} from '../../utils/numeroALetras'; // Asegúrate de tener esta función utilitaria
 
 const numeroALiteral = (monto) => {
-  if (monto === 16.00) return 'DIECISÉIS 00/100 BOLIVIANOS';
-  if (monto === 15.00) return 'QUINCE 00/100 BOLIVIANOS';
-  return `${monto.toFixed(2)} BOLIVIANOS`;
+  const entero = Math.floor(monto);
+  const decimales = Math.round((monto - entero) * 100).toString().padStart(2, '0');
+  return `${numeroALetras(entero).toUpperCase()} ${decimales}/100 BOLIVIANOS`;
 };
 
 
@@ -18,13 +18,13 @@ const BoletaPagoPDF = ({
   fechaEmision,
   estado,
   monto,
-  control = '17569',
-  metodo = 'Electrónico',
+  control,
+  metodo = 'CAJA',
   concepto = 'OLIMPIADA EN CIENCIAS SAN SIMON O! SANSI',
   comision = 1.00,
   horaEmision
 }) => {
-  const total = monto + comision;
+  const total = monto;
 
 
   return (
@@ -44,10 +44,15 @@ const BoletaPagoPDF = ({
           <Text style={styles.titulo}>BOLETA DE PAGO</Text>
 
           <View style={styles.infoTablaDer}>
+
             <View style={styles.infoRow}>
+
               <Text style={styles.label}>Nro. Control:</Text>
-              <Text>{control}</Text>
+
+              <Text>{ boleta}</Text>
+
             </View>
+
             <View style={styles.infoRow}>
               <Text style={styles.label}>Fecha:</Text>
               <Text>{fechaEmision} {horaEmision}</Text>
@@ -71,15 +76,15 @@ const BoletaPagoPDF = ({
             <View style={styles.conceptoCol}>
               <Text style={styles.label}>Concepto de:</Text>
               <Text>{concepto}</Text>
-              <Text>PAGO ELECTRÓNICO</Text>
+              
             </View>
 
             {/* Columna derecha: montos */}
             <View style={styles.montoCol}>
               <Text style={styles.montoRight}>{monto.toFixed(2)}</Text>
-              <Text style={styles.montoRight}>{comision.toFixed(2)}</Text>
+           
               <View style={styles.montoLine} />
-              <Text style={styles.total}>Total: Bs {total.toFixed(2)}</Text>
+              <Text style={styles.total}>Total: Bs {monto.toFixed(2)}</Text>
             </View>
           </View>
 

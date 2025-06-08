@@ -1,41 +1,72 @@
-// src/components/cajero/TablaBoletas.jsx
+import '../../styles/cajero/TablaBoletas.css';
 
-import React from 'react';
+const TablaBoletas = ({ boletas, onConfirmar, mostrarBotonValidar }) => {
+  const getEstadoClass = (estado) => {
+    switch (estado.toLowerCase()) {
+      case 'pendiente':
+        return 'estado-pendiente';
+      case 'pagado':
+        return 'estado-pagado';
+      case 'validado':
+        return 'estado-validado';
+      case 'cancelado':
+        return 'estado-cancelado';
+      default:
+        return '';
+    }
+  };
 
-const TablaBoletas = ({ boletas, onConfirmar }) => {
-  if (boletas.length === 0) {
-    return <p style={{ textAlign: 'center', marginTop: '1rem' }}>No se encontraron resultados.</p>;
+  if (!boletas || boletas.length === 0) {
+    return (
+      <div className="no-boletas">
+        <p>No hay boletas para mostrar</p>
+      </div>
+    );
   }
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>CÓDIGO</th>
-          <th>COMPETIDOR</th>
-          <th>CI</th>
-          <th>MONTO</th>
-          <th>FECHA</th>
-          <th>ACCIÓN</th>
-        </tr>
-      </thead>
-      <tbody>
-        {boletas.map((b, i) => (
-          <tr key={i}>
-            <td>{b.codigo}</td>
-            <td>{b.competidor}</td>
-            <td>{b.ci}</td>
-            <td>Bs. {b.monto.toFixed(2)}</td>
-            <td>{b.fecha}</td>
-            <td>
-              <button className="btn-validar" onClick={() => onConfirmar(b)}>
-                Validar Pago
-              </button>
-            </td>
+    <div className="tabla-boletas-container">
+      <table className="tabla-boletas">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Competidor</th>
+            <th>CI</th>
+            <th>Monto</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            {mostrarBotonValidar && <th>Acción</th>}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {boletas.map((boleta) => (
+            <tr key={boleta.id}>
+              <td>{boleta.codigo}</td>
+              <td>{boleta.competidor}</td>
+              <td>{boleta.ci}</td>
+              <td>Bs. {boleta.monto.toFixed(2)}</td>
+              <td>{boleta.fecha}</td>
+              <td>
+                <span className={`estado-badge ${boleta.estado.toLowerCase()}`}>
+                  {boleta.estado}
+                </span>
+              </td>
+              {mostrarBotonValidar && (
+                <td>
+                  <button
+                    className="btn-validar"
+                    onClick={() => onConfirmar(boleta)}
+                    disabled={boleta.estado === 'Pagado'}
+                  >
+                    Cobrar
+                  </button>
+                </td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

@@ -221,7 +221,7 @@ export const obtenerInscripcionesCompetidores = async (tutorUsuarioId) => {
     return inscripciones.map(inscripcionTutor => {
         const inscripcion = inscripcionTutor.inscripcion;
         const competidor = inscripcion.competidor;
-        
+
         return {
             id: inscripcion.id,
             estudiante: `${competidor.usuario.nombre} ${competidor.usuario.apellido}`,
