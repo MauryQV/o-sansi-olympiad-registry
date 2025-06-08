@@ -32,14 +32,14 @@ export const obtenerInscripcionesCompetidor = async (req, res) => {
     try {
         console.log("=== Consultando inscripciones del competidor ===");
         console.log("Usuario:", req.user.id);
-        
+
         const inscripciones = await competidorService.obtenerInscripcionesCompetidor(req.user.id);
         res.status(200).json({ inscripciones });
     } catch (error) {
         console.error('Error al obtener inscripciones del competidor:', error);
-        res.status(500).json({ 
-            mensaje: 'Error al obtener inscripciones', 
-            error: error.message 
+        res.status(500).json({
+            mensaje: 'Error al obtener inscripciones',
+            error: error.message
         });
     }
 };

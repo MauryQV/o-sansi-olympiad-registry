@@ -1,6 +1,3 @@
-// src/components/cajero/TablaBoletas.jsx
-
-import React from 'react';
 import '../../styles/cajero/TablaBoletas.css';
 
 const TablaBoletas = ({ boletas, onConfirmar, mostrarBotonValidar }) => {

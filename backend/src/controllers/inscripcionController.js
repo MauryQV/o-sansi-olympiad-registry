@@ -73,17 +73,25 @@ export const rechazarInscripcionController = async (req, res) => {
     }
 
     const inscripcion_id = parseInt(req.params.id, 10);
-    const { motivo_rechazo_id } = req.body;
 
-    // Llamar al servicio con el tutor.id
-    const resultado = await inscripcionService.rechazarInscripcion({ inscripcion_id, tutorId: tutor.id, motivo_rechazo_id });
+    // Extraemos el motivo de rechazo y la descripción del cuerpo de la solicitud
+    const { motivo_rechazo_id, descripcion_rechazo } = req.body;
+
+
+    // CORRECCIÓN: Pasar también descripcion_rechazo al servicio
+    const resultado = await inscripcionService.rechazarInscripcion({
+      inscripcion_id,
+      tutorId: tutor.id,
+      motivo_rechazo_id,
+      descripcion_rechazo // Agregar este parámetro
+    });
+
     res.status(200).json(resultado);
   } catch (error) {
     console.error('Error al rechazar inscripción:', error.message);
     res.status(400).json({ error: error.message });
   }
 };
-
 
 export const obtenerMotivosRechazoController = async (req, res) => {
   try {

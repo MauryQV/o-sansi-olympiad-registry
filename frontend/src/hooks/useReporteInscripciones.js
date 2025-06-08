@@ -53,7 +53,7 @@ export const useReporteInscripciones = () => {
         
         setAreas(areasUnicas);
       } catch (error) {
-        console.error('Error al cargar áreas:', error);
+        // console.error('Error al cargar áreas:', error);
         setError('Error al cargar áreas');
         // En caso de error, usar un arreglo vacío
         setAreas([]);
@@ -77,7 +77,7 @@ export const useReporteInscripciones = () => {
     // Ejecutar la búsqueda inmediatamente con los filtros actuales
     setCargando(true);
     setError(null);
-    
+
     try {
       console.log("=== APLICAR FILTROS MANUAL ===");
       console.log("estadoAUsar:", estadoAUsar, "tipo:", typeof estadoAUsar, "length:", estadoAUsar?.length);
@@ -85,6 +85,7 @@ export const useReporteInscripciones = () => {
       console.log("Parámetros recibidos - estado:", estadoParametro, "área:", areaParametro);
       
       const filtros = {};
+
       if (estadoAUsar && estadoAUsar.trim() !== '') {
         filtros.estado = estadoAUsar;
         console.log("Agregando filtro estado:", estadoAUsar);
@@ -103,12 +104,19 @@ export const useReporteInscripciones = () => {
       console.log("Keys del objeto filtros:", Object.keys(filtros));
       console.log("Enviando filtros al backend:", filtros);
       
+
+      if (estadoFiltro) filtros.estado = estadoFiltro;
+      if (areaFiltro) filtros.area = areaFiltro;
+
+      //console.log("Enviando filtros al backend:", filtros);
+
+
       const respuesta = await obtenerReportePostulantes(filtros);
-      console.log("Datos recibidos del backend:", respuesta);
-      
+      //console.log("Datos recibidos del backend:", respuesta);
+
       setInscripciones(respuesta.postulantes || []);
     } catch (error) {
-      console.error('Error al cargar datos:', error);
+      //console.error('Error al cargar datos:', error);
       setError('Error al cargar los datos. Por favor, inténtelo de nuevo.');
       setInscripciones([]);
     } finally {
