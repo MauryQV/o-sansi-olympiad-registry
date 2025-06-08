@@ -34,7 +34,7 @@ export const useAreaForm = (mostrar, areaAEditar, areasExistentes = []) => {
             const nombreNormalizado = nombreTrimmed.toLowerCase();
             const esDuplicado = areasExistentes.some(
                 area => area.nombre_area.trim().toLowerCase() === nombreNormalizado &&
-                        (!areaAEditar || area.id !== areaAEditar.id)
+                    (!areaAEditar || area.id !== areaAEditar.id)
             );
             if (esDuplicado) {
                 nuevosErrores.nombre = "Ya existe un área con ese nombre. Por favor, elige otro.";
@@ -53,8 +53,10 @@ export const useAreaForm = (mostrar, areaAEditar, areasExistentes = []) => {
             nuevosErrores.costo = 'El costo debe ser un número válido (ej. 25 o 25.50).';
         } else {
             const costoNumerico = parseFloat(costoTrimmed);
-            if (costoNumerico < 15 || costoNumerico > 30) {
-                nuevosErrores.costo = 'El costo debe estar entre 15 y 30 Bs.';
+            if (costoNumerico < 15) {
+                nuevosErrores.costo = 'El costo debe ser mayor o igual a 15 Bs.';
+            } else if (costoNumerico > 10000) {
+                nuevosErrores.costo = 'El costo no puede ser mayor a 10,000 Bs.';
             }
         }
 

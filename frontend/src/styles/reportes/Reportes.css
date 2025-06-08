@@ -139,6 +139,16 @@
   color: #ffffff;
 }
 
+.estado--aceptado {
+  background-color: #22C55E;
+  color: #ffffff;
+}
+
+.estado--aceptada {
+  background-color: #22C55E;
+  color: #ffffff;
+}
+
 .estado--completado {
   background-color: #22C55E;
   color: #ffffff;

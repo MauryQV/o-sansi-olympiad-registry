@@ -4,7 +4,7 @@ export const mostrarConfirmacionPago = (boleta) => {
   return Swal.fire({
     title: 'Confirmar Validación de Pago',
     html: `
-      <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">¿Está seguro de que desea validar el pago de esta boleta?</p>
+      <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">¿Está seguro de que desea cobrar el pago de esta boleta?</p>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.95rem;">
         <div>
           <p style="color: #666; margin: 0;">Código de Boleta</p>
@@ -29,7 +29,7 @@ export const mostrarConfirmacionPago = (boleta) => {
       </div>
     `,
     showCancelButton: true,
-    confirmButtonText: 'Sí, Validar',
+    confirmButtonText: 'Sí, Cobrar',
     cancelButtonText: 'Cancelar',
     confirmButtonColor: '#4caf50',
     cancelButtonColor: '#999',

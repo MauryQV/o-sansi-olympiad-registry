@@ -85,7 +85,7 @@ export const esCajero = (req, res, next) => {
         return res.status(401).json({ error: 'token invalido' });
     }
 
-    console.log('Rol del usuario:', req.usuario.rol_id); // Debugging
+    // console.log('Rol del usuario:', req.usuario.rol_id); // Debugging
     if (req.usuario.rol_id !== 3) { // id 2 rol de cajero
         return res.status(403).json({ error: 'Acceso denegado' });
     }

@@ -25,7 +25,7 @@ export const useReporteInscripciones = () => {
         ];
         setAreas(mockAreas);
       } catch (error) {
-        console.error('Error al cargar áreas:', error);
+        // console.error('Error al cargar áreas:', error);
         setError('Error al cargar áreas');
       }
     };
@@ -43,20 +43,20 @@ export const useReporteInscripciones = () => {
   const cargarDatos = async () => {
     setCargando(true);
     setError(null);
-    
+
     try {
       const filtros = {};
       if (estadoFiltro) filtros.estado = estadoFiltro;
       if (areaFiltro) filtros.area = areaFiltro;
-      
-      console.log("Enviando filtros al backend:", filtros);
-      
+
+      //console.log("Enviando filtros al backend:", filtros);
+
       const respuesta = await obtenerReportePostulantes(filtros);
-      console.log("Datos recibidos del backend:", respuesta);
-      
+      //console.log("Datos recibidos del backend:", respuesta);
+
       setInscripciones(respuesta.postulantes || []);
     } catch (error) {
-      console.error('Error al cargar datos:', error);
+      //console.error('Error al cargar datos:', error);
       setError('Error al cargar los datos. Por favor, inténtelo de nuevo.');
       setInscripciones([]);
     } finally {

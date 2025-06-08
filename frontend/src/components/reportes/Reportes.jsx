@@ -26,7 +26,7 @@ const Reportes = () => {
     error,
   } = useReporteInscripciones();
 
-  const estados = ["Pendiente", "Completado", "Cancelado"];
+  const estados = ["Pendiente", "Aceptada", "Cancelado"];
 
   return (
     <div className="reportes-minimal">

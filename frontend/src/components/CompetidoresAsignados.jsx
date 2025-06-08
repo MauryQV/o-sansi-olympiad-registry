@@ -133,10 +133,6 @@ const CompetidoresAsignados = () => {
             <span className="estado-badge estado-cancelado">Rechazada</span> La
             solicitud de inscripción ha sido rechazada.
           </li>
-          <li>
-            <span className="estado-badge estado-cancelado">Cancelada</span> La
-            inscripción ha sido cancelada.
-          </li>
         </ul>
       </div>
     </div>

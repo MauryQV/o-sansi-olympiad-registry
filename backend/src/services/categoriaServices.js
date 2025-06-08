@@ -230,3 +230,4 @@ export const obtenerCategoriasPorArea = async (areaId) => {
         throw error;
     }
 };
+

@@ -125,8 +125,8 @@ export const useRegistroForm = () => {
             setter(prev => ({ ...prev, [id]: value }));
         }
 
-            // Validar edad en tiempo real si la fecha de nacimineto esta detro del rango del sistemas no > a 19 años y no < a 8 años
-            if (userType === 'competidor' && id === 'birthDate') {
+        // Validar edad en tiempo real si la fecha de nacimineto esta detro del rango del sistemas no > a 19 años y no < a 8 años
+        if (userType === 'competidor' && id === 'birthDate') {
             const birthDate = new Date(value);
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
@@ -137,15 +137,15 @@ export const useRegistroForm = () => {
 
             if (age < 8 || age > 19) {
                 setErrors(prev => ({
-                ...prev,
-                birthDate: 'Usted no se encuentra dentro del rango de edades permitido en el sistema.'
+                    ...prev,
+                    birthDate: 'La edad permitida para registrarse es de 8 a 19 años.'
                 }));
             } else {
                 setErrors(prev => {
-                const { birthDate, ...rest } = prev;
-                return rest;
+                    const { birthDate, ...rest } = prev;
+                    return rest;
                 });
-            }       
+            }
         }
     };
 
