@@ -9,8 +9,22 @@ const API_URL = 'http://localhost:7777/api';
  */
 export const obtenerReportePostulantes = async (filtros = {}) => {
   try {
+    console.log("=== SERVICIO REPORTES ===");
+    console.log("Filtros recibidos en servicio:", filtros);
+    console.log("Filtros stringify:", JSON.stringify(filtros));
+    
+    // Limpiar filtros vacíos
+    const filtrosLimpios = {};
+    Object.keys(filtros).forEach(key => {
+      if (filtros[key] && filtros[key].trim() !== '') {
+        filtrosLimpios[key] = filtros[key];
+      }
+    });
+    
+    console.log("Filtros limpios a enviar:", filtrosLimpios);
+    
     const { data } = await axios.get(`${API_URL}/reportes/postulantes`, { 
-      params: filtros,
+      params: filtrosLimpios,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }

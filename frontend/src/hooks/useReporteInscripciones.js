@@ -26,7 +26,32 @@ export const useReporteInscripciones = () => {
           nombre: area.nombre_area
         }));
         
-        setAreas(areasFormateadas);
+        // Eliminar duplicados basándose en nombres similares (insensitive a mayúsculas)
+        const areasUnicas = [];
+        const nombresVistos = new Set();
+        
+        areasFormateadas.forEach(area => {
+          const nombreNormalizado = area.nombre.toLowerCase();
+          
+          // Verificar si ya existe una variación de este nombre
+          let yaExiste = false;
+          for (let nombreVisto of nombresVistos) {
+            if (nombreVisto === nombreNormalizado || 
+                (nombreVisto.includes('biolog') && nombreNormalizado.includes('biolog')) ||
+                (nombreVisto.includes('quím') && nombreNormalizado.includes('quím')) ||
+                (nombreVisto.includes('matemát') && nombreNormalizado.includes('matemát'))) {
+              yaExiste = true;
+              break;
+            }
+          }
+          
+          if (!yaExiste) {
+            areasUnicas.push(area);
+            nombresVistos.add(nombreNormalizado);
+          }
+        });
+        
+        setAreas(areasUnicas);
       } catch (error) {
         console.error('Error al cargar áreas:', error);
         setError('Error al cargar áreas');
@@ -38,22 +63,44 @@ export const useReporteInscripciones = () => {
     cargarAreas();
   }, []);
 
-  // Cargar datos iniciales
-  useEffect(() => {
-    if (filtrosAplicados) {
-      cargarDatos();
-    }
-  }, [filtrosAplicados]);
+  // Ya no necesitamos este useEffect porque aplicarFiltrosManual maneja la carga directamente
+  // useEffect removido para evitar cargas duplicadas
 
-  const cargarDatos = async () => {
+  const aplicarFiltrosManual = async (estadoParametro = null, areaParametro = null) => {
+    setFiltrosAplicados(true);
+    setCurrentPage(1);
+    
+    // Usar parámetros si se proporcionan, sino usar estados actuales
+    const estadoAUsar = estadoParametro !== null ? estadoParametro : estadoFiltro;
+    const areaAUsar = areaParametro !== null ? areaParametro : areaFiltro;
+    
+    // Ejecutar la búsqueda inmediatamente con los filtros actuales
     setCargando(true);
     setError(null);
     
     try {
-      const filtros = {};
-      if (estadoFiltro) filtros.estado = estadoFiltro;
-      if (areaFiltro) filtros.area = areaFiltro;
+      console.log("=== APLICAR FILTROS MANUAL ===");
+      console.log("estadoAUsar:", estadoAUsar, "tipo:", typeof estadoAUsar, "length:", estadoAUsar?.length);
+      console.log("areaAUsar:", areaAUsar, "tipo:", typeof areaAUsar, "length:", areaAUsar?.length);
+      console.log("Parámetros recibidos - estado:", estadoParametro, "área:", areaParametro);
       
+      const filtros = {};
+      if (estadoAUsar && estadoAUsar.trim() !== '') {
+        filtros.estado = estadoAUsar;
+        console.log("Agregando filtro estado:", estadoAUsar);
+      } else {
+        console.log("NO agregando filtro estado - valor vacío o undefined");
+      }
+      
+      if (areaAUsar && areaAUsar.trim() !== '') {
+        filtros.area = areaAUsar;
+        console.log("Agregando filtro área:", areaAUsar);
+      } else {
+        console.log("NO agregando filtro área - valor vacío o undefined");
+      }
+      
+      console.log("Objeto filtros final:", filtros);
+      console.log("Keys del objeto filtros:", Object.keys(filtros));
       console.log("Enviando filtros al backend:", filtros);
       
       const respuesta = await obtenerReportePostulantes(filtros);
@@ -67,11 +114,6 @@ export const useReporteInscripciones = () => {
     } finally {
       setCargando(false);
     }
-  };
-
-  const aplicarFiltrosManual = () => {
-    setFiltrosAplicados(true);
-    setCurrentPage(1);
   };
 
   const limpiar = () => {
