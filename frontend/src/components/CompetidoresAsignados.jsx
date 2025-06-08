@@ -122,16 +122,16 @@ const CompetidoresAsignados = () => {
             inscripción está en proceso de revisión.
           </li>
           <li>
-            <span className="estado-badge estado-aprobado">Aprobada</span> La
+            <span className="estado-badge estado-aprobado">Aprobado</span> La
             inscripción ha sido aprobada por todos los tutores.
           </li>
           <li>
-            <span className="estado-badge estado-completado">Completada</span>{" "}
+            <span className="estado-badge estado-completado">Completado</span>{" "}
             El competidor ha completado todos los requisitos.
           </li>
-           <li>
-            <span className="estado-badge estado-cancelado">Rechazada</span> La
-            solicitud de inscripción ha sido rechazada.
+          <li>
+            <span className="estado-badge estado-cancelado">Cancelado</span> La
+            inscripción ha sido cancelada.
           </li>
         </ul>
       </div>
