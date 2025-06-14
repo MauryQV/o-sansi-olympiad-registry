@@ -53,8 +53,8 @@ export const useAreaForm = (mostrar, areaAEditar, areasExistentes = []) => {
             nuevosErrores.costo = 'El costo debe ser un número válido (ej. 25 o 25.50).';
         } else {
             const costoNumerico = parseFloat(costoTrimmed);
-            if (costoNumerico < 15 || costoNumerico > 30) {
-                nuevosErrores.costo = 'El costo debe estar entre 15 y 30 Bs.';
+            if (costoNumerico < 15 || costoNumerico > 10000) {
+                nuevosErrores.costo = 'El costo debe ser mayor a 15bs';
             }
         }
 
