@@ -30,8 +30,8 @@ export const obtenerSolicitudesDelCompetidor = async (req, res, next) => {
 
 export const obtenerInscripcionesCompetidor = async (req, res) => {
     try {
-        console.log("=== Consultando inscripciones del competidor ===");
-        console.log("Usuario:", req.user.id);
+        // console.log("=== Consultando inscripciones del competidor ===");
+        // console.log("Usuario:", req.user.id);
 
         const inscripciones = await competidorService.obtenerInscripcionesCompetidor(req.user.id);
         res.status(200).json({ inscripciones });

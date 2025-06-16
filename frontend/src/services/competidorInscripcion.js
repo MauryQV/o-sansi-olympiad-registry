@@ -87,7 +87,7 @@ export const obtenerMisInscripciones = async () => {
     try {
         //console.log('Consultando mis inscripciones...');
         const response = await apiAuth.get('/mis-inscripciones');
-        //console.log('Respuesta recibida:', response.data);
+        console.log('Respuesta recibida:', response.data);
         return response.data.inscripciones;
     } catch (error) {
         //console.error('Error al obtener mis inscripciones:', error);
