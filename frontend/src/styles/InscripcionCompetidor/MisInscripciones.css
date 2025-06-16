@@ -210,3 +210,52 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Estilos para el tooltip de motivo de rechazo */
+.estado-tooltip {
+    cursor: help;
+    position: relative;
+}
+
+.motivo-rechazo-tooltip {
+    position: fixed;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    max-width: 250px;
+    word-wrap: break-word;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+    animation: tooltipFadeIn 0.2s ease-in-out;
+}
+
+.motivo-rechazo-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #333;
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Estilo adicional para el estado rechazada cuando tiene tooltip */
+.estado-rechazada.estado-tooltip:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}

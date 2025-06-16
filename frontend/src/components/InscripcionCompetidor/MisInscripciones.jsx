@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useConsultaInscripciones } from "../../hooks/useConsultaInscripciones";
 import "../../styles/InscripcionCompetidor/MisInscripciones.css";
 import { RefreshCw } from "lucide-react";
@@ -6,6 +6,9 @@ import { RefreshCw } from "lucide-react";
 const MisInscripciones = () => {
   const { inscripciones, cargando, error, actualizarInscripciones } =
     useConsultaInscripciones();
+  
+  const [tooltipVisible, setTooltipVisible] = useState(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
   const formatearFecha = (fechaStr) => {
     if (!fechaStr) return "No registrada";
@@ -28,11 +31,26 @@ const MisInscripciones = () => {
         return "estado-completado";
       case "cancelado":
         return "estado-cancelado";
-      default:
-        return "estado-pendiente";
       case "rechazada":
         return "estado-rechazada";
+      default:
+        return "estado-pendiente";
     }
+  };
+
+  const handleMouseEnter = (event, inscripcionId, motivoRechazo) => {
+    if (motivoRechazo) {
+      const rect = event.target.getBoundingClientRect();
+      setTooltipPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top - 10
+      });
+      setTooltipVisible(inscripcionId);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setTooltipVisible(null);
   };
 
   return (
@@ -87,7 +105,9 @@ const MisInscripciones = () => {
                     <span
                       className={`estado-badge ${getEstadoClase(
                         inscripcion.estado
-                      )}`}
+                      )} ${inscripcion.estado?.toLowerCase() === 'rechazada' && inscripcion.motivo_rechazo ? 'estado-tooltip' : ''}`}
+                      onMouseEnter={(e) => handleMouseEnter(e, inscripcion.id, inscripcion.motivo_rechazo)}
+                      onMouseLeave={handleMouseLeave}
                     >
                       {inscripcion.estado}
                     </span>
@@ -96,6 +116,20 @@ const MisInscripciones = () => {
               ))}
             </tbody>
           </table>
+
+          {/* Tooltip */}
+          {tooltipVisible && (
+            <div 
+              className="motivo-rechazo-tooltip"
+              style={{
+                left: tooltipPosition.x,
+                top: tooltipPosition.y,
+                transform: 'translateX(-50%)'
+              }}
+            >
+              {inscripciones.find(i => i.id === tooltipVisible)?.motivo_rechazo}
+            </div>
+          )}
         </div>
       )}
 
@@ -115,8 +149,8 @@ const MisInscripciones = () => {
             Has completado todos los requisitos.
           </li>
           <li>
-            <span className="estado-badge estado-cancelado">Cancelado</span> La
-            inscripción ha sido cancelada.
+            <span className="estado-badge estado-rechazada">Rechazada</span> Tu
+            inscripción ha sido rechazada. Pasa el cursor sobre el estado para ver el motivo.
           </li>
         </ul>
       </div>

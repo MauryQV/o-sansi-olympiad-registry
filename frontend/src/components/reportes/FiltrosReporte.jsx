@@ -22,9 +22,9 @@ const FiltrosReporte = ({
   }, [estadoFiltro, areaFiltro]);
 
   const aplicarFiltros = () => {
-    console.log("=== APLICAR FILTROS COMPONENTE ===");
-    console.log("estadoTemp:", estadoTemp);
-    console.log("areaTemp:", areaTemp);
+  //  console.log("=== APLICAR FILTROS COMPONENTE ===");
+    //console.log("estadoTemp:", estadoTemp);
+    //console.log("areaTemp:", areaTemp);
     
     // Actualizar los estados principales
     setEstadoFiltro(estadoTemp);

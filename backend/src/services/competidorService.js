@@ -158,6 +158,15 @@ export const obtenerSolicitudesDelCompetidor = async (usuarioId) => {
     return Object.values(agrupadas);
 };
 
+const MOTIVOS_RECHAZO = {
+    1: "Solicitud enviada por error",
+    2: "El estudiante no tiene datos correctos",
+    4: "No reconozco a esta estudiante",
+    5: "El estudiante alició al tutor equivocado",
+    6: "No autorizo su participación",
+    7: "Otro motivo"
+};
+
 export const obtenerInscripcionesCompetidor = async (usuarioId) => {
     // Buscar el competidor asociado al usuario
     const competidor = await prisma.competidor.findUnique({
@@ -168,7 +177,7 @@ export const obtenerInscripcionesCompetidor = async (usuarioId) => {
         throw new Error('No se encontró el competidor');
     }
 
-    // Obtener todas las inscripciones del competidor
+    // Obtener todas las inscripciones del competidor con sus tutores
     const inscripciones = await prisma.inscripcion.findMany({
         where: { competidor_id: competidor.id },
         include: {
@@ -182,21 +191,57 @@ export const obtenerInscripcionesCompetidor = async (usuarioId) => {
                     }
                 }
             },
-            convocatoria: true
+            convocatoria: true,
+            tutorInscripciones: true // Incluir las inscripciones de tutor para obtener motivos de rechazo
         },
         orderBy: { fecha_inscripcion: 'desc' }
     });
 
     // Formatear los datos para la respuesta
-    return inscripciones.map(inscripcion => ({
-        id: inscripcion.id,
-        area: inscripcion.area?.nombre_area || 'No asignada',
-        categoria: inscripcion.categoria?.nombre_categoria || 'No asignada',
-        grado: inscripcion.categoria?.grado_min?.nombre_grado || 'No especificado',
-        nivel: inscripcion.categoria?.grado_min?.nivel?.nombre_nivel || 'No especificado',
-        convocatoria: inscripcion.convocatoria?.nombre_convocatoria || 'No asignada',
-        fecha_inscripcion: inscripcion.fecha_inscripcion,
-        estado: inscripcion.estado_inscripcion || 'Pendiente',
-        fecha_estado: inscripcion.fecha_estado || null
+    return inscripciones.map(inscripcion => {
+        // Buscar si hay algún rechazo en las inscripciones de tutor
+        const rechazo = inscripcion.tutorInscripciones.find(ti =>
+            !ti.aprobado && (ti.motivo_rechazo_id || ti.descripcion_rechazo)
+        );
+
+        let motivoRechazo = null;
+        if (rechazo) {
+            if (rechazo.motivo_rechazo_id === 7) {
+                // Si es "Otro motivo", usar la descripción personalizada
+                motivoRechazo = rechazo.descripcion_rechazo || "Otro motivo";
+            } else if (rechazo.motivo_rechazo_id) {
+                // Buscar en el array estático
+                motivoRechazo = MOTIVOS_RECHAZO[rechazo.motivo_rechazo_id] || "Motivo no especificado";
+            }
+        }
+
+        return {
+            id: inscripcion.id,
+            area: inscripcion.area?.nombre_area || 'No asignada',
+            categoria: inscripcion.categoria?.nombre_categoria || 'No asignada',
+            grado: inscripcion.categoria?.grado_min?.nombre_grado || 'No especificado',
+            nivel: inscripcion.categoria?.grado_min?.nivel?.nombre_nivel || 'No especificado',
+            convocatoria: inscripcion.convocatoria?.nombre_convocatoria || 'No asignada',
+            fecha_inscripcion: inscripcion.fecha_inscripcion,
+            estado: inscripcion.estado_inscripcion || 'Pendiente',
+            fecha_estado: inscripcion.fecha_estado || null,
+            motivo_rechazo: motivoRechazo // Nuevo campo con el motivo de rechazo
+        };
+    });
+};
+
+// Función auxiliar para obtener el mensaje de motivo por ID (opcional)
+export const obtenerMotivoRechazo = (motivoId, descripcionPersonalizada = null) => {
+    if (motivoId === 7) {
+        return descripcionPersonalizada || "Otro motivo";
+    }
+    return MOTIVOS_RECHAZO[motivoId] || null;
+};
+
+// Función para obtener todos los motivos disponibles (útil para formularios)
+export const obtenerTodosLosMotivos = () => {
+    return Object.entries(MOTIVOS_RECHAZO).map(([id, mensaje]) => ({
+        id: parseInt(id),
+        mensaje
     }));
 };
