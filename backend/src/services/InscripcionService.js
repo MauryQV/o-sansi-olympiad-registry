@@ -183,7 +183,8 @@ export const aceptarInscripcion = async ({ inscripcion_id, tutorId }) => {
     if (todosAprobados) {
         await prisma.inscripcion.update({
             where: { id: inscripcion_id },
-            data: { estado_inscripcion: 'Aceptada' }
+            //primer cambio: estado_inscripcion: 'Aprobada'
+            data: { estado_inscripcion: 'Pendiente de pago' }
         });
 
         const { usuario } = await prisma.competidor.findUnique({

@@ -73,7 +73,7 @@ export const obtenerPostulantes = async (req, res) => {
     const inscripciones = await prisma.inscripcion.findMany({
       where: {
         ...filtro,
-        estado_inscripcion: { not: "Pendiente" }
+
       },
       include: {
         competidor: {
