@@ -69,6 +69,11 @@
   color: #985910;
 }
 
+.pagado {
+  background-color: #B8E0A9;
+  color: #111212;
+}
+
 .seccion-tabla-pagos {
   margin-top: 20px;
 }
@@ -112,14 +117,16 @@
 }
 
 .boton-ver-detalles:hover {
-  background-color: #94ec61;
+  background-color: #B8E0A9;
 }
+
 .titulo-tarjeta,
 .titulo-tabla-pagos {
   font-weight: bold;
   font-size: 1.2rem;
   color: #111;
 }
+
 .tarjeta-pagos-box {
   background-color: #fff;
   padding: 1.5rem;
@@ -129,12 +136,14 @@
   margin-top: 2rem;
   font-family: 'Comfortaa', sans-serif;
 }
+
 .titulo-tabla-pagos {
   font-weight: bold;
   font-size: 1.2rem;
   margin-bottom: 1rem;
   color: #111;
 }
+
 .tarjeta-inscripcion-activa,
 .tarjeta-convocatoria-activa {
   position: relative;
@@ -164,7 +173,7 @@
   border-color: #4ade80;
 }
 
-.en-inscripcion {
+.en-inscripción {
   background-color: #ACCCFF;
   color: #121314;
 }
